@@ -1,0 +1,203 @@
+github:
+  min_stars: 200
+  language: Python
+  # Multi-language discovery is enabled, but still structural: no issue keywords.
+  # Keep this short for rate-limit safety; add Java/Go/Ruby/etc. for larger runs.
+  languages:
+    - Python
+    - JavaScript
+    - TypeScript
+  # GitHub search already constrains language. Primary repo language can be
+  # misleading for mixed projects, so do not hard-filter by API primary language
+  # unless explicitly requested. Behaviour-file validation still enforces relevance.
+  strict_primary_language: false
+  include_merged_prs: true
+  include_closed_unmerged_prs: false
+  search_query: "language:Python stars:>=200 archived:false"
+  per_page: 50
+  # Continuous mode keeps this many core/search requests in reserve before sleeping until reset.
+  min_remaining: 100
+  # GitHub search has a small/minute bucket and secondary limits. Pace uncached
+  # search requests instead of hammering the endpoint and then sleeping 2 minutes.
+  search_min_interval_seconds: 2.35
+  core_min_interval_seconds: 0.0
+  request_jitter_seconds: 0.65
+
+filters:
+  english_only: true
+  english_confidence_note: "Uses langdetect on issue title + body. Non-English candidates are excluded."
+  min_issue_words: 50
+  issue_min_body_chars: 200
+  exclude_bots:
+    - dependabot
+    - renovate
+    - github-actions
+    - pyup
+    - pyup-bot
+    - dependabot-preview
+  exclude_docs_only: true
+  exclude_docs_scope_only: true
+  exclude_non_behaviour_only: true
+  relevant_extensions:
+    - .py
+    - .yml
+    - .yaml
+    - .toml
+    - .cfg
+    - .ini
+    - .json
+    - .lock
+    - Dockerfile
+  relevant_paths:
+    - requirements.txt
+    - pyproject.toml
+    - setup.py
+    - setup.cfg
+    - Pipfile
+    - Pipfile.lock
+    - poetry.lock
+    - .github/workflows/
+    - Dockerfile
+
+cache:
+  github_api: true
+  github_cache_dir: data/cache/github_api
+  force_refresh: false
+  force_rescan: false
+
+collection:
+  ai_only: false
+  # Feasibility controls, not suspiciousness filters.
+  # Use a fixed cutoff for this study run so GitHub retrieval and validation agree.
+  lookback_start: "2025-01-01"
+  lookback_months: 12
+  require_pr_merged_after_lookback: true
+  require_issue_created_after_lookback: false
+  max_cases_per_repo: 3
+  max_processed_prs_per_repo: 50
+  # Keep each query/run wide. We do not deep-crawl one repo from multiple streams.
+  # These caps only avoid repeated repository work during one live pass; they do not
+  # weaken final case validation.
+  max_prs_per_repo_per_query: 1
+  max_new_prs_per_repo_per_run: 2
+  # 0 disables raw-hit caps. We keep retrieval wide via round-robin scheduling,
+  # not by dropping potentially valid PRs before validation.
+  max_raw_hits_per_repo_per_pass: 0
+  targeted_per_page: 30
+  targeted_max_pages: 1
+  targeted_max_pages_total: 5
+  targeted_pause_seconds: 2
+  # Default discovery is one structural PR search per repo over the full
+  # lookback window. Saturated repos are NOT split in discovery mode; use
+  # REPO_WINDOW_EXHAUSTIVE_SPLIT=true for final exhaustive passes.
+  retrieval_mode: repo_window_pr_search
+  repo_month_per_page: 50
+  repo_month_max_pages: 2
+  repo_window_per_page: 50
+  repo_window_max_pages: 2
+  repo_window_split_threshold: 100
+  repo_window_exhaustive_split: false
+  require_primary_worker: true
+  # Evidence-mode gates: keep candidate mining focused on cases with a
+  # direct issue→PR link and downstream surfaces where introduced evidence is plausible.
+  require_high_yield_surface: true
+  max_changed_files_for_evidence: 75
+  max_linked_issues_per_pr_for_evidence: 1
+  active_repo_seed: true
+  active_repo_seed_max_pages: 2
+  active_repo_seed_per_page: 100
+  repo_universe_pushed_since: "2024-01-01"
+  use_graphql_hydration: true
+  require_graphql_same_repo_link: false
+  require_issue_quality_filter: false
+  repo_shard_count: 1
+  repo_shard_index: 0
+  month_shard_count: 1
+  month_shard_index: 0
+  repo_walk_enabled: false
+  # Main retrieval is structural and downstream-first; keyword streams are audit/UI features only.
+  query_phases: []
+  repo_sample_strategy: active_first
+  case_sample_strategy: random
+  random_seed: 42
+  repo_sample_pool_multiplier: 4
+  case_sample_pool_multiplier: 4
+  # When SCOPE=ai, do NOT use AI-repo seed lists. We only use agentic markers found in PR/issue/branch/commit evidence.
+  # search = marker search only; walk = sample normal repos and keep only marker-positive cases; hybrid = both.
+  ai_discovery: hybrid
+  fetch_commit_messages_for_ai: true
+  fetch_pr_comments_for_issue_links: true
+  fetch_commit_messages_for_issue_links: true
+  ai_search:
+    # high = strongest provenance terms only; safest/default.
+    # balanced = high + specific agent names.
+    # broad = high + all medium terms; more recall but more secondary-rate risk/noise.
+    profile: balanced
+    max_marker_queries: 12
+    max_pages_per_query: 1
+    per_page: 25
+    pause_seconds: 25
+    secondary_wait_seconds: 30
+    max_secondary_retries: 0
+
+scan:
+  ai_only: false
+  codeql_max_per_run: 3
+  methodology_note: "Downstream-evidence-first: scan all valid same-repo issue-linked PRs with applicable approved workers; no Semgrep or issue-keyword gate."
+
+scanners:
+  codeql: true
+  gitleaks: true
+  osv: true
+  dependency_downgrade: true
+  semgrep: false
+  codeql_language: auto
+  codeql_build_mode: none
+  # Security-focused CodeQL suite; this is not AI-biased, it only narrows CodeQL to security queries.
+  # auto uses per-language security-extended suites where known.
+  codeql_query_suite: null
+  clone_depth: 1
+  codeql_timeout_seconds: 1800
+  codeql_trigger: all_codeql
+  semgrep_config: "p/security-audit"
+  semgrep_timeout_seconds: 300
+  performance_note: "Default scan runs CodeQL for changed CodeQL-supported languages. Dependency and secret workers run by artifact applicability."
+
+ai_markers:
+  high_confidence:
+    - codex/
+    - copilot/
+    - cursor/
+    - devin-ai-integration[bot]
+    - "Co-Authored-By: Claude"
+    - "Generated with Claude Code"
+  medium_confidence:
+    - Claude Code
+    - Codex
+    - Copilot agent
+    - Copilot Workspace
+    - Cursor agent
+    - Cursor Deep Agent
+    - Devin
+    - OpenHands
+    - OpenDevin
+    - Cline
+    - Jules
+    - Genie
+    - Windsurf
+    - ChatGPT
+    - AI-generated
+    - generated by AI
+    - generated with
+    - LLM-generated
+    - agent-generated
+
+ui:
+  page_title: "Malicious Issue Miner"
+  rows_per_page: 50
+
+workers:
+  idle_seconds: 10
+  max_loops: 0
+  job_stale_minutes: 60
+  codeql_stale_minutes: 180

@@ -1,0 +1,13 @@
+---
+sourceLocationPrefix: /tmp/screen5_8147_niedjqaz/TREATED
+baselineLinesOfCode: 20603
+unicodeNewlines: true
+columnKind: utf16
+primaryLanguage: javascript
+creationMetadata:
+  cliVersion: 2.25.6
+  creationTime: 2026-10-17T20:19:33.535346086Z
+buildMode: none
+overlayBaseDatabase: false
+overlayDatabase: false
+finalised: true

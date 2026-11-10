@@ -1,0 +1,1071 @@
+from __future__ import annotations
+
+import argparse
+import os
+import shutil
+import socket
+import sqlite3
+import tempfile
+import time
+import traceback
+from pathlib import Path
+from typing import Any
+
+from src.db.database import Database
+from src.distributed.spool import DistributedSpool, read_json
+from src.settings import load_settings
+from src.workers.job_queue import (
+    ClaimedJob,
+    run_scanner_job,
+    update_case_stages,
+)
+
+
+ROOT = Path(
+    "/home-mscluster/astrauss/new/"
+    "malicious-issue-miner-rate-smart"
+)
+
+CODEQL_JOB_TYPES = (
+    "codeql_security",
+)
+
+
+JOB_SCANNERS = {
+    "codeql_security": (
+        "codeql-base",
+        "codeql-head",
+        "codeql",
+    ),
+}
+
+
+def active_db_path() -> Path:
+    pointer = ROOT / ".current_agentic_js_eval_db"
+
+    value = pointer.read_text(
+        encoding="utf-8"
+    ).strip()
+
+    if not value:
+        raise RuntimeError(
+            "Active database pointer is empty"
+        )
+
+    return Path(value)
+
+
+def spool_root() -> Path:
+    return Path(
+        os.environ.get(
+            "DISTRIBUTED_SPOOL_ROOT",
+            str(ROOT / "data/distributed_spool"),
+        )
+    )
+
+
+def ensure_import_table(db: Database) -> None:
+    db.execute(
+        """
+        CREATE TABLE IF NOT EXISTS
+        distributed_result_imports (
+            task_id TEXT PRIMARY KEY,
+            pool TEXT NOT NULL,
+            worker_id TEXT,
+            imported_at TEXT
+                DEFAULT CURRENT_TIMESTAMP
+        )
+        """
+    )
+
+
+def create_snapshot(
+    source_path: Path,
+    snapshot_path: Path,
+) -> None:
+    snapshot_path.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    temporary = snapshot_path.with_name(
+        f".{snapshot_path.name}."
+        f"{os.getpid()}.tmp"
+    )
+
+    for suffix in (
+        "",
+        "-journal",
+        "-wal",
+        "-shm",
+    ):
+        candidate = Path(
+            str(temporary) + suffix
+        )
+
+        try:
+            candidate.unlink()
+        except FileNotFoundError:
+            pass
+
+    source = sqlite3.connect(
+        str(source_path),
+        timeout=120,
+    )
+
+    destination = sqlite3.connect(
+        str(temporary),
+        timeout=120,
+    )
+
+    try:
+        source.execute(
+            "PRAGMA busy_timeout=120000"
+        )
+
+        destination.execute(
+            "PRAGMA busy_timeout=120000"
+        )
+
+        source.backup(
+            destination,
+            pages=1000,
+            sleep=0.05,
+        )
+
+        destination.execute(
+            "PRAGMA journal_mode=DELETE"
+        )
+
+        destination.commit()
+
+    finally:
+        destination.close()
+        source.close()
+
+    os.replace(
+        temporary,
+        snapshot_path,
+    )
+
+
+def task_present(
+    spool: DistributedSpool,
+    task_id: str,
+) -> bool:
+    pending = (
+        spool.queue_path(
+            "codeql_security",
+            "pending",
+        )
+        / f"{task_id}.json"
+    )
+
+    results = spool.queue_path(
+        "codeql_security",
+        "results",
+    )
+
+    completed_paths = (
+        pending,
+        results
+        / f"{task_id}.json",
+        results
+        / "imported"
+        / f"{task_id}.json",
+    )
+
+    if any(
+        path.exists()
+        for path in completed_paths
+    ):
+        return True
+
+    claimed = spool.queue_path(
+        "codeql_security",
+        "claimed",
+    )
+
+    return next(
+        claimed.glob(
+            f"{task_id}__*.json"
+        ),
+        None,
+    ) is not None
+
+
+def enqueue_jobs(
+    db: Database,
+    spool: DistributedSpool,
+    snapshot_path: Path,
+) -> int:
+    placeholders = ",".join(
+        "?"
+        for _ in CODEQL_JOB_TYPES
+    )
+
+    rows = db.query(
+        f"""
+        SELECT
+            id,
+            case_id,
+            job_type,
+            priority,
+            attempts,
+            status
+        FROM scanner_jobs
+        WHERE status IN (
+            'pending',
+            'retry',
+            'queued'
+        )
+          AND job_type IN (
+            {placeholders}
+          )
+        ORDER BY
+            priority DESC,
+            created_at ASC,
+            id ASC
+        """,
+        CODEQL_JOB_TYPES,
+    )
+
+    missing = []
+
+    for row in rows:
+        task_id = (
+            f"scanner-job-{int(row['id'])}"
+        )
+
+        if not task_present(
+            spool,
+            task_id,
+        ):
+            missing.append(
+                (
+                    task_id,
+                    row,
+                )
+            )
+
+    if not missing:
+        return 0
+
+    with db.transaction() as connection:
+        connection.execute(
+            "BEGIN IMMEDIATE"
+        )
+
+        for _, row in missing:
+            if row["status"] in (
+                "pending",
+                "retry",
+            ):
+                connection.execute(
+                    """
+                    UPDATE scanner_jobs
+                    SET status='queued',
+                        attempts=attempts+1,
+                        worker_id=NULL,
+                        started_at=NULL,
+                        finished_at=NULL
+                    WHERE id=?
+                    """,
+                    (
+                        int(row["id"]),
+                    ),
+                )
+
+        connection.commit()
+
+    create_snapshot(
+        active_db_path(),
+        snapshot_path,
+    )
+
+    created = 0
+
+    for task_id, row in missing:
+        if spool.enqueue(
+            "codeql_security",
+            task_id,
+            {
+                "job_id": int(row["id"]),
+                "case_id": int(row["case_id"]),
+                "job_type": str(row["job_type"]),
+                "snapshot_path": str(snapshot_path),
+            },
+        ):
+            created += 1
+
+    return created
+
+
+def remove_completed_task_markers(
+    spool: DistributedSpool,
+    task_id: str,
+) -> int:
+    """Remove residual queue markers for an imported task."""
+
+    removed = 0
+
+    pending = (
+        spool.queue_path(
+            "codeql_security",
+            "pending",
+        )
+        / f"{task_id}.json"
+    )
+
+    try:
+        pending.unlink()
+        removed += 1
+    except FileNotFoundError:
+        pass
+
+    claimed_directory = spool.queue_path(
+        "codeql_security",
+        "claimed",
+    )
+
+    for claimed in claimed_directory.glob(
+        f"{task_id}__*.json"
+    ):
+        try:
+            claimed.unlink()
+            removed += 1
+        except FileNotFoundError:
+            pass
+
+    return removed
+
+
+def import_results(
+    db: Database,
+    spool: DistributedSpool,
+) -> int:
+    results_directory = spool.queue_path(
+        "codeql_security",
+        "results",
+    )
+
+    imported_directory = (
+        results_directory
+        / "imported"
+    )
+
+    imported_directory.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    imported = 0
+
+    result_paths = sorted(
+        path
+        for path in results_directory.glob("*.json")
+        if not path.name.startswith(".")
+    )
+
+    for path in result_paths:
+        envelope = read_json(path)
+
+        task_id = str(
+            envelope.get("task_id")
+            or path.stem
+        )
+
+        worker_id = str(
+            envelope.get("worker_id")
+            or ""
+        )
+
+        result = envelope.get(
+            "result",
+            {},
+        )
+
+        with db.transaction() as connection:
+            connection.execute(
+                "BEGIN IMMEDIATE"
+            )
+
+            existing = connection.execute(
+                """
+                SELECT task_id
+                FROM distributed_result_imports
+                WHERE task_id=?
+                """,
+                (
+                    task_id,
+                ),
+            ).fetchone()
+
+            if existing:
+                connection.commit()
+
+            else:
+                job_id = int(
+                    result["job_id"]
+                )
+
+                case_id = int(
+                    result["case_id"]
+                )
+
+                job_type = str(
+                    result["job_type"]
+                )
+
+                scanner_names = tuple(
+                    result.get(
+                        "scanner_names",
+                        JOB_SCANNERS[job_type],
+                    )
+                )
+
+                placeholders = ",".join(
+                    "?"
+                    for _ in scanner_names
+                )
+
+                connection.execute(
+                    f"""
+                    DELETE FROM scanner_runs
+                    WHERE case_id=?
+                      AND scanner IN (
+                        {placeholders}
+                      )
+                    """,
+                    (
+                        case_id,
+                        *scanner_names,
+                    ),
+                )
+
+                connection.execute(
+                    f"""
+                    DELETE FROM scanner_findings
+                    WHERE case_id=?
+                      AND scanner IN (
+                        {placeholders}
+                      )
+                    """,
+                    (
+                        case_id,
+                        *scanner_names,
+                    ),
+                )
+
+                for run in result.get(
+                    "runs",
+                    [],
+                ):
+                    connection.execute(
+                        """
+                        INSERT INTO scanner_runs(
+                            case_id,
+                            pr_id,
+                            scanner,
+                            status,
+                            started_at,
+                            finished_at,
+                            stdout,
+                            stderr
+                        )
+                        VALUES (
+                            ?, ?, ?, ?, ?, ?, ?, ?
+                        )
+                        """,
+                        (
+                            run.get("case_id"),
+                            run.get("pr_id"),
+                            run.get("scanner"),
+                            run.get("status"),
+                            run.get("started_at"),
+                            run.get("finished_at"),
+                            run.get("stdout"),
+                            run.get("stderr"),
+                        ),
+                    )
+
+                for finding in result.get(
+                    "findings",
+                    [],
+                ):
+                    connection.execute(
+                        """
+                        INSERT INTO scanner_findings(
+                            case_id,
+                            pr_id,
+                            scanner,
+                            finding_type,
+                            severity,
+                            rule_id,
+                            cwe,
+                            file_path,
+                            line,
+                            description,
+                            evidence,
+                            raw_json,
+                            introduced,
+                            created_at
+                        )
+                        VALUES (
+                            ?, ?, ?, ?, ?, ?, ?,
+                            ?, ?, ?, ?, ?, ?, ?
+                        )
+                        """,
+                        (
+                            finding.get("case_id"),
+                            finding.get("pr_id"),
+                            finding.get("scanner"),
+                            finding.get(
+                                "finding_type"
+                            ),
+                            finding.get("severity"),
+                            finding.get("rule_id"),
+                            finding.get("cwe"),
+                            finding.get("file_path"),
+                            finding.get("line"),
+                            finding.get(
+                                "description"
+                            ),
+                            finding.get("evidence"),
+                            finding.get("raw_json"),
+                            finding.get(
+                                "introduced",
+                                1,
+                            ),
+                            finding.get(
+                                "created_at"
+                            ),
+                        ),
+                    )
+
+                status = str(
+                    result.get("status")
+                    or "error"
+                )
+
+                last_error = str(
+                    result.get("last_error")
+                    or ""
+                )[:2000]
+
+                connection.execute(
+                    """
+                    UPDATE scanner_jobs
+                    SET status=?,
+                        worker_id=?,
+                        finished_at=CURRENT_TIMESTAMP,
+                        last_error=?
+                    WHERE id=?
+                    """,
+                    (
+                        status,
+                        worker_id,
+                        last_error,
+                        job_id,
+                    ),
+                )
+
+                connection.execute(
+                    """
+                    INSERT INTO
+                    distributed_result_imports(
+                        task_id,
+                        pool,
+                        worker_id
+                    )
+                    VALUES (?, ?, ?)
+                    """,
+                    (
+                        task_id,
+                        "codeql_security",
+                        worker_id,
+                    ),
+                )
+
+                connection.commit()
+                imported += 1
+
+        destination = (
+            imported_directory
+            / path.name
+        )
+
+        try:
+            os.replace(
+                path,
+                destination,
+            )
+        except FileNotFoundError:
+            pass
+
+        remove_completed_task_markers(
+            spool,
+            task_id,
+        )
+
+    if imported:
+        update_case_stages(db)
+
+    return imported
+
+
+def coordinator(
+    once: bool,
+    interval: int,
+) -> None:
+    db = Database(
+        active_db_path()
+    )
+
+    spool = DistributedSpool(
+        spool_root()
+    )
+
+    snapshot_path = (
+        spool_root()
+        / "snapshots"
+        / "codeql-security.db"
+    )
+
+    ensure_import_table(db)
+
+    while True:
+        imported = import_results(
+            db,
+            spool,
+        )
+
+        requeued = spool.requeue_stale(
+            "codeql_security",
+            stale_seconds=4 * 60 * 60,
+        )
+
+        created = enqueue_jobs(
+            db,
+            spool,
+            snapshot_path,
+        )
+
+        counts = spool.counts(
+            "codeql_security"
+        )
+
+        print(
+            "coordinator "
+            f"imported={imported} "
+            f"created={created} "
+            f"requeued={requeued} "
+            f"counts={counts}",
+            flush=True,
+        )
+
+        if once:
+            return
+
+        time.sleep(
+            max(2, interval)
+        )
+
+
+def export_result(
+    db: Database,
+    job_id: int,
+    case_id: int,
+    job_type: str,
+) -> dict[str, Any]:
+    runs = db.query(
+        """
+        SELECT
+            case_id,
+            pr_id,
+            scanner,
+            status,
+            started_at,
+            finished_at,
+            stdout,
+            stderr
+        FROM scanner_runs
+        WHERE case_id=?
+          AND (
+              scanner='codeql'
+              OR scanner LIKE 'codeql-%'
+          )
+        ORDER BY id ASC
+        """,
+        (case_id,),
+    )
+
+    findings = db.query(
+        """
+        SELECT
+            case_id,
+            pr_id,
+            scanner,
+            finding_type,
+            severity,
+            rule_id,
+            cwe,
+            file_path,
+            line,
+            description,
+            evidence,
+            raw_json,
+            introduced,
+            created_at
+        FROM scanner_findings
+        WHERE case_id=?
+          AND scanner='codeql'
+        ORDER BY id ASC
+        """,
+        (case_id,),
+    )
+
+    status_row = db.one(
+        """
+        SELECT status, last_error
+        FROM scanner_jobs
+        WHERE id=?
+        """,
+        (job_id,),
+    ) or {}
+
+    scanner_names = sorted({
+        str(run["scanner"])
+        for run in runs
+        if run.get("scanner")
+    })
+
+    return {
+        "job_id": job_id,
+        "case_id": case_id,
+        "job_type": job_type,
+        "scanner_names": scanner_names,
+        "status": status_row.get(
+            "status",
+            "error",
+        ),
+        "last_error": status_row.get(
+            "last_error",
+            "",
+        ),
+        "runs": runs,
+        "findings": findings,
+    }
+
+
+def worker(
+    idle_rounds: int,
+    idle_seconds: int,
+) -> None:
+    spool = DistributedSpool(
+        spool_root()
+    )
+
+    worker_id = (
+        "codeql-"
+        f"{os.getenv('SLURM_JOB_ID', 'local')}-"
+        f"{os.getenv('SLURM_ARRAY_TASK_ID', '0')}-"
+        f"{socket.gethostname()}-"
+        f"{os.getpid()}"
+    )
+
+    scratch_root = Path(
+        os.environ.get(
+            "SLURM_TMPDIR",
+            tempfile.gettempdir(),
+        )
+    ) / worker_id
+
+    scratch_root.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    local_db_path = (
+        scratch_root
+        / "worker.db"
+    )
+
+    loaded_snapshot = None
+    settings = load_settings()
+
+    processed = 0
+    empty_rounds = 0
+
+    spool.heartbeat(
+        "codeql_security",
+        worker_id,
+        state="starting",
+        detail="Worker starting",
+    )
+
+    while empty_rounds < idle_rounds:
+        claim = spool.claim(
+            "codeql_security",
+            worker_id,
+        )
+
+        if claim is None:
+            empty_rounds += 1
+
+            spool.heartbeat(
+                "codeql_security",
+                worker_id,
+                state="idle",
+                detail=(
+                    f"No task "
+                    f"{empty_rounds}/{idle_rounds}"
+                ),
+            )
+
+            time.sleep(
+                max(1, idle_seconds)
+            )
+
+            continue
+
+        empty_rounds = 0
+
+        payload = claim.payload.get(
+            "payload",
+            {},
+        )
+
+        job_id = int(
+            payload["job_id"]
+        )
+
+        case_id = int(
+            payload["case_id"]
+        )
+
+        job_type = str(
+            payload["job_type"]
+        )
+
+        snapshot_path = Path(
+            payload["snapshot_path"]
+        )
+
+        try:
+            if (
+                loaded_snapshot
+                != str(snapshot_path)
+                or not local_db_path.exists()
+            ):
+                temporary = (
+                    local_db_path.with_suffix(
+                        ".copying"
+                    )
+                )
+
+                shutil.copy2(
+                    snapshot_path,
+                    temporary,
+                )
+
+                os.replace(
+                    temporary,
+                    local_db_path,
+                )
+
+                loaded_snapshot = str(
+                    snapshot_path
+                )
+
+            local_db = Database(
+                local_db_path
+            )
+
+            row = local_db.one(
+                """
+                SELECT
+                    id,
+                    case_id,
+                    job_type,
+                    priority,
+                    attempts
+                FROM scanner_jobs
+                WHERE id=?
+                """,
+                (
+                    job_id,
+                ),
+            )
+
+            if row is None:
+                shutil.copy2(
+                    snapshot_path,
+                    local_db_path,
+                )
+
+                local_db = Database(
+                    local_db_path
+                )
+
+                row = local_db.one(
+                    """
+                    SELECT
+                        id,
+                        case_id,
+                        job_type,
+                        priority,
+                        attempts
+                    FROM scanner_jobs
+                    WHERE id=?
+                    """,
+                    (
+                        job_id,
+                    ),
+                )
+
+            if row is None:
+                raise RuntimeError(
+                    f"Job {job_id} missing "
+                    "from coordinator snapshot"
+                )
+
+            job = ClaimedJob(
+                id=int(row["id"]),
+                case_id=int(
+                    row["case_id"]
+                ),
+                job_type=str(
+                    row["job_type"]
+                ),
+                priority=int(
+                    row.get("priority")
+                    or 0
+                ),
+                attempts=int(
+                    row.get("attempts")
+                    or 0
+                ),
+            )
+
+            run_scanner_job(
+                local_db,
+                settings,
+                job,
+            )
+
+            result = export_result(
+                local_db,
+                job_id,
+                case_id,
+                job_type,
+            )
+
+        except Exception:
+            result = {
+                "job_id": job_id,
+                "case_id": case_id,
+                "job_type": job_type,
+                "scanner_names": list(
+                    JOB_SCANNERS.get(
+                        job_type,
+                        (),
+                    )
+                ),
+                "status": "error",
+                "last_error": traceback.format_exc()[
+                    -10000:
+                ],
+                "runs": [],
+                "findings": [],
+            }
+
+        spool.publish_result(
+            claim,
+            result,
+        )
+
+        processed += 1
+
+        print(
+            f"worker={worker_id} "
+            f"job={job_id} "
+            f"type={job_type} "
+            f"status={result['status']} "
+            f"processed={processed}",
+            flush=True,
+        )
+
+    spool.heartbeat(
+        "codeql_security",
+        worker_id,
+        state="stopped",
+        detail=f"Processed {processed}",
+    )
+
+    print(
+        f"worker={worker_id} "
+        f"finished processed={processed}",
+        flush=True,
+    )
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+
+    subparsers = parser.add_subparsers(
+        dest="mode",
+        required=True,
+    )
+
+    coordinator_parser = (
+        subparsers.add_parser(
+            "coordinator"
+        )
+    )
+
+    coordinator_parser.add_argument(
+        "--once",
+        action="store_true",
+    )
+
+    coordinator_parser.add_argument(
+        "--interval",
+        type=int,
+        default=10,
+    )
+
+    worker_parser = (
+        subparsers.add_parser(
+            "worker"
+        )
+    )
+
+    worker_parser.add_argument(
+        "--idle-rounds",
+        type=int,
+        default=12,
+    )
+
+    worker_parser.add_argument(
+        "--idle-seconds",
+        type=int,
+        default=10,
+    )
+
+    args = parser.parse_args()
+
+    if args.mode == "coordinator":
+        coordinator(
+            args.once,
+            args.interval,
+        )
+    else:
+        worker(
+            args.idle_rounds,
+            args.idle_seconds,
+        )
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,13 @@
+---
+sourceLocationPrefix: /home-mscluster/astrauss/research_artifacts/T1_VALIDATE30_BIGBATCH_v1/_work/snapshots/R4/base
+baselineLinesOfCode: 19853
+unicodeNewlines: true
+columnKind: utf16
+primaryLanguage: javascript
+creationMetadata:
+  sha: 43a63372b24961e2345b6e491952e56164b3322a
+  cliVersion: 2.25.6
+  creationTime: 2026-09-20T21:27:52.542382436Z
+overlayBaseDatabase: false
+overlayDatabase: false
+finalised: true

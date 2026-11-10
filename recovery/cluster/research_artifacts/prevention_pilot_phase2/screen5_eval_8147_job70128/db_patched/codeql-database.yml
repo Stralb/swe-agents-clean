@@ -1,0 +1,13 @@
+---
+sourceLocationPrefix: /tmp/screen5_8147_5gbewmrp/TREATED
+baselineLinesOfCode: 20549
+unicodeNewlines: true
+columnKind: utf16
+primaryLanguage: javascript
+creationMetadata:
+  cliVersion: 2.25.6
+  creationTime: 2026-10-17T19:40:43.983643752Z
+buildMode: none
+overlayBaseDatabase: false
+overlayDatabase: false
+finalised: true

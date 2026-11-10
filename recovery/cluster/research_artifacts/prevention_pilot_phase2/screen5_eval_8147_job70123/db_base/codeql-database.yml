@@ -1,0 +1,46 @@
+---
+sourceLocationPrefix: /tmp/screen5_8147_pnapf7ft/REPO
+baselineLinesOfCode: 20477
+unicodeNewlines: true
+columnKind: utf16
+primaryLanguage: javascript
+inProgress:
+  primaryLanguage: javascript
+  installedExtractors:
+    swift:
+     - /home-mscluster/astrauss/tools/codeql/swift
+    rust:
+     - /home-mscluster/astrauss/tools/codeql/rust
+    ruby:
+     - /home-mscluster/astrauss/tools/codeql/ruby
+    python:
+     - /home-mscluster/astrauss/tools/codeql/python
+    yaml:
+     - /home-mscluster/astrauss/tools/codeql/yaml
+    javascript:
+     - /home-mscluster/astrauss/tools/codeql/javascript
+    xml:
+     - /home-mscluster/astrauss/tools/codeql/xml
+    java:
+     - /home-mscluster/astrauss/tools/codeql/java
+    properties:
+     - /home-mscluster/astrauss/tools/codeql/properties
+    go:
+     - /home-mscluster/astrauss/tools/codeql/go
+    html:
+     - /home-mscluster/astrauss/tools/codeql/html
+    csv:
+     - /home-mscluster/astrauss/tools/codeql/csv
+    csharp:
+     - /home-mscluster/astrauss/tools/codeql/csharp
+    cpp:
+     - /home-mscluster/astrauss/tools/codeql/cpp
+    actions:
+     - /home-mscluster/astrauss/tools/codeql/actions
+creationMetadata:
+  cliVersion: 2.25.6
+  creationTime: 2026-10-17T19:37:21.679280383Z
+buildMode: none
+overlayBaseDatabase: false
+overlayDatabase: false
+finalised: false

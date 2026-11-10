@@ -1,0 +1,13 @@
+---
+sourceLocationPrefix: /tmp/caseeval_p1h6jmyb/REPO
+baselineLinesOfCode: 20551
+unicodeNewlines: true
+columnKind: utf16
+primaryLanguage: javascript
+creationMetadata:
+  cliVersion: 2.25.6
+  creationTime: 2026-10-17T21:18:35.910025796Z
+buildMode: none
+overlayBaseDatabase: false
+overlayDatabase: false
+finalised: true

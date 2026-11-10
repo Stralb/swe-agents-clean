@@ -1,0 +1,1752 @@
+from __future__ import annotations
+
+import html
+import json
+import math
+from pathlib import Path
+from typing import Any
+
+import streamlit as st
+
+from src.db.database import Database
+from src.pipeline.case_exporter import (
+    selected_evidence_zip,
+)
+from ui.views.insight_data import (
+    SCANNER_LABELS,
+    fetch_case_page,
+    filter_options,
+    load_live_overview,
+)
+from ui.views.research_coverage import (
+    load_research_coverage,
+)
+from ui.views.research_insights import (
+    render_research_map,
+)
+import sqlite3
+
+
+PAGE_SIZE = 40
+
+POOL_LABELS = {
+    "mining": "Mining",
+    "cheap_analysis": "Cheap",
+    "codeql_security": "CodeQL",
+}
+
+
+
+
+def _current_codeql_error_count(
+    db_path: str,
+) -> int:
+    """Count only current terminal CodeQL job errors."""
+
+    connection = sqlite3.connect(
+        f"file:{db_path}?mode=ro",
+        uri=True,
+        timeout=10,
+    )
+
+    try:
+        row = connection.execute(
+            """
+            SELECT
+                COUNT(*)
+            FROM scanner_jobs
+            WHERE job_type='codeql_security'
+              AND LOWER(
+                    COALESCE(
+                        status,
+                        ''
+                    )
+                  ) IN (
+                    'error',
+                    'failed',
+                    'failure',
+                    'timeout',
+                    'timed_out',
+                    'blocked',
+                    'crashed'
+                  )
+            """
+        ).fetchone()
+
+        return int(
+            row[0]
+            or 0
+        )
+
+    finally:
+        connection.close()
+
+
+def _apply_current_codeql_error_count(
+    payload: object,
+    error_count: int,
+) -> int:
+    """Update CodeQL error counters in an Overview payload."""
+
+    applied = 0
+    visited: set[int] = set()
+
+    def visit(
+        value: object,
+        key_hint: str = "",
+    ) -> None:
+        nonlocal applied
+
+        identity = id(
+            value
+        )
+
+        if identity in visited:
+            return
+
+        if isinstance(
+            value,
+            dict,
+        ):
+            visited.add(
+                identity
+            )
+
+            scanner = str(
+                value.get(
+                    "scanner",
+                    "",
+                )
+                or value.get(
+                    "key",
+                    "",
+                )
+                or key_hint
+                or ""
+            ).strip().lower().replace(
+                "_",
+                "-",
+            )
+
+            if (
+                scanner == "codeql"
+                and "errors" in value
+            ):
+                value["errors"] = int(
+                    error_count
+                )
+
+                applied += 1
+
+            for key, child in value.items():
+                visit(
+                    child,
+                    str(
+                        key
+                    ),
+                )
+
+        elif isinstance(
+            value,
+            list,
+        ):
+            visited.add(
+                identity
+            )
+
+            for child in value:
+                visit(
+                    child,
+                    key_hint,
+                )
+
+    visit(
+        payload
+    )
+
+    return applied
+def _styles() -> None:
+    st.markdown(
+        """
+<style>
+.mim-kpis {
+    display:grid;
+    grid-template-columns:repeat(5,minmax(130px,1fr));
+    gap:.7rem;
+    margin:.3rem 0 .8rem 0;
+}
+
+.mim-kpi {
+    border:1px solid #dbe3ef;
+    border-left:5px solid var(--accent);
+    border-radius:14px;
+    background:white;
+    padding:.72rem .82rem;
+    box-shadow:0 3px 12px rgba(15,23,42,.05);
+}
+
+.mim-kpi-label {
+    color:#64748b;
+    font-size:.7rem;
+    font-weight:850;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+}
+
+.mim-kpi-value {
+    color:#0f172a;
+    font-size:1.55rem;
+    font-weight:950;
+}
+
+.mim-pools {
+    display:grid;
+    grid-template-columns:repeat(3,minmax(170px,1fr));
+    gap:.7rem;
+}
+
+.mim-pool {
+    border:1px solid #dbe3ef;
+    border-top:4px solid var(--accent);
+    border-radius:13px;
+    background:white;
+    padding:.62rem .8rem;
+}
+
+.mim-pool-name {
+    color:#475569;
+    font-size:.72rem;
+    font-weight:850;
+    text-transform:uppercase;
+}
+
+.mim-pool-value {
+    color:#0f172a;
+    font-size:1.25rem;
+    font-weight:950;
+}
+
+.mim-pool-sub {
+    color:#64748b;
+    font-size:.7rem;
+    font-weight:700;
+}
+
+.mim-progress {
+    width:100%;
+    height:10px;
+    background:#e2e8f0;
+    border-radius:999px;
+    overflow:hidden;
+}
+
+.mim-progress > div {
+    height:100%;
+    width:var(--width);
+    background:var(--accent);
+    border-radius:999px;
+}
+
+.mim-progress-label {
+    display:flex;
+    justify-content:space-between;
+    color:#334155;
+    font-size:.76rem;
+    font-weight:800;
+    margin-bottom:.25rem;
+}
+
+.mim-section {
+    display:flex;
+    align-items:center;
+    gap:.4rem;
+    margin:1.15rem 0 .55rem;
+    color:#0f172a;
+    font-size:1.13rem;
+    font-weight:950;
+}
+
+.mim-info {
+    width:17px;
+    height:17px;
+    border-radius:50%;
+    display:inline-flex;
+    justify-content:center;
+    align-items:center;
+    background:#e2e8f0;
+    color:#475569;
+    font-size:.68rem;
+    cursor:help;
+}
+
+.mim-region {
+    display:inline-block;
+    border-radius:999px;
+    padding:.18rem .45rem;
+    background:#eff6ff;
+    color:#1d4ed8;
+    font-size:.68rem;
+    font-weight:800;
+}
+
+@media(max-width:1000px) {
+    .mim-kpis {
+        grid-template-columns:repeat(2,minmax(130px,1fr));
+    }
+
+    .mim-pools {
+        grid-template-columns:1fr;
+    }
+}
+</style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def _section(
+    title: str,
+    tooltip: str,
+) -> None:
+    st.markdown(
+        (
+            "<div class='mim-section'>"
+            f"{html.escape(title)}"
+            "<span class='mim-info' "
+            f"title='{html.escape(tooltip)}'>"
+            "i"
+            "</span>"
+            "</div>"
+        ),
+        unsafe_allow_html=True,
+    )
+
+
+def _read_runtime() -> dict[str, Any]:
+    path = (
+        Path(
+            "data/distributed_spool"
+        )
+        / "status"
+        / "autoscaler.json"
+    )
+
+    try:
+        value = json.loads(
+            path.read_text(
+                encoding="utf-8"
+            )
+        )
+
+        return (
+            value
+            if isinstance(
+                value,
+                dict,
+            )
+            else {}
+        )
+    except Exception:
+        return {}
+
+
+# BEGIN MINING SCOPE METRICS
+@st.cache_data(
+    ttl=20,
+    show_spinner=False,
+)
+def _mining_scope_summary(
+    db_path: str,
+    database_mtime_ns: int,
+) -> dict[str, object]:
+    del database_mtime_ns
+
+    project_root = (
+        Path(__file__)
+        .resolve()
+        .parents[2]
+    )
+
+    return load_research_coverage(
+        db_path,
+        (
+            project_root
+            / "data"
+            / "distributed_spool"
+        ),
+    )
+
+
+# END MINING SCOPE METRICS
+
+
+def _render_kpis(
+    summary: dict[str, object],
+) -> None:
+    _section(
+        "Research coverage",
+        (
+            "Cumulative identifiable candidate "
+            "coverage across the active database."
+        ),
+    )
+
+    reached = int(
+        summary.get(
+            "repositories_reached",
+            0,
+        )
+        or 0
+    )
+
+    candidate_repositories = int(
+        summary.get(
+            "candidate_repositories",
+            0,
+        )
+        or 0
+    )
+
+    completed_scans = int(
+        summary.get(
+            "completed_repository_scans",
+            0,
+        )
+        or 0
+    )
+
+    assessed = int(
+        summary.get(
+            "candidates_assessed",
+            0,
+        )
+        or 0
+    )
+
+    included = int(
+        summary.get(
+            "included_cases",
+            0,
+        )
+        or 0
+    )
+
+    excluded = int(
+        summary.get(
+            "excluded_candidates",
+            0,
+        )
+        or 0
+    )
+
+    incomplete = int(
+        summary.get(
+            "incomplete_exclusion_records",
+            0,
+        )
+        or 0
+    )
+
+    coverage_metrics = (
+        (
+            "Candidate repositories",
+            candidate_repositories,
+            (
+                f"{candidate_repositories:,} unique "
+                "repositories produced at least one "
+                "identifiable issue–PR candidate. "
+                f"The broader query and exclusion "
+                f"footprint reached {reached:,} unique "
+                "repositories, while {completed_scans:,} "
+                "repositories have a successful completed "
+                "repo-window scan. Repositories reached "
+                "does not imply that every repository "
+                "received a complete deep scan."
+            ),
+        ),
+        (
+            "Candidates assessed",
+            assessed,
+            (
+                f"{assessed:,} uniquely identifiable "
+                "issue–PR candidates were assessed. "
+                f"{included:,} were included and "
+                f"{excluded:,} were excluded. "
+                f"{incomplete:,} historical exclusion "
+                "audit rows lacked a complete repository, "
+                "issue and pull-request key and are omitted "
+                "from this deduplicated total."
+            ),
+        ),
+        (
+            "Included cases",
+            included,
+            (
+                f"{included:,} unique identifiable "
+                "candidates are retained in the "
+                "research dataset."
+            ),
+        ),
+        (
+            "Excluded candidates",
+            excluded,
+            (
+                f"{excluded:,} unique identifiable "
+                "candidates did not meet the inclusion "
+                "criteria. Candidates subsequently "
+                "included are not counted again here."
+            ),
+        ),
+    )
+
+    coverage_columns = st.columns(
+        4,
+        gap="small",
+    )
+
+    for column, metric in zip(
+        coverage_columns,
+        coverage_metrics,
+    ):
+        label, value, tooltip = metric
+
+        with column.container(
+            border=True
+        ):
+            st.metric(
+                label,
+                f"{value:,}",
+                help=tooltip,
+            )
+
+    batch_id = str(
+        summary.get(
+            "current_batch_id",
+            "",
+        )
+        or ""
+    )
+
+    published = int(
+        summary.get(
+            "current_batch_published_shards",
+            0,
+        )
+        or 0
+    )
+
+    total_shards = int(
+        summary.get(
+            "current_batch_total_shards",
+            0,
+        )
+        or 0
+    )
+
+    completed_repositories = int(
+        summary.get(
+            "current_batch_repositories_completed",
+            0,
+        )
+        or 0
+    )
+
+    _section(
+        "Current batch",
+        (
+            "Live operational progress, separate "
+            "from cumulative research coverage."
+        ),
+    )
+
+    with st.container(
+        border=True
+    ):
+        st.markdown(
+            (
+                "**"
+                + (
+                    batch_id
+                    if batch_id
+                    else "No active batch"
+                )
+                + "** · "
+                + f"{published:,}/"
+                + f"{total_shards:,} shards "
+                + "published · "
+                + f"{completed_repositories:,} "
+                + "repositories completed"
+            )
+        )
+
+        st.progress(
+            (
+                min(
+                    1.0,
+                    published / total_shards,
+                )
+                if total_shards
+                else 0.0
+            ),
+            text=(
+                f"{published:,} of "
+                f"{total_shards:,} shards"
+            ),
+        )
+
+    _section(
+        "Dataset signals",
+        (
+            "Review and introduced-evidence "
+            "status for retained cases."
+        ),
+    )
+
+    signal_metrics = (
+        (
+            "Needs review",
+            int(
+                summary.get(
+                    "needs_review",
+                    0,
+                )
+                or 0
+            ),
+            (
+                "Retained cases awaiting manual "
+                "review."
+            ),
+        ),
+        (
+            "Positive cases",
+            int(
+                summary.get(
+                    "positive_cases",
+                    0,
+                )
+                or 0
+            ),
+            (
+                "Cases containing introduced "
+                "downstream evidence."
+            ),
+        ),
+    )
+
+    signal_columns = st.columns(
+        2,
+        gap="small",
+    )
+
+    for column, metric in zip(
+        signal_columns,
+        signal_metrics,
+    ):
+        label, value, tooltip = metric
+
+        with column.container(
+            border=True
+        ):
+            st.metric(
+                label,
+                f"{value:,}",
+                help=tooltip,
+            )
+
+
+def _render_pools() -> None:
+    runtime = _read_runtime()
+
+    pools = runtime.get(
+        "pools",
+        {},
+    )
+
+    if not isinstance(
+        pools,
+        dict,
+    ):
+        pools = {}
+
+    cards = []
+
+    for pool in (
+        "mining",
+        "cheap_analysis",
+        "codeql_security",
+    ):
+        details = pools.get(
+            pool,
+            {},
+        )
+
+        if not isinstance(
+            details,
+            dict,
+        ):
+            details = {}
+
+        counts = details.get(
+            "counts",
+            {},
+        )
+
+        if not isinstance(
+            counts,
+            dict,
+        ):
+            counts = {}
+
+        active = int(
+            details.get(
+                "active_workers"
+            )
+            or 0
+        )
+
+        desired = int(
+            details.get(
+                "desired_workers"
+            )
+            or 0
+        )
+
+        queued = int(
+            counts.get("pending")
+            or 0
+        ) + int(
+            counts.get("claimed")
+            or 0
+        )
+
+        color = (
+            "#16a34a"
+            if active == desired
+            else "#d97706"
+        )
+
+        cards.append(
+            (
+                "<div class='mim-pool' "
+                f"style='--accent:{color}' "
+                f"title='{POOL_LABELS[pool]}: "
+                f"{active} active, "
+                f"{desired} desired, "
+                f"{queued} queued'>"
+                "<div class='mim-pool-name'>"
+                f"{POOL_LABELS[pool]}"
+                "</div>"
+                "<div class='mim-pool-value'>"
+                f"{active}/{desired}"
+                "</div>"
+                "<div class='mim-pool-sub'>"
+                f"{queued} queued"
+                "</div>"
+                "</div>"
+            )
+        )
+
+    st.markdown(
+        (
+            "<div class='mim-pools'>"
+            + "".join(cards)
+            + "</div>"
+        ),
+        unsafe_allow_html=True,
+    )
+
+
+def _progress_html(
+    *,
+    label: str,
+    terminal: int,
+    eligible: int,
+    color: str,
+    tooltip: str,
+) -> str:
+    percentage = (
+        terminal
+        / eligible
+        * 100
+        if eligible
+        else 0.0
+    )
+
+    return (
+        "<div "
+        f"title='{html.escape(tooltip)}'>"
+        "<div class='mim-progress-label'>"
+        f"<span>{html.escape(label)}</span>"
+        f"<span>{terminal}/{eligible}"
+        f" · {percentage:.1f}%</span>"
+        "</div>"
+        "<div class='mim-progress' "
+        f"style='--accent:{color}'>"
+        "<div "
+        f"style='--width:{percentage:.3f}%'>"
+        "</div>"
+        "</div>"
+        "</div>"
+    )
+
+
+def _open_scanner(
+    scanner: str,
+) -> None:
+    st.session_state[
+        "selected_scanner"
+    ] = scanner
+
+    st.session_state["nav"] = (
+        "Scanner Insights"
+    )
+
+    st.rerun()
+
+
+def _render_scanners(
+    payload: dict[str, Any],
+) -> None:
+    cheap = payload["cheap"]
+
+    st.markdown(
+        _progress_html(
+            label=(
+                "Cheap scanner aggregate"
+            ),
+            terminal=int(
+                cheap["terminal"]
+            ),
+            eligible=int(
+                cheap["eligible"]
+            ),
+            color="#2563eb",
+            tooltip=(
+                "A case is complete when every "
+                "cheap scanner routed to that case "
+                "has a terminal latest result."
+            ),
+        ),
+        unsafe_allow_html=True,
+    )
+
+    scanner_rows = {
+        row["scanner"]: row
+        for row in payload["scanners"]
+    }
+
+    for scanner in (
+        "gitleaks",
+        "dependency-diff",
+        "osv-scanner",
+        "semgrep",
+        "trivy",
+    ):
+        row = scanner_rows.get(
+            scanner
+        )
+
+        if not row:
+            continue
+
+        if (
+            int(row["eligible"]) == 0
+            and int(row["findings"]) == 0
+        ):
+            continue
+
+        columns = st.columns(
+            [
+                1.2,
+                4.6,
+                1,
+                1,
+            ]
+        )
+
+        if columns[0].button(
+            row["label"],
+            key=(
+                "overview-scanner-"
+                + scanner
+            ),
+            width="stretch",
+            help=(
+                "Open scanner-specific findings, "
+                "regions, rules, repositories and "
+                "matching cases."
+            ),
+        ):
+            _open_scanner(scanner)
+
+        percentage = (
+            int(row["terminal"])
+            / int(row["eligible"])
+            * 100
+            if int(
+                row["eligible"]
+            )
+            else 0.0
+        )
+
+        columns[1].progress(
+            min(
+                1.0,
+                max(
+                    0.0,
+                    percentage / 100,
+                ),
+            ),
+            text=(
+                f"{row['terminal']}/"
+                f"{row['eligible']} eligible"
+            ),
+        )
+
+        columns[2].metric(
+            "Findings",
+            row["findings"],
+            help=(
+                "Stored findings produced by "
+                "this scanner."
+            ),
+        )
+
+        columns[3].metric(
+            "Errors",
+            row["errors"],
+            help=(
+                "Eligible cases whose latest "
+                "run ended in an error state."
+            ),
+        )
+
+    codeql = scanner_rows.get(
+        "codeql",
+        {
+            "eligible": 0,
+            "terminal": 0,
+            "findings": 0,
+            "errors": 0,
+            "label": "CodeQL",
+        },
+    )
+
+    st.markdown(
+        _progress_html(
+            label="CodeQL aggregate",
+            terminal=int(
+                codeql["terminal"]
+            ),
+            eligible=int(
+                codeql["eligible"]
+            ),
+            color="#7c3aed",
+            tooltip=(
+                "Terminal CodeQL results divided "
+                "by cases routed or submitted to "
+                "CodeQL."
+            ),
+        ),
+        unsafe_allow_html=True,
+    )
+
+    button_columns = st.columns(
+        [
+            1.2,
+            4.6,
+            1,
+            1,
+        ]
+    )
+
+    if button_columns[0].button(
+        "CodeQL",
+        key="overview-scanner-codeql",
+        width="stretch",
+        help=(
+            "Open CodeQL rules, CWE data, "
+            "regions, repositories and cases."
+        ),
+    ):
+        _open_scanner(
+            "codeql"
+        )
+
+    button_columns[1].progress(
+        (
+            int(codeql["terminal"])
+            / int(codeql["eligible"])
+            if int(
+                codeql["eligible"]
+            )
+            else 0.0
+        ),
+        text=(
+            f"{codeql['terminal']}/"
+            f"{codeql['eligible']} eligible"
+        ),
+    )
+
+    button_columns[2].metric(
+        "Findings",
+        codeql["findings"],
+    )
+
+    button_columns[3].metric(
+        "Errors",
+        codeql["errors"],
+    )
+
+
+def _live_status(
+    db_path: str,
+) -> None:
+    payload = load_live_overview(
+        db_path
+    )
+
+    _apply_current_codeql_error_count(
+        payload,
+        _current_codeql_error_count(
+            db_path,
+        ),
+    )
+
+    database_path = Path(
+        db_path
+    )
+
+    payload["summary"].update(
+        _mining_scope_summary(
+            db_path,
+            database_path.stat().st_mtime_ns,
+        )
+    )
+
+    _render_kpis(
+        payload["summary"]
+    )
+
+    _section(
+        "Worker pools",
+        (
+            "Compact active/desired worker "
+            "counts. Configuration remains on "
+            "the Runtime page."
+        ),
+    )
+
+    _render_pools()
+
+    _section(
+        "Scanner coverage",
+        (
+            "Coverage uses eligible routed "
+            "cases, not every case in the "
+            "database."
+        ),
+    )
+
+    _render_scanners(
+        payload
+    )
+
+
+_VOLATILE_OVERVIEW_KEYS = (
+    "time",
+    "timestamp",
+    "updated",
+    "mtime",
+    "elapsed",
+    "duration",
+    "age",
+    "seconds",
+    "started",
+    "finished",
+    "heartbeat",
+    "generated",
+)
+
+
+def _stable_overview_signature(
+    value: Any,
+    *,
+    key: str = "",
+) -> Any:
+    normalized_key = key.lower()
+
+    if any(
+        token in normalized_key
+        for token in _VOLATILE_OVERVIEW_KEYS
+    ):
+        return None
+
+    if (
+        value is None
+        or isinstance(
+            value,
+            (
+                bool,
+                int,
+                float,
+                str,
+            ),
+        )
+    ):
+        return value
+
+    if isinstance(
+        value,
+        dict,
+    ):
+        items = []
+
+        for child_key in sorted(
+            value,
+            key=lambda item: str(item),
+        ):
+            frozen = _stable_overview_signature(
+                value[child_key],
+                key=str(child_key),
+            )
+
+            if frozen is not None:
+                items.append(
+                    (
+                        str(child_key),
+                        frozen,
+                    )
+                )
+
+        return tuple(items)
+
+    if isinstance(
+        value,
+        set,
+    ):
+        values = sorted(
+            value,
+            key=repr,
+        )
+    elif isinstance(
+        value,
+        (
+            list,
+            tuple,
+        ),
+    ):
+        values = value
+    else:
+        return str(value)
+
+    frozen_values = []
+
+    for item in values:
+        frozen = _stable_overview_signature(
+            item
+        )
+
+        if frozen is not None:
+            frozen_values.append(
+                frozen
+            )
+
+    return tuple(
+        frozen_values
+    )
+
+
+def _overview_status_signature(
+    db_path: str,
+) -> Any:
+    payload = load_live_overview(
+        db_path
+    )
+
+    return _stable_overview_signature(
+        payload
+    )
+
+
+def _live_status_fragment(
+    db_path: str,
+) -> None:
+    _live_status(
+        db_path
+    )
+
+
+def _research_fragment(
+    db_path: str,
+) -> None:
+    render_research_map(
+        db_path
+    )
+
+
+if hasattr(st, "fragment"):
+    @st.fragment(
+        run_every="3s"
+    )
+    def _status_change_watcher(
+        db_path: str,
+    ) -> None:
+        load_live_overview.clear()
+
+        current = (
+            _overview_status_signature(
+                db_path
+            )
+        )
+
+        state_key = (
+            "overview_background_signature"
+        )
+
+        previous = st.session_state.get(
+            state_key
+        )
+
+        if previous is None:
+            st.session_state[
+                state_key
+            ] = current
+
+            return
+
+        if current == previous:
+            return
+
+        st.session_state[
+            state_key
+        ] = current
+
+        st.rerun()
+else:
+    def _status_change_watcher(
+        db_path: str,
+    ) -> None:
+        return
+
+
+def _selected_ids() -> set[int]:
+    return {
+        int(value)
+        for value in st.session_state.get(
+            "overview_selected_case_ids",
+            [],
+        )
+    }
+
+
+def _store_selected(
+    values: set[int],
+) -> None:
+    st.session_state[
+        "overview_selected_case_ids"
+    ] = sorted(values)
+
+
+def _open_case(
+    case_id: int,
+    queue: list[int],
+) -> None:
+    st.session_state[
+        "selected_case_id"
+    ] = int(case_id)
+
+    st.session_state[
+        "review_queue_ids"
+    ] = [
+        int(value)
+        for value in queue
+    ]
+
+    st.session_state["nav"] = (
+        "Case Review"
+    )
+
+    st.rerun()
+
+
+def _case_fragment(
+    *,
+    db_path: str,
+    search: str,
+    stage: str,
+    region: str,
+    repository: str,
+    sort: str,
+) -> None:
+    page = max(
+        1,
+        int(
+            st.session_state.get(
+                "overview_page",
+                1,
+            )
+        ),
+    )
+
+    total, rows = fetch_case_page(
+        db_path,
+        search=search,
+        stage=stage,
+        region=region,
+        repository=repository,
+        sort=sort,
+        page=page,
+        page_size=PAGE_SIZE,
+    )
+
+    total_pages = max(
+        1,
+        math.ceil(
+            total / PAGE_SIZE
+        ),
+    )
+
+    page = min(
+        page,
+        total_pages,
+    )
+
+    st.session_state[
+        "overview_page"
+    ] = page
+
+    visible_ids = [
+        int(row["case_id"])
+        for row in rows
+    ]
+
+    selected = _selected_ids()
+
+    toolbar = st.columns(
+        [
+            1.1,
+            1.1,
+            1.25,
+            1.35,
+            2.4,
+        ]
+    )
+
+    if toolbar[0].button(
+        "Select visible",
+        key="overview-select-visible",
+    ):
+        selected.update(
+            visible_ids
+        )
+
+        _store_selected(
+            selected
+        )
+
+        st.rerun()
+
+    if toolbar[1].button(
+        "Clear",
+        key="overview-clear-selection",
+    ):
+        selected.clear()
+
+        _store_selected(
+            selected
+        )
+
+        st.session_state.pop(
+            "overview_prepared_zip",
+            None,
+        )
+
+        st.rerun()
+
+    if toolbar[2].button(
+        "Review selected",
+        disabled=not selected,
+        key="overview-review-selected",
+    ):
+        queue = sorted(
+            selected
+        )
+
+        _open_case(
+            queue[0],
+            queue,
+        )
+
+    if toolbar[3].button(
+        "Prepare ZIP",
+        disabled=not selected,
+        key="overview-prepare-zip",
+        help=(
+            "Generate evidence only when "
+            "pressed. It is not rebuilt during "
+            "auto-refresh."
+        ),
+    ):
+        st.session_state[
+            "overview_prepared_zip"
+        ] = selected_evidence_zip(
+            Database(
+                Path(db_path)
+            ),
+            sorted(selected),
+        )
+
+    prepared = st.session_state.get(
+        "overview_prepared_zip"
+    )
+
+    if prepared is not None:
+        toolbar[4].download_button(
+            "Download selected evidence",
+            data=prepared,
+            file_name=(
+                "selected_cases_evidence.zip"
+            ),
+            mime="application/zip",
+            width="stretch",
+            key="overview-download-zip",
+        )
+    else:
+        toolbar[4].markdown(
+            f"**{len(selected)} selected**"
+        )
+
+    start = (
+        (page - 1)
+        * PAGE_SIZE
+        + 1
+        if total
+        else 0
+    )
+
+    end = min(
+        total,
+        page * PAGE_SIZE,
+    )
+
+    st.caption(
+        f"{start}–{end} of {total}"
+    )
+
+    for row in rows:
+        case_id = int(
+            row["case_id"]
+        )
+
+        columns = st.columns(
+            [
+                0.42,
+                0.6,
+                1.65,
+                4.15,
+                1.7,
+                1.15,
+                0.9,
+            ]
+        )
+
+        checked = columns[0].checkbox(
+            "Select",
+            value=(
+                case_id in selected
+            ),
+            key=(
+                "overview-case-select-"
+                f"{case_id}"
+            ),
+            label_visibility="collapsed",
+        )
+
+        if checked:
+            selected.add(case_id)
+        else:
+            selected.discard(
+                case_id
+            )
+
+        columns[1].markdown(
+            f"**#{case_id}**"
+        )
+
+        columns[2].write(
+            str(
+                row.get("repository")
+                or ""
+            )
+        )
+
+        columns[3].write(
+            str(
+                row.get("issue_title")
+                or ""
+            )
+        )
+
+        region_text = str(
+            row.get("regions")
+            or "Unknown"
+        )
+
+        columns[4].markdown(
+            (
+                "<span class='mim-region' "
+                "title='Persisted multi-label "
+                "artifact regions'>"
+                f"{html.escape(region_text)}"
+                "</span>"
+            ),
+            unsafe_allow_html=True,
+        )
+
+
+        columns[5].metric(
+            "Introduced findings",
+            int(
+                row.get(
+                    "introduced_count"
+                )
+                or 0
+            ),
+            help=(
+                "Findings present in head but "
+                "not in base."
+            ),
+        )
+
+        if columns[6].button(
+            "Inspect",
+            key=(
+                "overview-inspect-"
+                f"{case_id}"
+            ),
+            width="stretch",
+        ):
+            _open_case(
+                case_id,
+                visible_ids,
+            )
+
+    _store_selected(
+        selected
+    )
+
+    previous, centre, next_page = (
+        st.columns(
+            [
+                1,
+                3,
+                1,
+            ]
+        )
+    )
+
+    if previous.button(
+        "Previous",
+        disabled=(
+            page <= 1
+        ),
+        key="overview-previous",
+        width="stretch",
+    ):
+        st.session_state[
+            "overview_page"
+        ] = page - 1
+
+        st.rerun()
+
+    centre.markdown(
+        (
+            "<div style='text-align:center;"
+            "padding-top:.45rem'>"
+            f"<strong>Page {page} of "
+            f"{total_pages}</strong>"
+            "</div>"
+        ),
+        unsafe_allow_html=True,
+    )
+
+    if next_page.button(
+        "Next",
+        disabled=(
+            page >= total_pages
+        ),
+        key="overview-next",
+        width="stretch",
+    ):
+        st.session_state[
+            "overview_page"
+        ] = page + 1
+
+        st.rerun()
+
+
+_live_cases_fragment = (
+    _case_fragment
+)
+
+
+def render_overview_fast(
+    settings: Any,
+) -> None:
+    _styles()
+
+    _, runtime = st.columns(
+        [
+            5,
+            1,
+        ]
+    )
+
+    if runtime.button(
+        "Runtime",
+        width="stretch",
+        help=(
+            "Open scheduling mode, pool "
+            "toggles and thresholds."
+        ),
+    ):
+        st.session_state["nav"] = (
+            "Runtime"
+        )
+
+        st.rerun()
+
+    db_path = str(
+        settings.db_path
+    )
+
+    _live_status_fragment(
+        db_path
+    )
+
+    _status_change_watcher(
+        db_path
+    )
+
+    _section(
+        "Evidence yield map",
+        (
+            "Maps AI indicators, file facts, "
+            "path rules, regions and scanner "
+            "routes against eligible coverage "
+            "and downstream-positive yield."
+        ),
+    )
+
+    _research_fragment(
+        db_path
+    )
+
+    _section(
+        "Cases",
+        (
+            "Only forty lightweight records "
+            "are loaded. Full evidence opens "
+            "on the separate Case Review page."
+        ),
+    )
+
+    options = filter_options(
+        db_path
+    )
+
+    first_row = st.columns(
+        [
+            4,
+            1.25,
+        ]
+    )
+
+    search = first_row[0].text_input(
+        "Search",
+        placeholder=(
+            "Case ID, repository or issue title"
+        ),
+        key="overview_search",
+    )
+
+    sort = first_row[1].selectbox(
+        "Sort",
+        [
+            "Priority",
+            "Newest",
+            "Oldest",
+            "Repository",
+            "Case ID",
+        ],
+        key="overview_sort",
+    )
+
+    filters = st.columns(3)
+
+    stage = filters[0].selectbox(
+        "Case set",
+        [
+            "All",
+            "Needs review",
+            "Positive evidence",
+            "Reviewed",
+            "Problems",
+            "In progress",
+        ],
+        key="overview_stage",
+    )
+
+    region = filters[1].selectbox(
+        "Region",
+        [
+            "All",
+            *options["regions"],
+        ],
+        key="overview_region",
+    )
+
+    repository = filters[2].selectbox(
+        "Repository",
+        [
+            "All",
+            *options[
+                "repositories"
+            ],
+        ],
+        key="overview_repository",
+    )
+
+    signature = repr(
+        (
+            search,
+            stage,
+            region,
+            repository,
+            sort,
+        )
+    )
+
+    if (
+        st.session_state.get(
+            "overview_filter_signature"
+        )
+        != signature
+    ):
+        st.session_state[
+            "overview_filter_signature"
+        ] = signature
+
+        st.session_state[
+            "overview_page"
+        ] = 1
+
+    _live_cases_fragment(
+        db_path=db_path,
+        search=search,
+        stage=stage,
+        region=region,
+        repository=repository,
+        sort=sort,
+    )

@@ -1,0 +1,13 @@
+---
+sourceLocationPrefix: /home-mscluster/astrauss/research_artifacts/prevention_pilot_phase2/seven_case_scans_20261020/22223/scratch/seven_22223_11299/before/REPO
+baselineLinesOfCode: 68229
+unicodeNewlines: true
+columnKind: utf16
+primaryLanguage: javascript
+creationMetadata:
+  cliVersion: 2.25.6
+  creationTime: 2026-10-20T04:44:44.064009494Z
+buildMode: none
+overlayBaseDatabase: false
+overlayDatabase: false
+finalised: true
