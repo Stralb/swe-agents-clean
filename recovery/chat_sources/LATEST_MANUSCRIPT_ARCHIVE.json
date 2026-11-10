@@ -1,0 +1,7 @@
+{
+  "name": "Arno_A24_FINAL_FIGURES_SOURCE_2026-11-09.zip",
+  "bytes": 4843195,
+  "sha256": "403ae9749ed085d7ad6bb456f9b3e8707fd39ff7b974a7554a1ec1ae6bf111fc",
+  "git_blob_sha": "2690a5c9ed9d0c4c817059a5d5db1d36b64d13a3",
+  "note": "Exact original ZIP, including figure assets, supplementary LaTeX, reproducibility notes and build instructions. Latest separately uploaded main (3).tex is preserved among the hash-keyed source files; this older ZIP was not silently overwritten."
+}

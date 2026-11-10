@@ -1,0 +1,24 @@
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  font=\small,>={Latex[length=2.4mm]},
+  base/.style={draw=black!65,fill=black!4,rounded corners=2pt,align=center,inner xsep=8pt,inner ysep=6pt},
+  wide/.style={base,text width=11.6cm},
+  panel/.style={base,text width=5.1cm,minimum height=1.5cm},
+  link/.style={->,line width=.9pt,draw=black!70},
+  weak/.style={->,dashed,line width=.9pt,draw=black!70}]
+  \node[wide] (cohort) {\textbf{3,809 selected issue--PR instances}\\ Merged PRs, linked issues and public coding-agent indicators};
+  \node[wide,below=8mm of cohort] (checks) {\textbf{Security checks}\\ 192 with recorded introduced findings under completed applicable checks};
+  \node[panel,anchor=north] (rq1) at ($(checks.south)+(-3.1cm,-1.5cm)$) {\textbf{RQ1 --- Changes and context}\\ Trace findings to changed operations\\ 122 annotated first, 70 later\\ 455 operations, 342 choices};
+  \node[panel,anchor=north] (rq2) at ($(checks.south)+(3.1cm,-1.5cm)$) {\textbf{RQ2 --- Matched comparison}\\ 190 matched instance pairs\\ Issue wording and PR metadata};
+  \node[wide,anchor=north] (rq3) at ($(rq1.south)!0.5!(rq2.south)+(0,-1.7cm)$) {\textbf{RQ3 --- Exploratory replays}\\ Selected historical tasks with additional context or warning-derived guidance};
+  \draw[link] (cohort) -- (checks);
+  \draw[line width=.9pt,draw=black!70] (checks.south) -- ++(0,-6mm) coordinate (fork);
+  \draw[link] (fork) -| (rq1.north);
+  \draw[link] (fork) -| (rq2.north);
+  \draw[weak] (rq1.south) -- (rq1.south |- rq3.north);
+\end{tikzpicture}
+\caption{Study overview showing the sampled population, the RQ1 attribution, the RQ2 matched comparison and the RQ3 replays. The dashed arrow shows that the replay tasks come from historical instances with CodeQL findings; RQ3 does not use the RQ2 pairs.}
+\Description{The corpus branches into a mapping analysis of finding-positive instances and a matched issue comparison. Selected historical tasks enter a separate replay study.}
+\label{fig:overview}
+\end{figure}
