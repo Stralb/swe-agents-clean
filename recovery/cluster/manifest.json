@@ -23084,218 +23084,289 @@
       "sha256": "c1741730220abf753265246a82758ad0a0f70b8b1cd66504e08d67e87b849257"
     }
   ],
-  "quarantined": [
+  "quarantined": [],
+  "errors": [],
+  "policy": "Original bytes preserved; obvious embedded credentials excluded; all originals untouched.",
+  "redacted_sources": [
     {
       "path": "recovery/cluster/research_artifacts/mcp_uploads/jobs/15686_origin_probe_20261017_v1/run.sbatch",
       "source": "/home-mscluster/astrauss/research_artifacts/mcp_uploads/jobs/15686_origin_probe_20261017_v1/run.sbatch",
       "bytes": 2057,
-      "sha256": "58adf82d2cee306a89ff6d55b19b0e1e1573dd711db09a8e18a55f2cd7f4709e"
+      "source_sha256": "58adf82d2cee306a89ff6d55b19b0e1e1573dd711db09a8e18a55f2cd7f4709e",
+      "published_sha256": "b7b4d75768f8f0b15327e49febb9775e6e2bde0ac63cc21bf2e8ef558299f003",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/mcp_uploads/jobs/focus5_20261018_v3/acceptance.py",
       "source": "/home-mscluster/astrauss/research_artifacts/mcp_uploads/jobs/focus5_20261018_v3/acceptance.py",
       "bytes": 7020,
-      "sha256": "a85fa36aa5f5b330335d0a58b1876f46df6bd689993fde251f81902fc03c5348"
+      "source_sha256": "a85fa36aa5f5b330335d0a58b1876f46df6bd689993fde251f81902fc03c5348",
+      "published_sha256": "6f79529f26d2137bce88d6ef57d46ea4417bd328542dcbd7c840b091aa4828cd",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/mcp_uploads/jobs/focus5_20261018_v6/acceptance_v2.py",
       "source": "/home-mscluster/astrauss/research_artifacts/mcp_uploads/jobs/focus5_20261018_v6/acceptance_v2.py",
       "bytes": 9082,
-      "sha256": "6606e9143f74a547f5ae466555bfffe01234cb1e07a0f20ae0f48796d1f1e15e"
+      "source_sha256": "6606e9143f74a547f5ae466555bfffe01234cb1e07a0f20ae0f48796d1f1e15e",
+      "published_sha256": "259ee24bc72726b0d3bccea97a733dc7aca407578e1de07126f4ae8598bdfe1d",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/mcp_uploads/jobs/arc3_public_rl_survey_20261026/source_archive/ravikaash__qor-arc-agi-3-agent/qor-arc-agi-3-agent.py",
       "source": "/home-mscluster/astrauss/research_artifacts/mcp_uploads/jobs/arc3_public_rl_survey_20261026/source_archive/ravikaash__qor-arc-agi-3-agent/qor-arc-agi-3-agent.py",
       "bytes": 5354,
-      "sha256": "9bd227dd68cad6259864c40c94aa86be119508a406cbd46b89564b095048c5c8"
+      "source_sha256": "9bd227dd68cad6259864c40c94aa86be119508a406cbd46b89564b095048c5c8",
+      "published_sha256": "05f0a61a25e5e180b05746af51c72ea02b7ea18d0738bc992fae856142c0fca3",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/real122_attack_audit_evidence_qc_real122-attack-audit-evidence-v1.1-cluster_20260820T200541Z/cases/166/git_evidence/base_files/.github/workflows/turbo.yml",
       "source": "/home-mscluster/astrauss/research_artifacts/real122_attack_audit_evidence_qc_real122-attack-audit-evidence-v1.1-cluster_20260820T200541Z/cases/166/git_evidence/base_files/.github/workflows/turbo.yml",
       "bytes": 6909,
-      "sha256": "731005ec2985d2178715625e01cb70c7c772ce879b77c0bfe2b6ad867910b25a"
+      "source_sha256": "731005ec2985d2178715625e01cb70c7c772ce879b77c0bfe2b6ad867910b25a",
+      "published_sha256": "0bc0fb2cf74122eba7d88e2f5732a2ff2ccd08839a33ac215d2218250aaee139",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/real122_attack_audit_evidence_qc_real122-attack-audit-evidence-v1.1-cluster_20260820T200541Z/cases/166/git_evidence/head_files/.github/workflows/turbo.yml",
       "source": "/home-mscluster/astrauss/research_artifacts/real122_attack_audit_evidence_qc_real122-attack-audit-evidence-v1.1-cluster_20260820T200541Z/cases/166/git_evidence/head_files/.github/workflows/turbo.yml",
       "bytes": 7105,
-      "sha256": "9375628b04d532fd5bb1fe9fdf4ebd1f4e55df08923884003f48bae6a4e79437"
+      "source_sha256": "9375628b04d532fd5bb1fe9fdf4ebd1f4e55df08923884003f48bae6a4e79437",
+      "published_sha256": "27c51caaa32bcba01834bfb1a6c55552c8cd2ec3d6160a2621a14f9c5d41f993",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/f1f5_qc_RECOVERED_completed/cases/166/git_evidence/base_files/.github/workflows/turbo.yml",
       "source": "/home-mscluster/astrauss/research_artifacts/f1f5_qc_RECOVERED_completed/cases/166/git_evidence/base_files/.github/workflows/turbo.yml",
       "bytes": 6909,
-      "sha256": "731005ec2985d2178715625e01cb70c7c772ce879b77c0bfe2b6ad867910b25a"
+      "source_sha256": "731005ec2985d2178715625e01cb70c7c772ce879b77c0bfe2b6ad867910b25a",
+      "published_sha256": "0bc0fb2cf74122eba7d88e2f5732a2ff2ccd08839a33ac215d2218250aaee139",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/f1f5_qc_RECOVERED_completed/cases/166/git_evidence/head_files/.github/workflows/turbo.yml",
       "source": "/home-mscluster/astrauss/research_artifacts/f1f5_qc_RECOVERED_completed/cases/166/git_evidence/head_files/.github/workflows/turbo.yml",
       "bytes": 7105,
-      "sha256": "9375628b04d532fd5bb1fe9fdf4ebd1f4e55df08923884003f48bae6a4e79437"
+      "source_sha256": "9375628b04d532fd5bb1fe9fdf4ebd1f4e55df08923884003f48bae6a4e79437",
+      "published_sha256": "27c51caaa32bcba01834bfb1a6c55552c8cd2ec3d6160a2621a14f9c5d41f993",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/prevention_pilot_phase2/seven_case_scans_20261020/12344/scratch/seven_12344_10838/before/REPO/charts/open-design/values.yaml",
       "source": "/home-mscluster/astrauss/research_artifacts/prevention_pilot_phase2/seven_case_scans_20261020/12344/scratch/seven_12344_10838/before/REPO/charts/open-design/values.yaml",
       "bytes": 2589,
-      "sha256": "556092b16969db1f36f8ee5619d61b41e43ad54aa4f56460251b276e07c93920"
+      "source_sha256": "556092b16969db1f36f8ee5619d61b41e43ad54aa4f56460251b276e07c93920",
+      "published_sha256": "f917106fbcd661c5f05f1ee9cd54aad5540fb3841517cfe8ec629a2959705df3",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/prevention_pilot_phase2/seven_case_scans_20261020/12344/scratch/seven_12344_10838/before/REPO/deploy/aws/template.yaml",
       "source": "/home-mscluster/astrauss/research_artifacts/prevention_pilot_phase2/seven_case_scans_20261020/12344/scratch/seven_12344_10838/before/REPO/deploy/aws/template.yaml",
       "bytes": 16966,
-      "sha256": "06cf1502a2c4758aaa51fd844a59c9a11a6c9f57a952c9cb0031079ab0c4f791"
+      "source_sha256": "06cf1502a2c4758aaa51fd844a59c9a11a6c9f57a952c9cb0031079ab0c4f791",
+      "published_sha256": "c5ae8635c8285aeb3ff080588206b5dabbd9b372b735663014009044748cf49f",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/prevention_pilot_phase2/seven_case_scans_20261020/12344/scratch/seven_12344_10838/after/REPO/charts/open-design/values.yaml",
       "source": "/home-mscluster/astrauss/research_artifacts/prevention_pilot_phase2/seven_case_scans_20261020/12344/scratch/seven_12344_10838/after/REPO/charts/open-design/values.yaml",
       "bytes": 2589,
-      "sha256": "556092b16969db1f36f8ee5619d61b41e43ad54aa4f56460251b276e07c93920"
+      "source_sha256": "556092b16969db1f36f8ee5619d61b41e43ad54aa4f56460251b276e07c93920",
+      "published_sha256": "f917106fbcd661c5f05f1ee9cd54aad5540fb3841517cfe8ec629a2959705df3",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/prevention_pilot_phase2/seven_case_scans_20261020/12344/scratch/seven_12344_10838/after/REPO/deploy/aws/template.yaml",
       "source": "/home-mscluster/astrauss/research_artifacts/prevention_pilot_phase2/seven_case_scans_20261020/12344/scratch/seven_12344_10838/after/REPO/deploy/aws/template.yaml",
       "bytes": 16966,
-      "sha256": "06cf1502a2c4758aaa51fd844a59c9a11a6c9f57a952c9cb0031079ab0c4f791"
+      "source_sha256": "06cf1502a2c4758aaa51fd844a59c9a11a6c9f57a952c9cb0031079ab0c4f791",
+      "published_sha256": "c5ae8635c8285aeb3ff080588206b5dabbd9b372b735663014009044748cf49f",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/prevention_pilot_phase2/seven_case_scans_20261020/31207/scratch/seven_31207_1594332/before/REPO/ai/deploy/docker-compose.parity-capture.yml",
       "source": "/home-mscluster/astrauss/research_artifacts/prevention_pilot_phase2/seven_case_scans_20261020/31207/scratch/seven_31207_1594332/before/REPO/ai/deploy/docker-compose.parity-capture.yml",
       "bytes": 4978,
-      "sha256": "6c46eb7604269cb6b2c2ef8cdb9fece081674bdc3dea4635c019e67bb4176c48"
+      "source_sha256": "6c46eb7604269cb6b2c2ef8cdb9fece081674bdc3dea4635c019e67bb4176c48",
+      "published_sha256": "d8d6852b6e8a624331f451645587f6360901a8092c241afbf7d312465584f176",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/prevention_pilot_phase2/seven_case_scans_20261020/31207/scratch/seven_31207_1594332/before/REPO/ai/deploy/docker-compose.parity-ci.yml",
       "source": "/home-mscluster/astrauss/research_artifacts/prevention_pilot_phase2/seven_case_scans_20261020/31207/scratch/seven_31207_1594332/before/REPO/ai/deploy/docker-compose.parity-ci.yml",
       "bytes": 5661,
-      "sha256": "74795f256ab3b94f88cff3dd09cc3f1f76c60ddccaa98bb6774f3ca2403d83f2"
+      "source_sha256": "74795f256ab3b94f88cff3dd09cc3f1f76c60ddccaa98bb6774f3ca2403d83f2",
+      "published_sha256": "ddcbe5a4f7660a5b2fea27382ba59313d526285517ab2e765f71aa0ecf0152bb",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/prevention_pilot_phase2/seven_case_scans_20261020/31207/scratch/seven_31207_1594332/before/REPO/ai/deploy/docker-compose.test.yml",
       "source": "/home-mscluster/astrauss/research_artifacts/prevention_pilot_phase2/seven_case_scans_20261020/31207/scratch/seven_31207_1594332/before/REPO/ai/deploy/docker-compose.test.yml",
       "bytes": 10357,
-      "sha256": "5bde3fd1279434e2443a813aa5e2f305872561ccb6ba4b7097d375af1aeebfac"
+      "source_sha256": "5bde3fd1279434e2443a813aa5e2f305872561ccb6ba4b7097d375af1aeebfac",
+      "published_sha256": "81d7c49308b96cc2a52eda5ecf148f7bba9aa1e0f5f9b36601a80003e686b8e7",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/prevention_pilot_phase2/seven_case_scans_20261020/31207/scratch/seven_31207_1594332/after/REPO/ai/deploy/docker-compose.parity-capture.yml",
       "source": "/home-mscluster/astrauss/research_artifacts/prevention_pilot_phase2/seven_case_scans_20261020/31207/scratch/seven_31207_1594332/after/REPO/ai/deploy/docker-compose.parity-capture.yml",
       "bytes": 4978,
-      "sha256": "6c46eb7604269cb6b2c2ef8cdb9fece081674bdc3dea4635c019e67bb4176c48"
+      "source_sha256": "6c46eb7604269cb6b2c2ef8cdb9fece081674bdc3dea4635c019e67bb4176c48",
+      "published_sha256": "d8d6852b6e8a624331f451645587f6360901a8092c241afbf7d312465584f176",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/prevention_pilot_phase2/seven_case_scans_20261020/31207/scratch/seven_31207_1594332/after/REPO/ai/deploy/docker-compose.parity-ci.yml",
       "source": "/home-mscluster/astrauss/research_artifacts/prevention_pilot_phase2/seven_case_scans_20261020/31207/scratch/seven_31207_1594332/after/REPO/ai/deploy/docker-compose.parity-ci.yml",
       "bytes": 5661,
-      "sha256": "74795f256ab3b94f88cff3dd09cc3f1f76c60ddccaa98bb6774f3ca2403d83f2"
+      "source_sha256": "74795f256ab3b94f88cff3dd09cc3f1f76c60ddccaa98bb6774f3ca2403d83f2",
+      "published_sha256": "ddcbe5a4f7660a5b2fea27382ba59313d526285517ab2e765f71aa0ecf0152bb",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/prevention_pilot_phase2/seven_case_scans_20261020/31207/scratch/seven_31207_1594332/after/REPO/ai/deploy/docker-compose.test.yml",
       "source": "/home-mscluster/astrauss/research_artifacts/prevention_pilot_phase2/seven_case_scans_20261020/31207/scratch/seven_31207_1594332/after/REPO/ai/deploy/docker-compose.test.yml",
       "bytes": 10357,
-      "sha256": "5bde3fd1279434e2443a813aa5e2f305872561ccb6ba4b7097d375af1aeebfac"
+      "source_sha256": "5bde3fd1279434e2443a813aa5e2f305872561ccb6ba4b7097d375af1aeebfac",
+      "published_sha256": "81d7c49308b96cc2a52eda5ecf148f7bba9aa1e0f5f9b36601a80003e686b8e7",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/prevention_pilot_phase2/seven_case_targeted_fixes_20261020/12344/work/targeted_12344/baseline/REPO/charts/open-design/values.yaml",
       "source": "/home-mscluster/astrauss/research_artifacts/prevention_pilot_phase2/seven_case_targeted_fixes_20261020/12344/work/targeted_12344/baseline/REPO/charts/open-design/values.yaml",
       "bytes": 2589,
-      "sha256": "556092b16969db1f36f8ee5619d61b41e43ad54aa4f56460251b276e07c93920"
+      "source_sha256": "556092b16969db1f36f8ee5619d61b41e43ad54aa4f56460251b276e07c93920",
+      "published_sha256": "f917106fbcd661c5f05f1ee9cd54aad5540fb3841517cfe8ec629a2959705df3",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/prevention_pilot_phase2/seven_case_targeted_fixes_20261020/12344/work/targeted_12344/baseline/REPO/deploy/aws/template.yaml",
       "source": "/home-mscluster/astrauss/research_artifacts/prevention_pilot_phase2/seven_case_targeted_fixes_20261020/12344/work/targeted_12344/baseline/REPO/deploy/aws/template.yaml",
       "bytes": 16966,
-      "sha256": "06cf1502a2c4758aaa51fd844a59c9a11a6c9f57a952c9cb0031079ab0c4f791"
+      "source_sha256": "06cf1502a2c4758aaa51fd844a59c9a11a6c9f57a952c9cb0031079ab0c4f791",
+      "published_sha256": "c5ae8635c8285aeb3ff080588206b5dabbd9b372b735663014009044748cf49f",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/prevention_pilot_phase2/seven_case_targeted_fixes_20261020/31207/work/targeted_31207/baseline/REPO/ai/deploy/docker-compose.parity-capture.yml",
       "source": "/home-mscluster/astrauss/research_artifacts/prevention_pilot_phase2/seven_case_targeted_fixes_20261020/31207/work/targeted_31207/baseline/REPO/ai/deploy/docker-compose.parity-capture.yml",
       "bytes": 4978,
-      "sha256": "6c46eb7604269cb6b2c2ef8cdb9fece081674bdc3dea4635c019e67bb4176c48"
+      "source_sha256": "6c46eb7604269cb6b2c2ef8cdb9fece081674bdc3dea4635c019e67bb4176c48",
+      "published_sha256": "d8d6852b6e8a624331f451645587f6360901a8092c241afbf7d312465584f176",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/prevention_pilot_phase2/seven_case_targeted_fixes_20261020/31207/work/targeted_31207/baseline/REPO/ai/deploy/docker-compose.parity-ci.yml",
       "source": "/home-mscluster/astrauss/research_artifacts/prevention_pilot_phase2/seven_case_targeted_fixes_20261020/31207/work/targeted_31207/baseline/REPO/ai/deploy/docker-compose.parity-ci.yml",
       "bytes": 5661,
-      "sha256": "74795f256ab3b94f88cff3dd09cc3f1f76c60ddccaa98bb6774f3ca2403d83f2"
+      "source_sha256": "74795f256ab3b94f88cff3dd09cc3f1f76c60ddccaa98bb6774f3ca2403d83f2",
+      "published_sha256": "ddcbe5a4f7660a5b2fea27382ba59313d526285517ab2e765f71aa0ecf0152bb",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/prevention_pilot_phase2/seven_case_targeted_fixes_20261020/31207/work/targeted_31207/baseline/REPO/ai/deploy/docker-compose.test.yml",
       "source": "/home-mscluster/astrauss/research_artifacts/prevention_pilot_phase2/seven_case_targeted_fixes_20261020/31207/work/targeted_31207/baseline/REPO/ai/deploy/docker-compose.test.yml",
       "bytes": 10357,
-      "sha256": "5bde3fd1279434e2443a813aa5e2f305872561ccb6ba4b7097d375af1aeebfac"
+      "source_sha256": "5bde3fd1279434e2443a813aa5e2f305872561ccb6ba4b7097d375af1aeebfac",
+      "published_sha256": "81d7c49308b96cc2a52eda5ecf148f7bba9aa1e0f5f9b36601a80003e686b8e7",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/prevention_pilot_phase2/provider_variants_20261020/scans/31207/scratch/seven_31207_505264/before/REPO/ai/deploy/docker-compose.parity-capture.yml",
       "source": "/home-mscluster/astrauss/research_artifacts/prevention_pilot_phase2/provider_variants_20261020/scans/31207/scratch/seven_31207_505264/before/REPO/ai/deploy/docker-compose.parity-capture.yml",
       "bytes": 4978,
-      "sha256": "6c46eb7604269cb6b2c2ef8cdb9fece081674bdc3dea4635c019e67bb4176c48"
+      "source_sha256": "6c46eb7604269cb6b2c2ef8cdb9fece081674bdc3dea4635c019e67bb4176c48",
+      "published_sha256": "d8d6852b6e8a624331f451645587f6360901a8092c241afbf7d312465584f176",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/prevention_pilot_phase2/provider_variants_20261020/scans/31207/scratch/seven_31207_505264/before/REPO/ai/deploy/docker-compose.parity-ci.yml",
       "source": "/home-mscluster/astrauss/research_artifacts/prevention_pilot_phase2/provider_variants_20261020/scans/31207/scratch/seven_31207_505264/before/REPO/ai/deploy/docker-compose.parity-ci.yml",
       "bytes": 5661,
-      "sha256": "74795f256ab3b94f88cff3dd09cc3f1f76c60ddccaa98bb6774f3ca2403d83f2"
+      "source_sha256": "74795f256ab3b94f88cff3dd09cc3f1f76c60ddccaa98bb6774f3ca2403d83f2",
+      "published_sha256": "ddcbe5a4f7660a5b2fea27382ba59313d526285517ab2e765f71aa0ecf0152bb",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/prevention_pilot_phase2/provider_variants_20261020/scans/31207/scratch/seven_31207_505264/before/REPO/ai/deploy/docker-compose.test.yml",
       "source": "/home-mscluster/astrauss/research_artifacts/prevention_pilot_phase2/provider_variants_20261020/scans/31207/scratch/seven_31207_505264/before/REPO/ai/deploy/docker-compose.test.yml",
       "bytes": 10357,
-      "sha256": "5bde3fd1279434e2443a813aa5e2f305872561ccb6ba4b7097d375af1aeebfac"
+      "source_sha256": "5bde3fd1279434e2443a813aa5e2f305872561ccb6ba4b7097d375af1aeebfac",
+      "published_sha256": "81d7c49308b96cc2a52eda5ecf148f7bba9aa1e0f5f9b36601a80003e686b8e7",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/prevention_pilot_phase2/provider_variants_20261020/scans/31207/scratch/seven_31207_505264/after/REPO/ai/deploy/docker-compose.parity-capture.yml",
       "source": "/home-mscluster/astrauss/research_artifacts/prevention_pilot_phase2/provider_variants_20261020/scans/31207/scratch/seven_31207_505264/after/REPO/ai/deploy/docker-compose.parity-capture.yml",
       "bytes": 4978,
-      "sha256": "6c46eb7604269cb6b2c2ef8cdb9fece081674bdc3dea4635c019e67bb4176c48"
+      "source_sha256": "6c46eb7604269cb6b2c2ef8cdb9fece081674bdc3dea4635c019e67bb4176c48",
+      "published_sha256": "d8d6852b6e8a624331f451645587f6360901a8092c241afbf7d312465584f176",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/prevention_pilot_phase2/provider_variants_20261020/scans/31207/scratch/seven_31207_505264/after/REPO/ai/deploy/docker-compose.parity-ci.yml",
       "source": "/home-mscluster/astrauss/research_artifacts/prevention_pilot_phase2/provider_variants_20261020/scans/31207/scratch/seven_31207_505264/after/REPO/ai/deploy/docker-compose.parity-ci.yml",
       "bytes": 5661,
-      "sha256": "74795f256ab3b94f88cff3dd09cc3f1f76c60ddccaa98bb6774f3ca2403d83f2"
+      "source_sha256": "74795f256ab3b94f88cff3dd09cc3f1f76c60ddccaa98bb6774f3ca2403d83f2",
+      "published_sha256": "ddcbe5a4f7660a5b2fea27382ba59313d526285517ab2e765f71aa0ecf0152bb",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/prevention_pilot_phase2/provider_variants_20261020/scans/31207/scratch/seven_31207_505264/after/REPO/ai/deploy/docker-compose.test.yml",
       "source": "/home-mscluster/astrauss/research_artifacts/prevention_pilot_phase2/provider_variants_20261020/scans/31207/scratch/seven_31207_505264/after/REPO/ai/deploy/docker-compose.test.yml",
       "bytes": 10357,
-      "sha256": "5bde3fd1279434e2443a813aa5e2f305872561ccb6ba4b7097d375af1aeebfac"
+      "source_sha256": "5bde3fd1279434e2443a813aa5e2f305872561ccb6ba4b7097d375af1aeebfac",
+      "published_sha256": "81d7c49308b96cc2a52eda5ecf148f7bba9aa1e0f5f9b36601a80003e686b8e7",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/mcp_uploads/jobs/n117_kaggle_20261026_recovery1/build.sbatch",
       "source": "/home-mscluster/astrauss/research_artifacts/mcp_uploads/jobs/n117_kaggle_20261026_recovery1/build.sbatch",
       "bytes": 6128,
-      "sha256": "5b80567183453788785121bdaaaaf12fc71a393818dc47756352d147d776f17d"
+      "source_sha256": "5b80567183453788785121bdaaaaf12fc71a393818dc47756352d147d776f17d",
+      "published_sha256": "72959b444eab44126e773c62c98d1f1278c55483ab05320f86aa7bd2371474b7",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/mcp_uploads/jobs/click_diversity_e121_20261026/runtime/python_site/urllib3/connection.py",
       "source": "/home-mscluster/astrauss/research_artifacts/mcp_uploads/jobs/click_diversity_e121_20261026/runtime/python_site/urllib3/connection.py",
       "bytes": 42800,
-      "sha256": "d5947682a7c5748cd36085301742b99dfb60dba84ba94e67af5c874dd29bed60"
+      "source_sha256": "d5947682a7c5748cd36085301742b99dfb60dba84ba94e67af5c874dd29bed60",
+      "published_sha256": "0f7ab0f8c7ceb2231a6cf35ec3f82405dc50e5af69ac53b03bee2851c5e3b55d",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/mcp_uploads/jobs/click_diversity_e121_20261026/runtime/python_site/urllib3/connectionpool.py",
       "source": "/home-mscluster/astrauss/research_artifacts/mcp_uploads/jobs/click_diversity_e121_20261026/runtime/python_site/urllib3/connectionpool.py",
       "bytes": 43371,
-      "sha256": "64486e76c6bc048b9b0f63345e8c4106c8f16ec5f0320512707ee843d8be8f56"
+      "source_sha256": "64486e76c6bc048b9b0f63345e8c4106c8f16ec5f0320512707ee843d8be8f56",
+      "published_sha256": "72348809a135d321feb704bbf73646b606b3f0d417b68bccd465433ad33d9556",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/mcp_uploads/jobs/click_diversity_e121_20261026/runtime/python_site/urllib3/contrib/emscripten/connection.py",
       "source": "/home-mscluster/astrauss/research_artifacts/mcp_uploads/jobs/click_diversity_e121_20261026/runtime/python_site/urllib3/contrib/emscripten/connection.py",
       "bytes": 8960,
-      "sha256": "822125b01a14b0a55445b6736fc182ac99aa5b6dd79ef8f668dc90545e36b258"
+      "source_sha256": "822125b01a14b0a55445b6736fc182ac99aa5b6dd79ef8f668dc90545e36b258",
+      "published_sha256": "e6225624d36e741b2172f0d7fb9a2b79b526d34e74f5d79ca148233da3529cd8",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/research_artifacts/mcp_uploads/jobs/e128_release_20261027/build_release.py",
       "source": "/home-mscluster/astrauss/research_artifacts/mcp_uploads/jobs/e128_release_20261027/build_release.py",
       "bytes": 5282,
-      "sha256": "b805ed90a7506aedda0f2b7b9062dac1456184af57e54d5faa4faee325dc4386"
+      "source_sha256": "b805ed90a7506aedda0f2b7b9062dac1456184af57e54d5faa4faee325dc4386",
+      "published_sha256": "47954245bfdc8defff44925dfcf889c73eb0a3b3c2b125b455808fdb5ea3b70c",
+      "redacted": true
     },
     {
       "path": "recovery/cluster/miner/ui/views/case_review.py",
       "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/ui/views/case_review.py",
       "bytes": 15084,
-      "sha256": "1672912ddd32d917b300b8a3ce44b9945e97a14ccd0f9f9ef89ba2d9187f9a42"
+      "source_sha256": "1672912ddd32d917b300b8a3ce44b9945e97a14ccd0f9f9ef89ba2d9187f9a42",
+      "published_sha256": "5fab23056e4630470291863b411a662d40234504169ec59243465c4bf981b6a4",
+      "redacted": true
     }
-  ],
-  "errors": [],
-  "policy": "Original bytes preserved; obvious embedded credentials excluded; all originals untouched."
+  ]
 }
