@@ -1,0 +1,317 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-10-23",
+  "unit_of_analysis": "matched issue-to-PR workflows",
+  "matched_pairs": 190,
+  "same_repository_pairs": 115,
+  "cross_repository_pairs": 75,
+  "source_note": "Derived from the original study's indexed C6 matched-pair master and paired-contingency table. Original raw CSV bytes have not yet been independently authenticated.",
+  "comparison_order": [
+    "Issue purpose",
+    "Instruction specificity",
+    "Goal alignment",
+    "Implementation category",
+    "Formal human review before merge",
+    "Issue→PR creation delay (hours)",
+    "Same issue/PR author",
+    "Any requester prior repo activity",
+    "Primary agent/tool"
+  ],
+  "categorical": {
+    "Issue purpose": {
+      "categories": [
+        "Bug / regression / reliability fix",
+        "Compatibility / migration / platform adaptation",
+        "Dependency / package/toolchain maintenance",
+        "Feature / capability addition",
+        "Internal engineering / test / CI maintenance",
+        "Security hardening / vulnerability remediation"
+      ],
+      "counts": [
+        [
+          54,
+          2,
+          7,
+          12,
+          5,
+          2
+        ],
+        [
+          9,
+          0,
+          1,
+          5,
+          1,
+          0
+        ],
+        [
+          2,
+          1,
+          3,
+          3,
+          2,
+          1
+        ],
+        [
+          23,
+          1,
+          2,
+          26,
+          4,
+          1
+        ],
+        [
+          5,
+          0,
+          1,
+          3,
+          4,
+          1
+        ],
+        [
+          4,
+          0,
+          0,
+          4,
+          0,
+          1
+        ]
+      ]
+    },
+    "Instruction specificity": {
+      "categories": [
+        "Explicit instruction",
+        "Problem only",
+        "Suggests solution"
+      ],
+      "counts": [
+        [
+          98,
+          15,
+          8
+        ],
+        [
+          25,
+          10,
+          1
+        ],
+        [
+          25,
+          8,
+          0
+        ]
+      ]
+    },
+    "Goal alignment": {
+      "categories": [
+        "Aligned",
+        "Diverged",
+        "Expanded",
+        "Unclear"
+      ],
+      "counts": [
+        [
+          155,
+          2,
+          3,
+          0
+        ],
+        [
+          7,
+          1,
+          1,
+          0
+        ],
+        [
+          19,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    "Implementation category": {
+      "categories": [
+        "Behavior / reliability correction",
+        "Capability / integration expansion",
+        "Data / persistence / state management",
+        "Dependency / build / toolchain change",
+        "Internal tooling / CI / refactor",
+        "Runtime / infrastructure / configuration change",
+        "Validation / access / boundary control"
+      ],
+      "counts": [
+        [
+          16,
+          7,
+          1,
+          2,
+          2,
+          5,
+          2
+        ],
+        [
+          11,
+          27,
+          2,
+          4,
+          4,
+          6,
+          1
+        ],
+        [
+          6,
+          3,
+          2,
+          1,
+          2,
+          6,
+          0
+        ],
+        [
+          4,
+          4,
+          1,
+          11,
+          3,
+          3,
+          0
+        ],
+        [
+          3,
+          4,
+          0,
+          1,
+          5,
+          1,
+          1
+        ],
+        [
+          4,
+          6,
+          2,
+          1,
+          1,
+          4,
+          4
+        ],
+        [
+          3,
+          5,
+          1,
+          0,
+          2,
+          4,
+          2
+        ]
+      ]
+    },
+    "Primary agent/tool": {
+      "categories": [
+        "Claude Code",
+        "Cursor",
+        "Devin",
+        "GitHub Copilot",
+        "Multiple / unclear",
+        "OpenAI Codex"
+      ],
+      "counts": [
+        [
+          11,
+          1,
+          0,
+          3,
+          0,
+          7
+        ],
+        [
+          0,
+          6,
+          0,
+          1,
+          2,
+          6
+        ],
+        [
+          0,
+          0,
+          2,
+          0,
+          0,
+          0
+        ],
+        [
+          6,
+          2,
+          2,
+          22,
+          0,
+          7
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          1,
+          1
+        ],
+        [
+          4,
+          9,
+          2,
+          7,
+          4,
+          83
+        ]
+      ]
+    }
+  },
+  "binary": {
+    "Formal human review before merge": {
+      "both_yes": 23,
+      "positive_only_yes": 31,
+      "control_only_yes": 24,
+      "both_no": 111,
+      "complete_pairs": 189
+    },
+    "Same issue/PR author": {
+      "both_yes": 39,
+      "positive_only_yes": 30,
+      "control_only_yes": 29,
+      "both_no": 92,
+      "complete_pairs": 190
+    },
+    "Any requester prior repo activity": {
+      "both_yes": 101,
+      "positive_only_yes": 30,
+      "control_only_yes": 39,
+      "both_no": 17,
+      "complete_pairs": 187
+    }
+  },
+  "delay_reported": {
+    "name": "Issue→PR creation delay (hours)",
+    "complete_pairs": 190,
+    "median_paired_difference_hours": -0.4049444444444438,
+    "p_value": 0.2412317385974189,
+    "replayed_from_aggregate": false
+  },
+  "historical_pvalues": {
+    "Issue purpose": 0.0971925657089748,
+    "Instruction specificity": 0.000520117009904,
+    "Goal alignment": 0.0010186743792719,
+    "Implementation category": 0.1195235832394017,
+    "Formal human review before merge": 0.4187541882690154,
+    "Issue→PR creation delay (hours)": 0.2412317385974189,
+    "Same issue/PR author": 1,
+    "Any requester prior repo activity": 0.3355576182340152,
+    "Primary agent/tool": 0.2190106974324261
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "audit_date_utc": "2026-10-22",
+  "status": "INDEXED_SOURCE_REPORTED_PAIR_BOOTSTRAP_CI_NOT_SOURCE_BYTE_AUTHENTICATED",
+  "source_representation": "C6_CATEGORY_DETAILS.csv indexed aggregate, PRIMARY scope; raw C6 file SHA-256 not verified",
+  "historical_bootstrap_draws_and_seed_known": false,
+  "historical_replicate_percentile_algorithm_known": false,
+  "source_reported_rows": [
+    {
+      "variable": "Instruction specificity",
+      "category": "Explicit instruction",
+      "n_pairs": 190,
+      "positive_count": 121,
+      "control_count": 148,
+      "source_reported_pair_boot_ci95_low_pp": -22.631578947368425,
+      "source_reported_pair_boot_ci95_high_pp": -5.789473684210522
+    },
+    {
+      "variable": "Instruction specificity",
+      "category": "Suggests solution",
+      "n_pairs": 190,
+      "positive_count": 33,
+      "control_count": 9,
+      "source_reported_pair_boot_ci95_low_pp": 6.315789473684211,
+      "source_reported_pair_boot_ci95_high_pp": 19.473684210526315
+    },
+    {
+      "variable": "Goal alignment",
+      "category": "Aligned",
+      "n_pairs": 190,
+      "positive_count": 160,
+      "control_count": 183,
+      "source_reported_pair_boot_ci95_low_pp": -17.894736842105264,
+      "source_reported_pair_boot_ci95_high_pp": -6.842105263157894
+    }
+  ],
+  "original_source_C6_file_bytes_authenticated": false,
+  "original_repository_blocked_CIs_recomputed": false,
+  "causal_effect_established": false
+}
