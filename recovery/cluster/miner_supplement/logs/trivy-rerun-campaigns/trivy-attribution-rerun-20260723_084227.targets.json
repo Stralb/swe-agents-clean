@@ -1,0 +1,911 @@
+{
+  "campaign": "trivy-attribution-rerun-20260723_084227",
+  "snapshot_path": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/snapshots/trivy-attribution-rerun-20260723_084227.db",
+  "source_database": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/miner.agentic-js.eval.20260720_224159.db",
+  "status_counts": {
+    "ok": 100
+  },
+  "target_count": 100,
+  "targets": [
+    {
+      "attempts": 1,
+      "case_id": 692,
+      "job_id": 166002,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=package.json",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 695,
+      "job_id": 166017,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=modules/arrow/package.json, modules/compression/package.json, modules/core/package.json, modules/crypto/package.json, modules/draco/package.json, modules/excel/package.json, modules/flatgeobuf/package.json, modules/i3s/package.json",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 696,
+      "job_id": 166022,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=packages/binding/package.json, packages/fsrs/package.json",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 704,
+      "job_id": 166062,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=package-lock.json, package.json",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 708,
+      "job_id": 166082,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=packages/adapters/angular/v19/package.json, packages/adapters/angular/v20/package.json, packages/adapters/angular/v21/package.json, packages/adapters/react-hook-form-adapter/package.json, packages/components/package.json, packages/samples/react/package.json, packages/themes/default/package.json, packages/themes/ecl/package.json",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3238,
+      "job_id": 490232,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=src-tauri/Cargo.lock, src-tauri/Cargo.toml",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3241,
+      "job_id": 490242,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=src-tauri/Cargo.lock, src-tauri/Cargo.toml",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3250,
+      "job_id": 490287,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=src-tauri/Cargo.toml",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3258,
+      "job_id": 494661,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=bun.lock, packages/backend/package.json",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3259,
+      "job_id": 494666,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=bun.lock, packages/web/package.json",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3260,
+      "job_id": 494671,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=bun.lock, packages/backend/package.json, packages/web/package.json",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3264,
+      "job_id": 494686,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=package.json, packages/scripts/package.json, yarn.lock",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3267,
+      "job_id": 494701,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=packages/backend/package.json, yarn.lock",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3270,
+      "job_id": 494716,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=packages/web/package.json, yarn.lock",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3280,
+      "job_id": 494761,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=package-lock.json, package.json",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3282,
+      "job_id": 494771,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=package.json",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3296,
+      "job_id": 494836,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=package.json, pnpm-lock.yaml",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3302,
+      "job_id": 494866,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=package.json, pnpm-lock.yaml",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3313,
+      "job_id": 499524,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=package-lock.json, package.json",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3346,
+      "job_id": 508984,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=package.json, packages/ui/package.json, pnpm-lock.yaml",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3376,
+      "job_id": 523726,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=packages/html/package.json, packages/icons/package.json, packages/react/package.json",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3382,
+      "job_id": 528703,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=bun.lock, docs/bun.lock, docs/package.json, docs/pnpm-lock.yaml, package.json, pnpm-lock.yaml",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3397,
+      "job_id": 533696,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=apps/example/package.json, package.json, packages/junior-amplitude/package.json, pnpm-lock.yaml",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3412,
+      "job_id": 533761,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=apps/example/package.json, packages/junior-linear/package.json, pnpm-lock.yaml",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3460,
+      "job_id": 549271,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=examples/test-app/package.json, examples/test-app/pnpm-lock.yaml",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3527,
+      "job_id": 571052,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=pnpm-lock.yaml",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3580,
+      "job_id": 593991,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=playground/optimize-deps/dep-with-plus-subpath/package.json, playground/optimize-deps/package.json, pnpm-lock.yaml",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3582,
+      "job_id": 599749,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=package-lock.json, package.json",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3583,
+      "job_id": 599754,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=src/webview/package-lock.json",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3584,
+      "job_id": 599759,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=package.json",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3592,
+      "job_id": 599799,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=package-lock.json",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3593,
+      "job_id": 599804,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=package-lock.json",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3594,
+      "job_id": 599809,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=package-lock.json, package.json",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3595,
+      "job_id": 599814,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=package-lock.json, package.json, src/webview/package-lock.json",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3604,
+      "job_id": 605656,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=package.json, packages/website/package.json, pnpm-lock.yaml",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3622,
+      "job_id": 605746,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=packages/deslop-js/package.json, packages/react-doctor/package.json, pnpm-lock.yaml",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3623,
+      "job_id": 605751,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=packages/deslop-js/tests/fixtures/expo-plugin-packages-false-positive/package.json",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3660,
+      "job_id": 605841,
+      "job_type": "trivy_dependency",
+      "priority": 28,
+      "route_reason": "artifact_region=dependency_config paths=packages/react-doctor/package.json, pnpm-lock.yaml",
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 5,
+      "job_id": 389,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 6,
+      "job_id": 390,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 48,
+      "job_id": 432,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 55,
+      "job_id": 439,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 59,
+      "job_id": 443,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 61,
+      "job_id": 445,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 79,
+      "job_id": 463,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 102,
+      "job_id": 486,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 112,
+      "job_id": 496,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 115,
+      "job_id": 499,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 116,
+      "job_id": 500,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 117,
+      "job_id": 501,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 147,
+      "job_id": 19754,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 150,
+      "job_id": 19757,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 151,
+      "job_id": 19758,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 153,
+      "job_id": 19760,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 154,
+      "job_id": 19761,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 155,
+      "job_id": 19762,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 156,
+      "job_id": 19763,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 157,
+      "job_id": 19764,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 162,
+      "job_id": 19769,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 163,
+      "job_id": 19770,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 166,
+      "job_id": 19773,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 168,
+      "job_id": 19775,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 169,
+      "job_id": 19776,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 176,
+      "job_id": 19783,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 193,
+      "job_id": 19800,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 195,
+      "job_id": 19802,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 198,
+      "job_id": 19805,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 212,
+      "job_id": 19819,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 213,
+      "job_id": 19820,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 216,
+      "job_id": 19823,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 222,
+      "job_id": 19829,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 235,
+      "job_id": 19842,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 280,
+      "job_id": 19887,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 300,
+      "job_id": 19907,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 316,
+      "job_id": 19923,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 408,
+      "job_id": 20015,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 424,
+      "job_id": 20031,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 436,
+      "job_id": 20043,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 449,
+      "job_id": 20056,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 452,
+      "job_id": 20059,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 458,
+      "job_id": 20065,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 466,
+      "job_id": 20073,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 471,
+      "job_id": 20078,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 480,
+      "job_id": 20087,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 481,
+      "job_id": 20088,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 482,
+      "job_id": 20089,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 483,
+      "job_id": 20090,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 510,
+      "job_id": 20117,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 518,
+      "job_id": 20125,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 520,
+      "job_id": 20127,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 528,
+      "job_id": 20135,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 542,
+      "job_id": 20149,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 549,
+      "job_id": 20156,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 575,
+      "job_id": 20182,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 578,
+      "job_id": 20185,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 581,
+      "job_id": 20188,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 624,
+      "job_id": 20231,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 652,
+      "job_id": 20259,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 655,
+      "job_id": 20262,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    },
+    {
+      "attempts": 1,
+      "case_id": 664,
+      "job_id": 20271,
+      "job_type": "trivy_dependency",
+      "priority": 0,
+      "route_reason": null,
+      "status": "ok"
+    }
+  ]
+}
