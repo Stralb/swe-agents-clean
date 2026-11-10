@@ -1,0 +1,43 @@
+{
+  "created_at": 1784750016.5905447,
+  "schema_version": 1,
+  "task_count": 6,
+  "tasks": [
+    {
+      "archive": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/backups/codeql-stale-normalization-20260722_195319/stale-imported/scanner-job-166793.json",
+      "sha256": "223f11bccab558c3cf531bb88e7cdd4d47c2faf2e0acb42c592aef59c94a5350",
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/codeql_security/results/imported/scanner-job-166793.json",
+      "task_id": "scanner-job-166793"
+    },
+    {
+      "archive": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/backups/codeql-stale-normalization-20260722_195319/stale-imported/scanner-job-166795.json",
+      "sha256": "77a47efe83d793f91b3552bf6d658edb47746ff93a80b0bbbd7e30bcbbdc2398",
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/codeql_security/results/imported/scanner-job-166795.json",
+      "task_id": "scanner-job-166795"
+    },
+    {
+      "archive": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/backups/codeql-stale-normalization-20260722_195319/stale-imported/scanner-job-534540.json",
+      "sha256": "84c3ee4e8a7373ee18c31912057f50716458da5004066432959f4774eb5d8fd6",
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/codeql_security/results/imported/scanner-job-534540.json",
+      "task_id": "scanner-job-534540"
+    },
+    {
+      "archive": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/backups/codeql-stale-normalization-20260722_195319/stale-imported/scanner-job-534541.json",
+      "sha256": "5fc5d2b06c416adf52022ad15e50904108f5647541603585fd539d0f66caff69",
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/codeql_security/results/imported/scanner-job-534541.json",
+      "task_id": "scanner-job-534541"
+    },
+    {
+      "archive": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/backups/codeql-stale-normalization-20260722_195319/stale-imported/scanner-job-534542.json",
+      "sha256": "ff0d0066a040834a8777855113ea84863603219ccb2779b8eba83da7b4c94a37",
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/codeql_security/results/imported/scanner-job-534542.json",
+      "task_id": "scanner-job-534542"
+    },
+    {
+      "archive": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/backups/codeql-stale-normalization-20260722_195319/stale-imported/scanner-job-534543.json",
+      "sha256": "8fe725fc578153fbe41eb2b686bce8b6dfe780b1403daf9474c7cf9e60273be4",
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/codeql_security/results/imported/scanner-job-534543.json",
+      "task_id": "scanner-job-534543"
+    }
+  ]
+}

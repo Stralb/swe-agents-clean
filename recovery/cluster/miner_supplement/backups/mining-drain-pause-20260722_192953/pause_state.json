@@ -1,0 +1,25 @@
+{
+  "created_at": 1784748602.1726692,
+  "moved_task_count": 15,
+  "moved_tasks": [
+    "mining-495760-24-of-32.json",
+    "mining-495760-25-of-32.json",
+    "mining-495760-26-of-32.json",
+    "mining-495760-27-of-32.json",
+    "mining-495760-28-of-32.json",
+    "mining-495760-29-of-32.json",
+    "mining-495760-3-of-32.json",
+    "mining-495760-30-of-32.json",
+    "mining-495760-31-of-32.json",
+    "mining-495760-4-of-32.json",
+    "mining-495760-5-of-32.json",
+    "mining-495760-6-of-32.json",
+    "mining-495760-7-of-32.json",
+    "mining-495760-8-of-32.json",
+    "mining-495760-9-of-32.json"
+  ],
+  "parked_directory": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/mining/paused-for-control-reload-abtlufhh",
+  "pending_directory": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/mining/pending",
+  "remaining_pending": [],
+  "schema_version": 1
+}

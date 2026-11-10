@@ -1,0 +1,147 @@
+{
+  "created_at": 1785605299.1349454,
+  "preserved_task_count": 32,
+  "retired": [
+    {
+      "original_state": "pending",
+      "retired_file": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/mining/failed/mining-496001-2-of-32--retired-20260801-172751.json",
+      "sha256": "fa7ac51696e13c6347b68908a454706aef0b927bac390d1fdfce06d2eaaa04ab",
+      "task_id": "mining-496001-2-of-32"
+    },
+    {
+      "original_state": "pending",
+      "retired_file": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/mining/failed/mining-496001-3-of-32--retired-20260801-172751.json",
+      "sha256": "c6cc810b3539dd29f76b143292092ed36ac47bbc7be7389ba373403e9437ea3d",
+      "task_id": "mining-496001-3-of-32"
+    },
+    {
+      "original_state": "pending",
+      "retired_file": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/mining/failed/mining-496001-4-of-32--retired-20260801-172751.json",
+      "sha256": "f07ccb35292d2910dab5eac203f24cdfb7948882e15f14bb19138205f6e11456",
+      "task_id": "mining-496001-4-of-32"
+    },
+    {
+      "original_state": "pending",
+      "retired_file": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/mining/failed/mining-496001-5-of-32--retired-20260801-172751.json",
+      "sha256": "3b8a3bc16219e51554a75eeecca5f19d0ed85398863bfd8aad9b07e4b3e29935",
+      "task_id": "mining-496001-5-of-32"
+    },
+    {
+      "original_state": "pending",
+      "retired_file": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/mining/failed/mining-496001-6-of-32--retired-20260801-172751.json",
+      "sha256": "d4f42ca847aa3f0fa3b10c357f07abac49ae5d3cfe2750f275b4aa2f4ada1794",
+      "task_id": "mining-496001-6-of-32"
+    },
+    {
+      "original_state": "pending",
+      "retired_file": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/mining/failed/mining-496001-7-of-32--retired-20260801-172751.json",
+      "sha256": "46c7bf84c8570bb63a63c9bad177c40a670c9a01c3a9338b70afc291a0f83859",
+      "task_id": "mining-496001-7-of-32"
+    },
+    {
+      "original_state": "pending",
+      "retired_file": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/mining/failed/mining-496001-8-of-32--retired-20260801-172751.json",
+      "sha256": "da3e64b7dbcd4eb46df230abda8cbbdd0b73f989b68e0dacc4fca201d55c196c",
+      "task_id": "mining-496001-8-of-32"
+    },
+    {
+      "original_state": "pending",
+      "retired_file": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/mining/failed/mining-496001-9-of-32--retired-20260801-172751.json",
+      "sha256": "8513476164a951d14878a4e1401247dbd2611a3a9fd69401f729d014ec61c9ff",
+      "task_id": "mining-496001-9-of-32"
+    },
+    {
+      "original_state": "pending",
+      "retired_file": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/mining/failed/mining-496001-18-of-32--retired-20260801-172751.json",
+      "sha256": "d1474757d16afd117cd7df799dbc2937a11fd6d369988d604c25a8b01302148e",
+      "task_id": "mining-496001-18-of-32"
+    },
+    {
+      "original_state": "pending",
+      "retired_file": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/mining/failed/mining-496001-19-of-32--retired-20260801-172751.json",
+      "sha256": "56a4ae5c5dd4465eb62d6c6d60a0b6452938723750bd37ec823c6422e39fb626",
+      "task_id": "mining-496001-19-of-32"
+    },
+    {
+      "original_state": "pending",
+      "retired_file": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/mining/failed/mining-496001-20-of-32--retired-20260801-172751.json",
+      "sha256": "56cab74e126cb2a8fb8db04cdb3d96ab8a35ef073c926366906e3312ccb911dc",
+      "task_id": "mining-496001-20-of-32"
+    },
+    {
+      "original_state": "pending",
+      "retired_file": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/mining/failed/mining-496001-21-of-32--retired-20260801-172751.json",
+      "sha256": "d533c7e63b31304137ff816c5c57bdc3b85982273c213f0c4b9b8a2bbf588a40",
+      "task_id": "mining-496001-21-of-32"
+    },
+    {
+      "original_state": "pending",
+      "retired_file": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/mining/failed/mining-496001-22-of-32--retired-20260801-172751.json",
+      "sha256": "a7d161bb9af5c819f2c9d088af8e2515fc35b358fa46befcbac83abb2ad2ceef",
+      "task_id": "mining-496001-22-of-32"
+    },
+    {
+      "original_state": "pending",
+      "retired_file": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/mining/failed/mining-496001-23-of-32--retired-20260801-172751.json",
+      "sha256": "0acf58fffc4a6056f4e79170fe657e633f70a1a11e68f1b22c05796693c75eef",
+      "task_id": "mining-496001-23-of-32"
+    },
+    {
+      "original_state": "pending",
+      "retired_file": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/mining/failed/mining-496001-24-of-32--retired-20260801-172751.json",
+      "sha256": "2f1075c9075ffb58552d8caac6d3f8e2fa748df10c2948530b2819c349a4029c",
+      "task_id": "mining-496001-24-of-32"
+    },
+    {
+      "original_state": "pending",
+      "retired_file": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/mining/failed/mining-496001-25-of-32--retired-20260801-172751.json",
+      "sha256": "fb88801019501c79f136aa66242f7d31cd5613bc78738d23e0889ecba8d4fd82",
+      "task_id": "mining-496001-25-of-32"
+    },
+    {
+      "original_state": "pending",
+      "retired_file": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/mining/failed/mining-496001-26-of-32--retired-20260801-172751.json",
+      "sha256": "cc02f24d3f9f5ab3d4f34556f9b49f1b9dec6c6722c950cf07a34a7c663d4cc9",
+      "task_id": "mining-496001-26-of-32"
+    },
+    {
+      "original_state": "pending",
+      "retired_file": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/mining/failed/mining-496001-27-of-32--retired-20260801-172751.json",
+      "sha256": "b0d928534cd9c12f884d720707854a6cb973822b9dd5108490e9a3e85b5bd76e",
+      "task_id": "mining-496001-27-of-32"
+    },
+    {
+      "original_state": "pending",
+      "retired_file": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/mining/failed/mining-496001-28-of-32--retired-20260801-172751.json",
+      "sha256": "1ac72cec55f1e8bd777f19a971b12e12003ff0f53dc697d1d1391c4491bae5e2",
+      "task_id": "mining-496001-28-of-32"
+    },
+    {
+      "original_state": "pending",
+      "retired_file": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/mining/failed/mining-496001-29-of-32--retired-20260801-172751.json",
+      "sha256": "5b7a93b633fd749c9f358c115acc96f52e638d08c58a93c9c7fc8d492a9e1831",
+      "task_id": "mining-496001-29-of-32"
+    },
+    {
+      "original_state": "pending",
+      "retired_file": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/mining/failed/mining-496001-30-of-32--retired-20260801-172751.json",
+      "sha256": "548753ca3d3a0e1973f11ebbcdfbd11fd8ec5c12dc1cc8a1c90dcab04cec92a4",
+      "task_id": "mining-496001-30-of-32"
+    },
+    {
+      "original_state": "pending",
+      "retired_file": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/mining/failed/mining-496001-31-of-32--retired-20260801-172751.json",
+      "sha256": "bc029868568146a247c598f71c4238c9a1e277cef9ec5aeb21e74fce881531d7",
+      "task_id": "mining-496001-31-of-32"
+    },
+    {
+      "original_state": "claimed",
+      "retired_file": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/mining/failed/mining-496001-17-of-32--retired-20260801-172751.json",
+      "sha256": "7719f42417b359645696ef1717e48e8138c3685f6c1e3dedc956c8b390843037",
+      "task_id": "mining-496001-17-of-32"
+    }
+  ],
+  "retired_unfinished_count": 23,
+  "schema_version": 1,
+  "target_batch": "mining-496001"
+}

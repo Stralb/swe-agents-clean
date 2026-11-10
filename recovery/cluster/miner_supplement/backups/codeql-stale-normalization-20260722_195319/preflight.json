@@ -1,0 +1,122 @@
+{
+  "created_at": 1784750010.1828098,
+  "database": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/miner.agentic-js.eval.20260720_224159.db",
+  "database_backup": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/backups/codeql-stale-normalization-20260722_195319/shared-before-normalization.db",
+  "database_backup_sha256": "fcf6a35e1556060bb9e2bf9686474e605217fc15cd087f8cba0e383644378188",
+  "distributed_imports_before": [
+    {
+      "imported_at": "2026-07-22 19:43:38",
+      "pool": "codeql_security",
+      "task_id": "scanner-job-166793",
+      "worker_id": "codeql-4341-0-mscluster107.ms.wits.ac.za-348904"
+    },
+    {
+      "imported_at": "2026-07-22 19:43:39",
+      "pool": "codeql_security",
+      "task_id": "scanner-job-166795",
+      "worker_id": "codeql-4344-0-mscluster75.ms.wits.ac.za-555257"
+    },
+    {
+      "imported_at": "2026-07-22 19:47:17",
+      "pool": "codeql_security",
+      "task_id": "scanner-job-534540",
+      "worker_id": "codeql-4347-0-mscluster89.ms.wits.ac.za-289630"
+    },
+    {
+      "imported_at": "2026-07-22 19:47:31",
+      "pool": "codeql_security",
+      "task_id": "scanner-job-534541",
+      "worker_id": "codeql-4345-0-mscluster80.ms.wits.ac.za-275808"
+    },
+    {
+      "imported_at": "2026-07-22 19:47:44",
+      "pool": "codeql_security",
+      "task_id": "scanner-job-534542",
+      "worker_id": "codeql-4341-0-mscluster107.ms.wits.ac.za-348904"
+    },
+    {
+      "imported_at": "2026-07-22 19:47:17",
+      "pool": "codeql_security",
+      "task_id": "scanner-job-534543",
+      "worker_id": "codeql-4344-0-mscluster75.ms.wits.ac.za-555257"
+    }
+  ],
+  "parked_before": 101,
+  "pending_before": [
+    "scanner-job-524512.json",
+    "scanner-job-524513.json",
+    "scanner-job-534544.json",
+    "scanner-job-534545.json",
+    "scanner-job-534546.json",
+    "scanner-job-534547.json"
+  ],
+  "scanner_jobs_before": [
+    {
+      "attempts": 2,
+      "case_id": 718,
+      "finished_at": "2026-07-22 19:43:38",
+      "id": 166793,
+      "job_type": "codeql_security",
+      "last_error": "error",
+      "started_at": null,
+      "status": "error",
+      "worker_id": "codeql-4341-0-mscluster107.ms.wits.ac.za-348904"
+    },
+    {
+      "attempts": 2,
+      "case_id": 720,
+      "finished_at": "2026-07-22 19:43:39",
+      "id": 166795,
+      "job_type": "codeql_security",
+      "last_error": "error",
+      "started_at": null,
+      "status": "error",
+      "worker_id": "codeql-4344-0-mscluster75.ms.wits.ac.za-555257"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3393,
+      "finished_at": "2026-07-22 19:47:17",
+      "id": 534540,
+      "job_type": "codeql_security",
+      "last_error": "ok",
+      "started_at": null,
+      "status": "ok",
+      "worker_id": "codeql-4347-0-mscluster89.ms.wits.ac.za-289630"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3394,
+      "finished_at": "2026-07-22 19:47:31",
+      "id": 534541,
+      "job_type": "codeql_security",
+      "last_error": "ok",
+      "started_at": null,
+      "status": "ok",
+      "worker_id": "codeql-4345-0-mscluster80.ms.wits.ac.za-275808"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3395,
+      "finished_at": "2026-07-22 19:47:44",
+      "id": 534542,
+      "job_type": "codeql_security",
+      "last_error": "ok",
+      "started_at": null,
+      "status": "ok",
+      "worker_id": "codeql-4341-0-mscluster107.ms.wits.ac.za-348904"
+    },
+    {
+      "attempts": 1,
+      "case_id": 3396,
+      "finished_at": "2026-07-22 19:47:17",
+      "id": 534543,
+      "job_type": "codeql_security",
+      "last_error": "ok",
+      "started_at": null,
+      "status": "ok",
+      "worker_id": "codeql-4344-0-mscluster75.ms.wits.ac.za-555257"
+    }
+  ],
+  "schema_version": 1
+}
