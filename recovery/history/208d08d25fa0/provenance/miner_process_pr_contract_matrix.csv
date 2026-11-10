@@ -1,0 +1,24 @@
+contract,original_handler_executed,expected_result,compatibility_note
+SHA-256 source fidelity,yes,all three snapshots byte-identical,original preserved
+successful PR-to-case,yes,one case and marker,counts match new fixture path
+JS-TS before docs filtering,yes,no_javascript_typescript_surface when enabled,historical gate order
+prose-only PR with JS-TS off,yes,non_behaviour_only,earlier docs/worker gate unaffected
+PR lookback,yes,outside_lookback_pr,no database case rows
+issue lookback,yes,outside_lookback_issue,original PR metadata already persisted
+missing PR files,yes,pr_files_unavailable on HTTP 422,missing fixture in harness is fatal
+missing issue,yes,stale_or_missing_issue_reference on HTTP 404,original PR metadata already persisted
+inaccessible issue,yes,inaccessible_issue on HTTP 500,original catches API error
+comment issue-link fallback,yes,case saved with referenced issue,prefetched issues not required
+commit-message fallback,yes,case saved with referenced issue,commit request fixture required
+prefetched duplicate links,yes,one case,duplicate issue references removed
+multi issue ambiguity,yes,ambiguous_multi_issue_pr,before PR metadata writes
+body length default,yes,issue_body_too_short,default 200 characters
+quality word filter,yes,issue_filter,original PR metadata already persisted
+changed file cap,yes,pr_scope_too_large_for_evidence,before PR metadata writes
+case cap,yes,case count unchanged,original PR metadata already persisted
+per repository cap,yes,over_repo_cap,original PR metadata already persisted
+repeated case,yes,one case and duplicate AI markers,new fixture adapter de-duplicates
+unprovided fixtures,yes,hard abort via fixture-only wrapper,original catches generic exceptions
+live network or external database,yes,rejected by test harness,does not make historical code intrinsically safe
+full collect retrieval modes,no,not tested,remaining task
+scanner worker and Streamlit,no,not tested,remaining task

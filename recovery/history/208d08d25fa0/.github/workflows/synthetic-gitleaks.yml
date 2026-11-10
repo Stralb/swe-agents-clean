@@ -1,0 +1,41 @@
+name: Synthetic-only verified Gitleaks CLI smoke
+
+on:
+  push:
+    branches:
+      - work/miner-core-consolidation-20261021
+
+permissions:
+  contents: read
+
+jobs:
+  archived-gitleaks-real-cli:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout private work branch (read-only credentials)
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Download and checksum-verify Gitleaks 8.30.1
+        shell: bash
+        run: |
+          archive="$RUNNER_TEMP/gitleaks_8.30.1_linux_x64.tar.gz"
+          curl --fail --show-error --silent --location --retry 2             --output "$archive"             "https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz"
+          printf '%s  %s\n'             '551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb'             "$archive" | sha256sum --check
+          mkdir -p "$RUNNER_TEMP/arno-gitleaks"
+          tar -xzf "$archive" -C "$RUNNER_TEMP/arno-gitleaks" gitleaks
+          chmod 0700 "$RUNNER_TEMP/arno-gitleaks/gitleaks"
+          "$RUNNER_TEMP/arno-gitleaks/gitleaks" version
+      - name: Run original archived wrapper on fabricated in-memory patch
+        shell: bash
+        env:
+          ARNO_RUN_PINNED_GITLEAKS: '1'
+        run: |
+          export ARNO_GITLEAKS_EXECUTABLE="$RUNNER_TEMP/arno-gitleaks/gitleaks"
+          python -m unittest tests.test_miner_archived_real_gitleaks_smoke -v

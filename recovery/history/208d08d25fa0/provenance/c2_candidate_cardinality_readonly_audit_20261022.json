@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "observed_date": "2026-10-22",
+  "status": "PASS_CONDITIONAL_C2_MAXIMUM_CARDINALITY_FROM_HASH_VERIFIED_COUNTS",
+  "source_candidates": {
+    "path": "matched_control_c2_v1_0/C2_CANDIDATE_COUNTS_192.csv",
+    "bytes": 13393,
+    "source_frozen_sha256": "6e4e09e7ac4b091a018b9bb55cfeab581fb67196159a729cf034e8851b728c8d",
+    "sha256_fully_verified_from_readonly_original": true
+  },
+  "source_pairs": {
+    "path": "matched_control_c2_v1_0/C2_MATCHED_PAIRS_FROZEN.csv",
+    "bytes": 56175,
+    "source_frozen_sha256": "4568dcadd50e827004b13c9a435c7034babce8ebf96d6a9bee49b66c9b11be2b",
+    "sha256_previously_independently_verified": true
+  },
+  "candidate_table": {
+    "positive_cases": 192,
+    "with_any_eligible": 190,
+    "with_zero_eligible": 2,
+    "positive_with_tier_a_candidate": 119,
+    "positive_with_tier_b_candidate": 189,
+    "only_tier_a": 1,
+    "only_tier_b": 71,
+    "both_tiers": 118,
+    "neither_tier": 2,
+    "source_recorded_tier_a_candidate_edges": 1098,
+    "source_recorded_tier_b_candidate_edges": 86608
+  },
+  "selection": {
+    "matched_cases": 190,
+    "distinct_positive_cases": 190,
+    "distinct_controls": 190,
+    "tier_a": 115,
+    "tier_b": 75,
+    "unmatched_positive_ids": [
+      13918,
+      17460
+    ],
+    "no_stored_eligibility_mismatches": true
+  },
+  "inference": {
+    "maximum_matching_cardinality_conditional_on_candidate_table": 190,
+    "selected_matching_reaches_that_bound": true,
+    "original_candidate_generator_reexecuted": false,
+    "original_matching_optimizer_reexecuted": false,
+    "maximum_tier_a_proven": false,
+    "minimum_distance_proven": false,
+    "scanner_outcome_correctness_proven": false,
+    "final_aug29_sqlite_authenticated": false
+  },
+  "note": "The archived counts show two positives with no eligible edges. A complete 190-pair unique matching therefore attains the maximum possible cardinality relative to this frozen graph. Does not independently recompute candidate counts from full C1."
+}

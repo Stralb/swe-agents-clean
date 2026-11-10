@@ -1,0 +1,18 @@
+area,original_function,verification,fixture_boundary,identified_limitation
+source_identity,collect_pipeline.py,SHA256 matched across three snapshots,offline source bytes,not a full environment lock
+dispatch,collect,repo_month and downstream_first aliases,stub constructors and collector spies,handlers not executed together
+dispatch,collect,targeted and stream aliases,stub constructors and collector spies,handlers not executed together
+dispatch,collect,AI search and hybrid and fallback branches,stub constructors and collector spies,no external job orchestration
+adaptive_search,_bounded_merged_query,case insensitive merged qualifier replacement,explicit UTC timestamps,does not validate GitHub indexing
+adaptive_search,_split_agentic_window,inclusive binary split with no lost or duplicated seconds,synthetic date boundaries,only binary split
+adaptive_search,_iter_adaptive_agentic_search,first probe reused as first search page and subsequent page numbering,in memory GET responses,not live API
+adaptive_search,_iter_adaptive_agentic_search,recursive split on incomplete or count threshold,in memory count responses,not live API
+adaptive_search,_iter_adaptive_agentic_search,one second and maximum depth failures,synthetic saturated windows,not historical overflow frequency
+adaptive_search,_iter_adaptive_agentic_search,seven day pre-split duplicates a boundary-second fixture,in memory timestamps,does not estimate empirical duplication rate
+adaptive_search,_iter_adaptive_agentic_search,recursive stats overwritten by last initial chunk,explicit shared stats dict,original code intentionally unchanged
+targeted,_targeted_query_jobs,original term ordering and query string,static original constants,does not establish cohort recall
+targeted,_collect_targeted_stream_search,resume cursor and state after full short empty pages,disposable SQLite and fixture GET,persistent real deployment not tested
+targeted,_collect_targeted_stream_search,500 retry and search 1000 limit exhaustion,fixture HTTP errors,secondary throttle not reproduced
+targeted,_collect_targeted_stream_search,missing fixture abort and disallowed real DB path,typed fail closed adapter,not a production safety sandbox
+targeted,_collect_targeted_stream_search,valid synthetic case and retrieval link,original Database in disposable harness,does not use full collector collect entrypoint
+targeted,_collect_targeted_stream_search,multiple retrieval queries linked to one case without marker duplication,disposable SQLite and fixture client,standalone _process_pr duplicate bug remains

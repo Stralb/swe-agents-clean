@@ -1,0 +1,173 @@
+{
+  "schema_version": 1,
+  "date_utc": "2026-10-23",
+  "status": "REPLAYED_FROM_COMPLETE_INDEXED_LIBRARY_C6_190_PAIRED_ROWS__NOT_RAW_BYTE_SHA_AUTHENTICATED",
+  "source": {
+    "library_file": "C6_MATCHED_PAIR_MASTER_190.csv",
+    "library_file_id": "file_00000000bd448211a41a71b09eba8693",
+    "library_reported_size_bytes": 98431,
+    "files_read_extracted_rows": 190,
+    "original_raw_bytes_materialized": false,
+    "original_raw_SHA256_independently_computed": false,
+    "raw_file_access_denied": "Library file has no authorized raw-byte materialization path",
+    "full_text_was_available_from_files_read": true,
+    "original_results": "C6_PRIMARY_OMNIBUS_RESULTS.csv",
+    "results_library_file_id": "file_0000000073e48207ab9265069182b45b",
+    "original_result_reported_pvalues_reproduced_in_indexed_replay": true,
+    "independent_frozen_C2_membership_provenance": "provenance/c1_c2_crossfile_readonly_audit_20261022.json"
+  },
+  "paired_population": {
+    "n_pairs": 190,
+    "unique_pair_indices": 190,
+    "unique_positive_cases": 190,
+    "unique_control_cases": 190
+  },
+  "comparisons": [
+    {
+      "variable": "Issue purpose",
+      "test": "Stuart-Maxwell marginal homogeneity",
+      "n": 190,
+      "df": 5,
+      "statistic": 9.313549061963634,
+      "paired_p": 0.0971925657089748,
+      "effect": "total variation distance",
+      "effect_value": 0.1,
+      "source_type": "fresh_exact_contingency_statistic_and_approx_chi2_p_from_190_indexed_rows"
+    },
+    {
+      "variable": "Instruction specificity",
+      "test": "Stuart-Maxwell marginal homogeneity",
+      "n": 190,
+      "df": 2,
+      "statistic": 15.122913505311077,
+      "paired_p": 0.000520117009904,
+      "effect": "total variation distance",
+      "effect_value": 0.1421052631578947,
+      "source_type": "fresh_exact_contingency_statistic_and_approx_chi2_p_from_190_indexed_rows"
+    },
+    {
+      "variable": "Goal alignment",
+      "test": "Stuart-Maxwell marginal homogeneity",
+      "n": 190,
+      "df": 3,
+      "statistic": 16.22707423580786,
+      "paired_p": 0.0010186743792719,
+      "effect": "total variation distance",
+      "effect_value": 0.1210526315789474,
+      "source_type": "fresh_exact_contingency_statistic_and_approx_chi2_p_from_190_indexed_rows"
+    },
+    {
+      "variable": "Implementation category",
+      "test": "Stuart-Maxwell marginal homogeneity",
+      "n": 190,
+      "df": 6,
+      "statistic": 10.124067054069645,
+      "paired_p": 0.1195235832394017,
+      "effect": "total variation distance",
+      "effect_value": 0.1263157894736842,
+      "source_type": "fresh_exact_contingency_statistic_and_approx_chi2_p_from_190_indexed_rows"
+    },
+    {
+      "variable": "Formal human review before merge",
+      "test": "Exact McNemar",
+      "n": 189,
+      "both_yes": 23,
+      "positive_only": 31,
+      "control_only": 24,
+      "both_no": 111,
+      "positive_yes": 54,
+      "control_yes": 47,
+      "paired_p": 0.4187541882690154,
+      "effect": "matched rate difference",
+      "effect_value": 0.037037037037037035,
+      "missing_pairs": [
+        {
+          "positive_case_id": 12354,
+          "control_case_id": 12897
+        }
+      ],
+      "source_type": "fresh_exact_binomial_McNemar_replay_from_original_indexed_pairs"
+    },
+    {
+      "variable": "Issue→PR creation delay (hours)",
+      "test": "Wilcoxon signed-rank",
+      "n": 190,
+      "W_plus": 8183,
+      "W_minus": 9962,
+      "paired_p": 0.2412317385974189,
+      "effect": "median paired difference hours",
+      "effect_value": -0.4049444444444438,
+      "source_type": "historical_original_C6_results_and_separately_earlier_reconstructed_timestamp_pairs;not freshly computed_from_190_indexed_delay_column_this_turn"
+    },
+    {
+      "variable": "Same issue/PR author",
+      "test": "Exact McNemar",
+      "n": 190,
+      "both_yes": 39,
+      "positive_only": 30,
+      "control_only": 29,
+      "both_no": 92,
+      "positive_yes": 69,
+      "control_yes": 68,
+      "paired_p": 1,
+      "effect": "matched rate difference",
+      "effect_value": 0.005263157894736842,
+      "missing_pairs": [],
+      "source_type": "fresh_exact_binomial_McNemar_replay_from_original_indexed_pairs"
+    },
+    {
+      "variable": "Any requester prior repo activity",
+      "test": "Exact McNemar",
+      "n": 187,
+      "both_yes": 101,
+      "positive_only": 30,
+      "control_only": 39,
+      "both_no": 17,
+      "positive_yes": 131,
+      "control_yes": 140,
+      "paired_p": 0.3355576182340152,
+      "effect": "matched rate difference",
+      "effect_value": -0.0481283422459893,
+      "missing_pairs": [
+        {
+          "positive_case_id": 3267,
+          "control_case_id": 3264
+        },
+        {
+          "positive_case_id": 12354,
+          "control_case_id": 12897
+        },
+        {
+          "positive_case_id": 17320,
+          "control_case_id": 17321
+        }
+      ],
+      "source_type": "fresh_exact_binomial_McNemar_replay_from_original_indexed_pairs"
+    },
+    {
+      "variable": "Primary agent/tool",
+      "test": "Stuart-Maxwell marginal homogeneity",
+      "n": 190,
+      "df": 5,
+      "statistic": 7.021980760604098,
+      "paired_p": 0.2190106974324261,
+      "effect": "total variation distance",
+      "effect_value": 0.05789473684210526,
+      "source_type": "fresh_exact_contingency_statistic_and_approx_chi2_p_from_190_indexed_rows"
+    }
+  ],
+  "replay_method": {
+    "five_categorical": "In JS from 190 recovered paired original labels, construct full k×k contingency, calculate Stuart–Maxwell d^T V^-1 d with one reference category removed; chi2 p approximated to <3e-10 using explicit erfc formula.",
+    "three_binary": "From complete pairwise YES/NO labels, drop only pairs with a missing side, compute two-sided exact binomial tail for McNemar discordant counts.",
+    "continuous": "Original Wilcoxon reported value recorded, independently approximated previously from archived case timestamps and C2 frozen matched controls; requires fresh execution using recovered pair column for the new full-text-input audit.",
+    "uncertainty": "Original bootstrap CI columns are report-provided, not freshly regenerated in this checkpoint."
+  },
+  "scientific_limits": {
+    "case_data_Binary_review_missing_means_NO": false,
+    "three_prior_activity_missing_pairs_assumed_negative": false,
+    "all_nine_newly_computed_entirely_from_C6_indexed_rows": false,
+    "original_C6_190_raw_file_bytes_SHA256_authenticated": false,
+    "matched_observational_effect_is_causal_issue_prevention": false,
+    "all_190_control_repos_exchangeable_iid": false
+  }
+}

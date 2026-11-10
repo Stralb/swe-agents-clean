@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "stage": "c1_c2_readonly_crossfile_membership",
+  "date_utc": "2026-10-22",
+  "status": "PASS_STORED_C1_C2_CROSSFILE_MEMBERSHIP_ONLY",
+  "source_c1": {
+    "path": "matched_control_c1_v1_1/C1_CASE_SCANNER_OPPORTUNITY_3809.csv",
+    "bytes": 841710,
+    "expected_sha256": "6028cb41a3ab80921395f16ffd7c398763631d901363a4a326cb5f04bdca5d7b",
+    "sha256_previously_independently_verified": true
+  },
+  "source_c2": {
+    "path": "matched_control_c2_v1_0/C2_MATCHED_PAIRS_FROZEN.csv",
+    "bytes": 56175,
+    "expected_sha256": "4568dcadd50e827004b13c9a435c7034babce8ebf96d6a9bee49b66c9b11be2b",
+    "sha256_previously_independently_verified": true
+  },
+  "method": "Read-only, ordered byte-range inspection of the frozen C1/C2 original CSVs on Wits; compare C2 member IDs, stored binary outcomes, exact repository strings, and exact complete-opportunity signatures with C1 rows; check pair uniqueness, tier rules, and 90-day caliper. Explicitly reconstitute the C1 record spanning the final chunk boundary. No original files or DB opened for writing.",
+  "c1_accounting": {
+    "first_range_rows": 902,
+    "middle_range_rows": 2515,
+    "final_range_rows": 391,
+    "boundary_spanning_row": 1,
+    "total_rows": 3809,
+    "stored_positives": 192,
+    "stored_potential_negatives": 3617,
+    "invalid_or_malformed_rows_observed": 0
+  },
+  "c2_accounting": {
+    "matched_pairs": 190,
+    "matched_positive_members": 190,
+    "matched_negative_members": 190,
+    "same_repository_tier_a": 115,
+    "cross_repository_tier_b": 75,
+    "reused_case_ids": 0,
+    "time_caliper_violations": 0,
+    "pair_tier_violations": 0
+  },
+  "crossfile": {
+    "matched_member_rows_accounted_for": 380,
+    "missing_c2_members_from_c1": 0,
+    "stored_outcome_mismatches": 0,
+    "repository_mismatches": 0,
+    "opportunity_signature_mismatches": 0,
+    "unmatched_positive_case_ids": [
+      13918,
+      17460
+    ],
+    "unmatched_positive_count": 2
+  },
+  "boundaries": {
+    "range_cut_offsets": [
+      196608,
+      753664
+    ],
+    "last_boundary_row_start_byte": 753522,
+    "last_boundary_row_end_byte": 753748,
+    "last_boundary_row_fields": 24,
+    "last_boundary_row_stored_positive": false
+  },
+  "data_privacy": {
+    "source_csv_bytes_committed": false,
+    "case_level_membership_records_committed": false,
+    "derived_aggregate_report_only": true
+  },
+  "scope": {
+    "current_session_full_file_sha256_recomputed": false,
+    "original_c1_and_c2_sha256_verified_in_prior_session": true,
+    "original_matching_optimizer_reexecuted": false,
+    "final_aug29_sqlite_bytes_authenticated": false,
+    "positive_labels_recomputed_from_scanner_rows": false,
+    "original_scanners_executed": false,
+    "statistical_comparisons_reproduced": false,
+    "causal_security_claim_supported": false
+  }
+}

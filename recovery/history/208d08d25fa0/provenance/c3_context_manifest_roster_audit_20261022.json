@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "audit_date_utc": "2026-10-22",
+  "status": "PASS_C3_CONTEXT_SOURCE_SHA256_AND_BLIND_REPOSITORY_ROSTER_FINGERPRINT",
+  "source": {
+    "path": "matched_control_c3_v1_0/04_CONTEXT_SEPARATE/C3_CONTEXT_RAW_190.csv",
+    "bytes": 1090666,
+    "expected_sha256": "0224053cf034f97ff3ff5850bac1bfa18942c3c0f7de0431ed13832c0aff7bfb",
+    "computed_sha256": "0224053cf034f97ff3ff5850bac1bfa18942c3c0f7de0431ed13832c0aff7bfb",
+    "sha256_matches": true
+  },
+  "method": "Retrieve all 1,090,666 original bytes via approved read-only Wits 32,768-byte chunks; independently compute SHA-256 with streaming compression states and final bit-length padding. Parse quote-aware CSV boundaries and count field delimiters. Compare order-independent 64-bit FNV-1a sums and XORs of blind IDs and blind-ID|repository pairs with the separately read source-original blinded control manifest. Check manifest IDs unique. Produce aggregate counters/hashes only.",
+  "context": {
+    "header_columns": 17,
+    "records": 190,
+    "malformed_rows": 0,
+    "quote_open_at_eof": false,
+    "unconsumed_field_at_eof": false,
+    "complete_byte_range": true
+  },
+  "reference_manifest": {
+    "path": "matched_control_c3_v1_0/C3_CONTROL_MANIFEST_BLINDED.csv",
+    "bytes": 9070,
+    "records": 190,
+    "unique_blind_ids": 190,
+    "previous_source_sha256": "4aa967a944ccd6b0c09483727c0c9ab7adac91cab1172d7696d3d3a22a1b9e4e"
+  },
+  "comparison": {
+    "blind_id_fnv64_sum_hex": "ed370344365a3ccd",
+    "blind_id_fnv64_xor_hex": "b2f0ee3e52a20557",
+    "blind_id_and_repo_fnv64_sum_hex": "f1790b0c13bb1451",
+    "blind_id_and_repo_fnv64_xor_hex": "b77ff574cae34af3",
+    "four_aggregate_fingerprint_comparisons_passed": 4,
+    "privacy": "Only nonsensitive aggregate checksums; no original row values published"
+  },
+  "scope": {
+    "fully_authenticated_c3_issues": true,
+    "fully_authenticated_c3_prs": true,
+    "fully_authenticated_c3_context": true,
+    "context_blind_id_repository_aggregate_roster_reconciled": true,
+    "exact_set_equality_only_from_64bit_commutative_fingerprints_not_claimed": true,
+    "full_three_way_row_level_metadata_join_executed": false,
+    "implementation_packet_contents_sha256_verified": false,
+    "completed_c4_c5_coding_source_authenticated": false,
+    "c6_c7_pvalues_recomputed": false,
+    "final_aug29_sqlite_authenticated": false,
+    "original_finding_attribution_recomputed": false
+  },
+  "original_sources_modified": false
+}

@@ -1,0 +1,10 @@
+source_set,path,reason,bytes
+MINER_AUG17,.env.example,blocked_sensitive_or_runtime_path,102
+MINER_AUG19,.streamlit/secrets.toml.example,blocked_sensitive_or_runtime_path,266
+MINER_AUG19,.env.example,blocked_sensitive_or_runtime_path,687
+MINER_LIVE,.pytest_cache/.gitignore,blocked_sensitive_or_runtime_path,37
+MINER_LIVE,.pytest_cache/v/cache/lastfailed,blocked_sensitive_or_runtime_path,2
+MINER_LIVE,.pytest_cache/v/cache/nodeids,blocked_sensitive_or_runtime_path,712
+MINER_LIVE,.pytest_cache/README.md,blocked_sensitive_or_runtime_path,302
+MINER_LIVE,.pytest_cache/CACHEDIR.TAG,blocked_sensitive_or_runtime_path,191
+DECISION_STEP7,__pycache__/collect_step7_evidence.cpython-313.pyc,blocked_sensitive_or_runtime_path,23542

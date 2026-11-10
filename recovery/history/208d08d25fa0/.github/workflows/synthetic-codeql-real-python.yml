@@ -1,0 +1,78 @@
+name: Real checksum-verified CodeQL Python security queries — synthetic only
+
+on:
+  push:
+    branches:
+      - work/miner-core-consolidation-20261021
+
+permissions:
+  contents: read
+
+jobs:
+  original-codeql-real-python-offline:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 28
+    steps:
+      - name: Checkout private work branch without persisted credentials
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Download and SHA-256 verify official CodeQL 2.27.3 bundle
+        shell: bash
+        run: |
+          curl --fail --silent --show-error --location --retry 2 \
+            --output "$RUNNER_TEMP/codeql-bundle-linux64.tar.gz" \
+            "https://github.com/github/codeql-action/releases/download/codeql-bundle-v2.27.3/codeql-bundle-linux64.tar.gz"
+          printf '%s  %s\n' \
+            "64518dc413c8e7b5733fee2489e830a899bb1e3f28c8873b5869d5cc90164c5c" \
+            "$RUNNER_TEMP/codeql-bundle-linux64.tar.gz" | sha256sum --check
+          mkdir -p "$RUNNER_TEMP/verified-codeql"
+          tar -xzf "$RUNNER_TEMP/codeql-bundle-linux64.tar.gz" \
+            -C "$RUNNER_TEMP/verified-codeql"
+          # The official archive contains precompiled QLX blobs that are not
+          # readable by the non-root container user with extracted file modes.
+          # Permit read/search only on this verified throwaway tool bundle.
+          chmod -R a+rX "$RUNNER_TEMP/verified-codeql/codeql"
+          test -x "$RUNNER_TEMP/verified-codeql/codeql/codeql"
+          python3 - "$RUNNER_TEMP/verified-codeql/codeql" <<'PY'
+          from pathlib import Path
+          import os, sys
+          root = Path(sys.argv[1])
+          matches = sorted(root.glob("qlpacks/codeql/python-queries/*/.codeql/precompiled/*.bytes.qlx"))
+          assert matches, "Pinned CodeQL bundle contains no expected precompiled query plan"
+          assert all(os.access(p, os.R_OK) for p in matches), "Unreadable precompiled plan"
+          print(f"Verified readable precompiled CodeQL query plans: {len(matches)}")
+          PY
+          sha256sum "$RUNNER_TEMP/verified-codeql/codeql/codeql"
+          "$RUNNER_TEMP/verified-codeql/codeql/codeql" version
+          du -sh "$RUNNER_TEMP/verified-codeql/codeql"
+      - name: Build throwaway Python and Git test container
+        shell: bash
+        run: |
+          docker build --file tests/support/Dockerfile.snapshot-stub-smoke \
+            --tag arno-codeql-archived-synthetic:20261021 .
+      - name: Run exact archived Python CodeQL scanner offline in restricted container
+        shell: bash
+        run: |
+          docker run --rm \
+            --network none \
+            --read-only \
+            --tmpfs /tmp:rw,exec,nosuid,nodev,size=3072m,mode=1777 \
+            --cap-drop ALL \
+            --security-opt no-new-privileges \
+            --pids-limit 220 \
+            --memory 6g \
+            --cpus 2 \
+            --user 65534:65534 \
+            --mount "type=bind,source=$RUNNER_TEMP/verified-codeql/codeql,target=/opt/codeql,readonly" \
+            --mount "type=bind,source=$GITHUB_WORKSPACE,target=/workspace,readonly" \
+            --workdir /workspace \
+            --env HOME=/tmp \
+            --env XDG_CACHE_HOME=/tmp/codeql-cache \
+            --env PYTHONDONTWRITEBYTECODE=1 \
+            --env PATH=/opt/codeql:/usr/local/bin:/usr/bin:/bin \
+            --env ARNO_RUN_REAL_CODEQL=1 \
+            --env ARNO_REAL_CODEQL_BINARY=/opt/codeql/codeql \
+            arno-codeql-archived-synthetic:20261021 \
+            python -m unittest tests.test_miner_real_codeql_local_synthetic -v

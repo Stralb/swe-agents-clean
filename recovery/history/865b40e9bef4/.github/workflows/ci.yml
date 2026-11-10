@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - research/**
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install test dependencies
+        run: python3 -m pip install pytest packaging PyYAML requests python-dotenv langdetect
+      - name: Check Python syntax
+        run: python3 -m compileall -q src scripts analysis ui tests
+      - name: Verify matched results
+        run: python3 -m analysis.reproduce_matched --check
+      - name: Check population accounting
+        run: python3 -m analysis.cluster_stage_lineage audit-recorded
+      - name: Run matched-results tests
+        run: python3 -m unittest discover -s tests -p 'test_reproduce_matched.py' -v
+      - name: Run miner unit tests
+        run: python3 -m pytest -q tests/test_ai_markers.py tests/test_dependency_diff.py tests/test_issue_linker.py tests/test_upstream_features.py tests/test_filters.py tests/test_tool_applicability.py

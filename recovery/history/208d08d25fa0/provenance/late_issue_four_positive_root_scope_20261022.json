@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "status": "EXPLORATORY_READONLY_PUBLIC_LINKAGE_SCOPE_TRIAGE_NO_LABEL_CHANGES",
+  "audit_date_utc": "2026-10-22",
+  "source_provenance": {
+    "case_positivity": "frozen C1 original observed for four cases",
+    "candidate_sqlite": "miner.agentic-js.eval.20260720_224159.full3809-continuation.db (later continuation; not authenticated final)",
+    "roots": "original Wits D1_ROOT_INDEX_342.csv and D2 blind-A packets",
+    "disputes": "provenance/d_vs_d7_label_differences.csv",
+    "public_issue_pr": "current public GitHub issue/PR metadata and changed file patches; as-of-PR issue snapshots unavailable",
+    "original_C6_pair_master_authenticated": false,
+    "final_frozen_sqlite_sha256_authenticated": false,
+    "root_level_commit_introduction_dates_authenticated": false
+  },
+  "expected_total_census_roots": 342,
+  "expected_total_conflicting_roots": 43,
+  "reviewed_issue_after_pr_positive_cases": [
+    {
+      "case_id": 5264,
+      "repository_original": "EKKOLearnAI/hermes-studio",
+      "repository_current": "EKKOLearnAI/ekko-studio",
+      "issue_number": 1352,
+      "pr_number": 1351,
+      "issue_created_utc": "2026-06-05T15:35:11Z",
+      "pr_created_utc": "2026-06-05T09:24:59Z",
+      "pr_merged_utc": "2026-06-06T01:06:53Z",
+      "issue_goal": "Persistent Session/Always approval choice for execute_code",
+      "pr_broader_goal": "LAN-peer MCP terminals, command execution and file transfer",
+      "root_issue_scope_review": "DISTINCT_PR_WORKSTREAM_IN_DIFF",
+      "root_ids": [
+        "CROOT-05264-01",
+        "CROOT-05264-02",
+        "CROOT-05264-03",
+        "CROOT-05264-04",
+        "CROOT-05264-05"
+      ],
+      "issue_specific_file": "packages/server/src/services/hermes/agent-bridge/hermes_bridge.py",
+      "scanner_root_workstream": "LAN-peer service/device controllers/socket paths",
+      "notes": "Original Wits D2 roots point at LAN-peer/devices functionality; public PR patch separately includes the approval-memory fix. No independent pre-issue private prompts."
+    },
+    {
+      "case_id": 5267,
+      "repository_original": "EKKOLearnAI/hermes-studio",
+      "repository_current": "EKKOLearnAI/ekko-studio",
+      "issue_number": 1087,
+      "pr_number": 1086,
+      "issue_created_utc": "2026-05-28T04:08:05Z",
+      "pr_created_utc": "2026-05-28T03:58:21Z",
+      "pr_merged_utc": "2026-05-28T04:30:50Z",
+      "issue_goal": "Allow session_usage.created_at migration with DEFAULT 0",
+      "pr_broader_goal": "Version preview/update service",
+      "root_issue_scope_review": "DISTINCT_PR_WORKSTREAM_IN_DIFF",
+      "root_ids": [
+        "CROOT-05267-01",
+        "CROOT-05267-02",
+        "CROOT-05267-03",
+        "CROOT-05267-04",
+        "CROOT-05267-05",
+        "CROOT-05267-06",
+        "CROOT-05267-07"
+      ],
+      "issue_specific_file": "packages/server/src/db/hermes/schemas.ts",
+      "scanner_root_workstream": "Version-preview update controller and preview runtime",
+      "issue_specific_fix_commit": "2ef456ef26da30318818bce59f94ceb117bcf6da",
+      "issue_specific_fix_commit_utc": "2026-05-28T04:25:51Z",
+      "notes": "Issue-specific commit changes schema and adds migration test; all seven original D2 root operations are in preview/update controller. Wits packets describe preview code predating issue, but exact earliest source-line commit chronology remains unverified."
+    },
+    {
+      "case_id": 7682,
+      "repository_original": "companion-inc/feynman",
+      "repository_current": "companion-inc/feynman",
+      "issue_number": 207,
+      "pr_number": 206,
+      "issue_created_utc": "2026-07-31T08:51:51Z",
+      "pr_created_utc": "2026-07-30T09:03:44Z",
+      "pr_merged_utc": "2026-08-01T15:23:15Z",
+      "issue_goal": "Fix Win11 one-line installer path/extraction failure",
+      "pr_broader_goal": "Bundled Pi runtime upgrade with Windows installer fix",
+      "root_issue_scope_review": "RELATEDNESS_UNRESOLVED_MIXED_PR",
+      "root_ids": [
+        "CROOT-07682-01"
+      ],
+      "issue_specific_file": "scripts/install/install.ps1",
+      "scanner_root_workstream": "Child-process command resolution in runtime/native bundle",
+      "notes": "PR includes user-reported installer repair but extends many runtime and code generation paths; root impact on issue goal requires file/commit trace."
+    },
+    {
+      "case_id": 12334,
+      "repository_original": "getpaseo/paseo",
+      "repository_current": "getpaseo/paseo",
+      "issue_number": 2012,
+      "pr_number": 2011,
+      "issue_created_utc": "2026-07-11T22:16:34Z",
+      "pr_created_utc": "2026-07-11T21:17:01Z",
+      "pr_merged_utc": "2026-07-12T18:10:36Z",
+      "issue_goal": "Allow generic ACP filesystem/terminal capability advertisement to be disabled",
+      "pr_broader_goal": "Implement configurable generic ACP client capabilities",
+      "root_issue_scope_review": "RELATED_BUT_POST_PR_START",
+      "root_ids": [
+        "CROOT-12334-01"
+      ],
+      "issue_specific_file": "packages/server/src/server/agent/providers/generic-acp-agent.ts",
+      "scanner_root_workstream": "ACP diagnostic test/agent process invocation",
+      "notes": "Issue-PR patch is goal-aligned; issue creation is nevertheless after PR creation and cannot be presumed to be the original prompt."
+    }
+  ],
+  "interpretation_limits": {
+    "scope_labels_are_adjudicated": false,
+    "observed_current_issue_body_proves_historical_pre_pr_body": false,
+    "issue_created_after_PR_started_proves_issue_not_actionable_for_all_commits": false,
+    "case_level_observations_are_statistically_independent_of_roots": false,
+    "primary_C6_omnibus_recalculated_for_this_subset": false,
+    "do_not_drop_original_cases": true
+  }
+}

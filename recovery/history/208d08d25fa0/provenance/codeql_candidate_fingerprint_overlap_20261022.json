@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "audit_date_utc": "2026-10-22",
+  "status": "READONLY_CANDIDATE_SQLITE_CODEQL_LOCATION_OVERLAP_NOT_FINAL_FROZEN_REPLAY",
+  "source_database": {
+    "kind": "later continuation SQLite, not final 29 August frozen research DB",
+    "filename": "miner.agentic-js.eval.20260720_224159.full3809-continuation.db",
+    "final_database_sha_authenticated": false
+  },
+  "filter": "scanner='codeql' AND introduced=1",
+  "all_codeql_rows": 392,
+  "codeql_cases": 131,
+  "unique_full_raw_json": 392,
+  "missing_line_hash": 0,
+  "missing_start_column_fingerprint": 0,
+  "missing_message": 0,
+  "missing_case_rule_file": 0,
+  "grouping_by_case_rule_file_primary_line_hash": {
+    "groups": 385,
+    "repeated_groups": 3,
+    "extra_rows_beyond_one": 7,
+    "qualified_cases": [
+      649,
+      10779,
+      11286
+    ]
+  },
+  "grouping_by_case_rule_file_primary_line_hash_start_column_fingerprint_and_message": {
+    "groups": 388,
+    "repeated_groups": 1,
+    "extra_rows_beyond_one": 4,
+    "repeated_case": 649,
+    "repeated_count": 5,
+    "repeated_rule": "js/incomplete-sanitization",
+    "repeated_file": "src/shared/format-terminal-path.ts",
+    "repeated_line": 74,
+    "repeated_primary_line_hash": "d9ac97afaab7de15:1",
+    "repeated_start_column_fingerprint": "12",
+    "unique_full_raw_json_in_group": 5,
+    "distinct_end_lines": [
+      75,
+      76,
+      77,
+      78,
+      79
+    ],
+    "message": "This does not escape backslash characters in the input."
+  },
+  "contrasted_other_repeated_line_hash_cases": [
+    {
+      "case_id": 10779,
+      "grouping_note": "Three rows at one primary line-hash with distinct message/start columns; no repeated refined fingerprint-message group"
+    },
+    {
+      "case_id": 11286,
+      "grouping_note": "Five rows in same case/rule/file, at least one repeated line-hash group, but not a repeated refined fingerprint-message group"
+    }
+  ],
+  "scientific_limits": {
+    "five_case649_rows_are_proven_duplicate_vulnerabilities": false,
+    "codeql_raw_json_unique_implies_five_independent_vulnerabilities": false,
+    "warnings_are_same_as_causal_defects": false,
+    "underlying_original_SARIF_compared": false,
+    "warning_root_counts_altered": false,
+    "original_scanner_positive_cohort_recomputed": false
+  },
+  "compared_available_other_Wits_sarif": {
+    "path": "counterfactual_replay_r1/calibration_medium/historical_validation/results/S5PAIR-025.base.sarif",
+    "bytes": 101211,
+    "sha256_reassembled_and_verified_with_known_SHA256_test_vector": "080f79fd01a52d22ed9d86ec5dbdd9518f059d279bc4d6f8b907ab1f686c6808",
+    "total_results": 0,
+    "linked_case_id": 3581,
+    "source_case_original_base_sha": "68d4f9c0ac43e54266205b80fea328da4dd535a2",
+    "OWP14_expected_before_sarif_sha256": "406d53383bc7c6b133114ab623bfe63a2f43da6d1450b404d105f1e6d853cc9b",
+    "is_exact_OWP14_baseline": false,
+    "notes": "Historical calibration targeted-rule SARIF from same original repo base is NOT the full historical OWP14 baseline; do not substitute this file for it."
+  }
+}

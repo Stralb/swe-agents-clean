@@ -1,0 +1,362 @@
+{
+  "schema_version": 1,
+  "audit_date_utc": "2026-10-22",
+  "status": "INDEXED_C6_CATEGORY_RECONCILIATION_REPORTED_PVALUES_ONLY",
+  "source_representation": {
+    "category_effects": "C6_CATEGORY_DETAILS.csv (37 indexed rows)",
+    "categorical_contingency": "C6_PAIRED_CONTINGENCY_LONG.csv (165 indexed cells)",
+    "source_C6_original_file_bytes_authenticated": false
+  },
+  "expected_primary_family_size": 9,
+  "historical_primary_pvalues": [
+    {
+      "name": "issue_instruction_specificity",
+      "p_reported": 0.00052,
+      "n_pairs_reported": 190,
+      "display_decimals": 5,
+      "input_provenance": "HISTORICAL_REPORTED_VALUE"
+    },
+    {
+      "name": "issue_purpose",
+      "p_reported": 0.097,
+      "n_pairs_reported": 190,
+      "display_decimals": 3,
+      "input_provenance": "HISTORICAL_REPORTED_VALUE"
+    },
+    {
+      "name": "pr_goal_alignment",
+      "p_reported": 0.001,
+      "n_pairs_reported": 190,
+      "display_decimals": 3,
+      "input_provenance": "HISTORICAL_REPORTED_VALUE"
+    },
+    {
+      "name": "implementation_category",
+      "p_reported": 0.12,
+      "n_pairs_reported": 190,
+      "display_decimals": 3,
+      "input_provenance": "HISTORICAL_REPORTED_VALUE"
+    },
+    {
+      "name": "human_review",
+      "p_reported": 0.419,
+      "n_pairs_reported": 189,
+      "display_decimals": 3,
+      "input_provenance": "HISTORICAL_REPORTED_VALUE"
+    },
+    {
+      "name": "issue_to_pr_delay",
+      "p_reported": 0.241,
+      "n_pairs_reported": 190,
+      "display_decimals": 3,
+      "input_provenance": "HISTORICAL_REPORTED_VALUE"
+    },
+    {
+      "name": "same_issue_pr_author",
+      "p_reported": 1.0,
+      "n_pairs_reported": 190,
+      "display_decimals": 3,
+      "input_provenance": "HISTORICAL_REPORTED_VALUE"
+    },
+    {
+      "name": "any_prior_repository_activity",
+      "p_reported": 0.336,
+      "n_pairs_reported": 190,
+      "display_decimals": 3,
+      "input_provenance": "HISTORICAL_REPORTED_VALUE"
+    },
+    {
+      "name": "primary_agent_tool",
+      "p_reported": 0.219,
+      "n_pairs_reported": 190,
+      "display_decimals": 3,
+      "input_provenance": "HISTORICAL_REPORTED_VALUE"
+    }
+  ],
+  "category_effect_counts": {
+    "Issue purpose": {
+      "Bug / regression / reliability fix": [
+        82,
+        97
+      ],
+      "Feature / capability addition": [
+        57,
+        53
+      ],
+      "Compatibility / migration / platform adaptation": [
+        16,
+        4
+      ],
+      "Dependency / package/toolchain maintenance": [
+        12,
+        14
+      ],
+      "Security hardening / vulnerability remediation": [
+        9,
+        6
+      ],
+      "Internal engineering / test / CI maintenance": [
+        14,
+        16
+      ]
+    },
+    "Instruction specificity": {
+      "Problem only": [
+        36,
+        33
+      ],
+      "Suggests solution": [
+        33,
+        9
+      ],
+      "Explicit instruction": [
+        121,
+        148
+      ]
+    },
+    "Goal alignment": {
+      "Aligned": [
+        160,
+        183
+      ],
+      "Expanded": [
+        19,
+        4
+      ],
+      "Diverged": [
+        9,
+        3
+      ],
+      "Unclear": [
+        2,
+        0
+      ]
+    },
+    "Implementation category": {
+      "Capability / integration expansion": [
+        55,
+        56
+      ],
+      "Behavior / reliability correction": [
+        35,
+        47
+      ],
+      "Dependency / build / toolchain change": [
+        26,
+        20
+      ],
+      "Data / persistence / state management": [
+        20,
+        9
+      ],
+      "Runtime / infrastructure / configuration change": [
+        22,
+        29
+      ],
+      "Validation / access / boundary control": [
+        17,
+        10
+      ],
+      "Internal tooling / CI / refactor": [
+        15,
+        19
+      ]
+    },
+    "Primary agent/tool": {
+      "OpenAI Codex": [
+        109,
+        104
+      ],
+      "GitHub Copilot": [
+        39,
+        34
+      ],
+      "Claude Code": [
+        22,
+        21
+      ],
+      "Cursor": [
+        15,
+        18
+      ],
+      "Devin": [
+        2,
+        6
+      ],
+      "Multiple / unclear": [
+        3,
+        7
+      ]
+    },
+    "PR purpose": {
+      "Bug / regression / reliability fix": [
+        59,
+        89
+      ],
+      "Feature / capability addition": [
+        66,
+        59
+      ],
+      "Compatibility / migration / platform adaptation": [
+        25,
+        5
+      ],
+      "Dependency / package/toolchain maintenance": [
+        12,
+        15
+      ],
+      "Security hardening / vulnerability remediation": [
+        10,
+        6
+      ],
+      "Internal engineering / test / CI maintenance": [
+        18,
+        16
+      ]
+    },
+    "Requester association": {
+      "NONE": [
+        79,
+        71
+      ],
+      "CONTRIBUTOR": [
+        46,
+        59
+      ],
+      "COLLABORATOR": [
+        17,
+        17
+      ],
+      "MEMBER": [
+        11,
+        19
+      ],
+      "OWNER": [
+        36,
+        23
+      ]
+    }
+  },
+  "secondary_contingency": {
+    "PR purpose": {
+      "categories": [
+        "Bug / regression / reliability fix",
+        "Compatibility / migration / platform adaptation",
+        "Dependency / package/toolchain maintenance",
+        "Feature / capability addition",
+        "Internal engineering / test / CI maintenance",
+        "Security hardening / vulnerability remediation"
+      ],
+      "counts": [
+        [
+          45,
+          0,
+          2,
+          7,
+          3,
+          2
+        ],
+        [
+          12,
+          1,
+          4,
+          5,
+          2,
+          1
+        ],
+        [
+          2,
+          0,
+          3,
+          6,
+          1,
+          0
+        ],
+        [
+          21,
+          2,
+          3,
+          33,
+          5,
+          2
+        ],
+        [
+          5,
+          0,
+          3,
+          5,
+          5,
+          0
+        ],
+        [
+          4,
+          2,
+          0,
+          3,
+          0,
+          1
+        ]
+      ]
+    },
+    "Requester association": {
+      "categories": [
+        "COLLABORATOR",
+        "CONTRIBUTOR",
+        "MEMBER",
+        "NONE",
+        "OWNER"
+      ],
+      "counts": [
+        [
+          9,
+          3,
+          2,
+          1,
+          2
+        ],
+        [
+          1,
+          21,
+          4,
+          17,
+          3
+        ],
+        [
+          1,
+          2,
+          4,
+          4,
+          0
+        ],
+        [
+          6,
+          25,
+          9,
+          34,
+          5
+        ],
+        [
+          0,
+          8,
+          0,
+          15,
+          13
+        ]
+      ]
+    }
+  },
+  "source_reported_tier_a_sensitivity": {
+    "instruction_specificity_nominal_p": 0.00645,
+    "goal_alignment_nominal_p": 0.077,
+    "n_pairs": 115,
+    "status": "REPORTED_ONLY_NOT_RECOMPUTED"
+  },
+  "limitations": {
+    "category_effect_counts_from_indexed_table_only": true,
+    "original_C6_C7_full_source_SHA256_verified": false,
+    "four_remaining_primary_tests_independently_recomputed": false,
+    "historical_repository_blocked_CIs_recomputed": false,
+    "posthoc_multiple_testing_sensitivity_not_historically_preregistered": true,
+    "causal_effect_established": false
+  }
+}
