@@ -73,4 +73,4 @@ See [methods and results](docs/methods.md) and [reproduction notes](docs/reprodu
 
 ## Research dataset
 
-Start with [the dataset guide](dataset/README.md) for case membership, evidence links, schema and access. The neutral data export is being built; its completion status is recorded there. Historical sources remain under `recovery/` and on the `preservation/20261111` branch.
+Start with [the dataset guide](dataset/README.md) for case membership, evidence links, schema and access. The Parquet release is uploaded and verified; the guide records its pinned data revision and the separate SQLite preparation status. Historical sources remain under `recovery/` and on the `preservation/20261111` branch.
