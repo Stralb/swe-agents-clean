@@ -80,3 +80,7 @@ The preserved master includes an additive review layer for navigating cases, exp
 - [Private dataset release on Hugging Face](https://huggingface.co/datasets/Stralb/malicious-issue-miner-data/tree/main/research/arno-review-20261111-v1)
 
 The small reviewer files are verified uploaded. Full database transfer remains unverified in the last recorded status; consult [BUILD_STATUS.json](recovery/reviewer_release/BUILD_STATUS.json) and the remote upload receipt before claiming completion. Private data access must be arranged for reviewers.
+
+## Paper-facing Parquet entry point
+
+The [paper dataset guide](recovery/reviewer_release/PAPER_DATASET.md) defines one case-index entry point with paper-cohort membership, issue/PR links and supporting evidence tables. Export/upload job `85293` was submitted; publication is not yet verified because cluster connections timed out. The existing preservation release remains available separately.
