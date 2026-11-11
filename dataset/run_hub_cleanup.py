@@ -17,10 +17,10 @@ def main():
  original_prefix=names[0][:-len('classifications')].rstrip('_')
  stamp=datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ')
  job=root/'mcp_uploads/jobs'/('dataset_cleanup_'+stamp+'_'+uuid.uuid4().hex[:6]);job.mkdir(parents=True,exist_ok=False);(job/'logs').mkdir()
- revision='6fd83076a2be845c8b99a2c36af9930ef800f177'
+ revision='9af0ac5dc7db6294df66b547831a14d2e2a44f47'
  url='https://raw.githubusercontent.com/Stralb/swe-agents-clean/'+revision+'/dataset/clean_hub.py'
  data=urllib.request.urlopen(url,timeout=60).read()
- assert hashlib.sha256(data).hexdigest()=='fc797d89e0590e0c776ab6a8f209834886ef1afd0db9f89afc51de39c39a03b3','Downloaded source checksum mismatch'
+ assert hashlib.sha256(data).hexdigest()=='24f34d7bebaefd8602be5f773c232aa1e127770be476f9837e5f29a7be5f9180','Downloaded source checksum mismatch'
  script=job/'clean_hub.py';script.write_bytes(data)
  python=Path.home()/'.venvs/huggingface/bin/python';assert python.is_file(),python
  cmd=[str(python),'-u',str(script),'--bootstrap','--database',str(database),'--output',str(job/'exports'),'--publish','--code-revision',revision]
