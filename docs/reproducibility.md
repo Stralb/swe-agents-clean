@@ -8,7 +8,7 @@
 - `src/`, `scripts/`, and `ui/`: the recovered miner and inspection implementation.
 - `analysis/`: offline checks for recorded counts and separately supplied original files.
 
-The miner was imported from `Stralb/arno-research-reproducibility`, commit `865b40e9bef4e552cefb6217c10aedb53cb6e8a7`, which contains a recovered 20 October 2026 source candidate. The initial import was checked against the source file hashes. Later changes reorganized paths, imports, commands, tests, and documentation without rewriting the collection or scanner algorithms. It is not independently established that these exact source bytes produced every historical scanner result. The original frozen SQLite database, row-level annotations, scanner outputs, query packs, and runtime environment are not included.
+The miner was imported from the archived source repository, preserved on branch `preservation/20261111`, commit `865b40e9bef4e552cefb6217c10aedb53cb6e8a7`, which contains a recovered 20 October 2026 source candidate. The initial import was checked against the source file hashes. Later changes reorganized paths, imports, commands, tests, and documentation without rewriting the collection or scanner algorithms. It is not independently established that these exact source bytes produced every historical scanner result. The original frozen SQLite database, row-level annotations, scanner outputs, query packs, and runtime environment are not included.
 
 ## Offline checks
 

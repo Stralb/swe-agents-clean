@@ -71,16 +71,6 @@ A scanner finding is not proof of an exploitable vulnerability or a malicious is
 
 See [methods and results](docs/methods.md) and [reproduction notes](docs/reproducibility.md) for exactly what has been checked and what remains unavailable.
 
-## Research database and review edition
+## Research dataset
 
-The preserved master includes an additive review layer for navigating cases, experiments, annotations and embedded evidence. Original records remain intact; historical experiments and later tests are separately identified.
-
-- [Dataset guide: contents, version, checksum, access and limitations](recovery/reviewer_release/DATASET.md)
-- [Full database ERD](recovery/reviewer_release/database/erd/FULL_DATABASE_ERD.svg)
-- [Private dataset release on Hugging Face](https://huggingface.co/datasets/Stralb/malicious-issue-miner-data/tree/main/research/arno-review-20261111-v1)
-
-The small reviewer files are verified uploaded. Full database transfer remains unverified in the last recorded status; consult [BUILD_STATUS.json](recovery/reviewer_release/BUILD_STATUS.json) and the remote upload receipt before claiming completion. Private data access must be arranged for reviewers.
-
-## Paper-facing Parquet entry point
-
-The [paper dataset guide](recovery/reviewer_release/PAPER_DATASET.md) defines one case-index entry point with paper-cohort membership, issue/PR links and supporting evidence tables. Export/upload job `85293` was submitted; publication is not yet verified because cluster connections timed out. The existing preservation release remains available separately.
+Start with [the dataset guide](dataset/README.md) for case membership, evidence links, schema and access. The neutral data export is being built; its completion status is recorded there. Historical sources remain under `recovery/` and on the `preservation/20261111` branch.

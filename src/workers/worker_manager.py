@@ -50,7 +50,7 @@ def _start_thread(name: str, target: Callable[[], None]) -> threading.Thread:
     return t
 
 
-def run_supervisor(settings: Settings, *, mode: str, github_workers: int, source_workers: int, dependency_workers: int, secret_workers: int, codeql_workers: int, max_loops: int = 0, idle_seconds: int | None = None, exit_when_drained: bool = False) -> None:
+def run_controller(settings: Settings, *, mode: str, github_workers: int, source_workers: int, dependency_workers: int, secret_workers: int, codeql_workers: int, max_loops: int = 0, idle_seconds: int | None = None, exit_when_drained: bool = False) -> None:
     db = Database(settings.db_path)
     if mode == "live" and max_loops:
         # Live mode is the production continuous pipeline. It must keep mining and
@@ -99,13 +99,13 @@ def run_supervisor(settings: Settings, *, mode: str, github_workers: int, source
         for t in threads:
             t.join()
     except KeyboardInterrupt:
-        log.info("Supervisor stopped by user")
-        db.execute("INSERT INTO pipeline_events(event_type, detail) VALUES ('supervisor_stopped', 'KeyboardInterrupt')")
+        log.info("Controller stopped by user")
+        db.execute("INSERT INTO pipeline_events(event_type, detail) VALUES ('controller_stopped', 'KeyboardInterrupt')")
 
 
 def main() -> None:
     setup_logging()
-    parser = argparse.ArgumentParser(description="Continuous mining/evaluation worker supervisor")
+    parser = argparse.ArgumentParser(description="Continuous mining/evaluation worker controller")
     parser.add_argument("--mode", choices=["live", "mine", "evaluate", "evaluate-cheap", "evaluate-codeql"], default="live")
     parser.add_argument("--github-workers", type=int, default=1)
     parser.add_argument("--source-workers", type=int, default=1)
@@ -121,7 +121,7 @@ def main() -> None:
         args.source_workers = args.dependency_workers = args.secret_workers = args.codeql_workers = 0
     if args.mode == "evaluate":
         args.github_workers = 0
-    run_supervisor(
+    run_controller(
         settings,
         mode=args.mode,
         github_workers=args.github_workers,

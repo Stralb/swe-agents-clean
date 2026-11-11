@@ -1,0 +1,11 @@
+digraph schema {graph [rankdir=TB,splines=ortho,concentrate=false,pack=true,packmode="array_u3",nodesep=0.8,ranksep=1.2,pad=0.3,bgcolor="white",outputorder=edgesfirst];node [shape=plain,fontname="DejaVu Sans",fontsize=12];edge [color="#4d6789",penwidth=1.4,arrowsize=0.75];
+"cases" [label=<<TABLE BORDER="1" COLOR="#70849d" CELLBORDER="0" CELLSPACING="0" CELLPADDING="7"><TR><TD COLSPAN="3" BGCOLOR="#d7e9ff"><B>cases</B></TD></TR><TR><TD ALIGN="LEFT">PK</TD><TD ALIGN="LEFT">id</TD><TD>INTEGER</TD></TR><TR><TD ALIGN="LEFT">FK</TD><TD ALIGN="LEFT">repo_id</TD><TD>INTEGER</TD></TR><TR><TD ALIGN="LEFT">FK</TD><TD ALIGN="LEFT">issue_id</TD><TD>INTEGER</TD></TR><TR><TD ALIGN="LEFT">FK</TD><TD ALIGN="LEFT">pr_id</TD><TD>INTEGER</TD></TR></TABLE>>];
+"issues" [label=<<TABLE BORDER="1" COLOR="#70849d" CELLBORDER="0" CELLSPACING="0" CELLPADDING="7"><TR><TD COLSPAN="3" BGCOLOR="#d7e9ff"><B>issues</B></TD></TR><TR><TD ALIGN="LEFT">PK</TD><TD ALIGN="LEFT">id</TD><TD>INTEGER</TD></TR><TR><TD ALIGN="LEFT">FK</TD><TD ALIGN="LEFT">repo_id</TD><TD>INTEGER</TD></TR></TABLE>>];
+"pull_requests" [label=<<TABLE BORDER="1" COLOR="#70849d" CELLBORDER="0" CELLSPACING="0" CELLPADDING="7"><TR><TD COLSPAN="3" BGCOLOR="#d7e9ff"><B>pull_requests</B></TD></TR><TR><TD ALIGN="LEFT">PK</TD><TD ALIGN="LEFT">id</TD><TD>INTEGER</TD></TR><TR><TD ALIGN="LEFT">FK</TD><TD ALIGN="LEFT">repo_id</TD><TD>INTEGER</TD></TR></TABLE>>];
+"repos" [label=<<TABLE BORDER="1" COLOR="#70849d" CELLBORDER="0" CELLSPACING="0" CELLPADDING="7"><TR><TD COLSPAN="3" BGCOLOR="#d7e9ff"><B>repos</B></TD></TR><TR><TD ALIGN="LEFT">PK</TD><TD ALIGN="LEFT">id</TD><TD>INTEGER</TD></TR></TABLE>>];
+"cases" -> "pull_requests";
+"cases" -> "issues";
+"cases" -> "repos";
+"issues" -> "repos";
+"pull_requests" -> "repos";
+}

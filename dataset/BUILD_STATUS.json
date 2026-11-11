@@ -1,0 +1,9 @@
+{
+  "state": "PREPARED_CLUSTER_EXECUTION_UNCONFIRMED",
+  "schema_tables": 111,
+  "schema_views": 18,
+  "declared_foreign_keys": 146,
+  "source_data_modified": false,
+  "upload_verified": false,
+  "history_rewritten": false
+}

@@ -2,7 +2,7 @@ from pathlib import Path
 
 from src.db.database import Database
 from src.settings import RuntimeLimits, Settings
-from src.workers import supervisor
+from src.workers import worker_manager as controller
 
 
 class DummyThread:
@@ -38,11 +38,11 @@ def test_live_mode_ignores_max_loops_so_workers_keep_polling(monkeypatch, tmp_pa
         calls.append(("eval", job_group, worker_id, max_loops, exit_when_idle, mode_label))
         return 0
 
-    monkeypatch.setattr(supervisor, "_start_thread", fake_start_thread)
-    monkeypatch.setattr(supervisor, "mine_loop", fake_mine_loop)
-    monkeypatch.setattr(supervisor, "evaluate_loop", fake_evaluate_loop)
+    monkeypatch.setattr(controller, "_start_thread", fake_start_thread)
+    monkeypatch.setattr(controller, "mine_loop", fake_mine_loop)
+    monkeypatch.setattr(controller, "evaluate_loop", fake_evaluate_loop)
 
-    supervisor.run_supervisor(
+    controller.run_controller(
         settings,
         mode="live",
         github_workers=1,
@@ -78,10 +78,10 @@ def test_evaluate_mode_still_drains_and_exits(monkeypatch, tmp_path):
         calls.append((job_group, max_loops, exit_when_idle, mode_label))
         return 0
 
-    monkeypatch.setattr(supervisor, "_start_thread", fake_start_thread)
-    monkeypatch.setattr(supervisor, "evaluate_loop", fake_evaluate_loop)
+    monkeypatch.setattr(controller, "_start_thread", fake_start_thread)
+    monkeypatch.setattr(controller, "evaluate_loop", fake_evaluate_loop)
 
-    supervisor.run_supervisor(
+    controller.run_controller(
         settings,
         mode="evaluate",
         github_workers=0,
