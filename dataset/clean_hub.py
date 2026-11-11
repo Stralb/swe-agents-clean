@@ -97,7 +97,7 @@ def publish(out,frames,manifest,card,prefix,path_tokens):
  def safe_path(path):
   for token in path_tokens:path=re.sub(re.escape(token),'legacy',path,flags=re.I)
   return path
- old_card=Path(hf_hub_download(repo,'README.md',repo_type='dataset',revision=before)).read_bytes()
+ old_card=Path(hf_hub_download(repo,'README.md',repo_type='dataset',revision=before)).read_bytes() if 'README.md' in items else b''
  previous=old_card.decode('utf-8')
  if previous.startswith('---\n'):
   old_meta=yaml.safe_load(previous.split('---',2)[1]) or {};new_meta=yaml.safe_load(card.split('---',2)[1])
@@ -121,7 +121,7 @@ def publish(out,frames,manifest,card,prefix,path_tokens):
   ops.append(CommitOperationDelete(path_in_repo=path));moves.append((path,target,ident(f)))
   archive_index.append({'path':target,**ident(f)})
  # Preserve the previous card bytes without keeping them in the default interface.
- ops.append(CommitOperationAdd(path_in_repo=archive_prefix+'/original_dataset_card.md',path_or_fileobj=old_card))
+ if old_card:ops.append(CommitOperationAdd(path_in_repo=archive_prefix+'/original_dataset_card.md',path_or_fileobj=old_card))
  archive_info={'source_revision':before,'preservation_ref':branch,'files':archive_index,'note':'Original snapshots and evidence retain their original bytes and may contain historical identifiers. These files are not the default case table.'}
  # Keep an audit of verbatim source-text occurrences. Source text is never silently redacted.
  exceptions=[]
@@ -148,7 +148,7 @@ def publish(out,frames,manifest,card,prefix,path_tokens):
  for source,target,want in moves:
   assert target in remote and ident(remote[target])==want,'Archive object identity mismatch'
   assert source not in remote,'Old path unexpectedly retained'
- assert Path(hf_hub_download(repo,archive_prefix+'/original_dataset_card.md',repo_type='dataset',revision=commit.oid)).read_bytes()==old_card
+ if old_card:assert Path(hf_hub_download(repo,archive_prefix+'/original_dataset_card.md',repo_type='dataset',revision=commit.oid)).read_bytes()==old_card
  assert Path(hf_hub_download(repo,'README.md',repo_type='dataset',revision=commit.oid)).read_bytes()==card.encode()
  for p in out.iterdir():
   if p.is_file():assert sha(Path(hf_hub_download(repo,prefix+'/'+p.name,repo_type='dataset',revision=commit.oid)))==sha(p),p.name
