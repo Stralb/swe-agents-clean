@@ -1,8 +1,12 @@
-# Database relationships
+# Database ERDs
 
-[Complete diagram](erd/FULL_DATABASE_ERD.svg)
+[Core overview](erd/OVERVIEW.svg)
 
-| Section | Diagram |
+![Core database ERD](erd/OVERVIEW.svg)
+
+[Complete ERD atlas](erd/FULL_DATABASE_ERD.svg)
+
+| Subject | Diagram |
 |---|---|
 | sqlite internal | [SVG](erd/sqlite_internal.svg) |
 | coding lineage | [SVG](erd/coding_lineage.svg) |
@@ -16,4 +20,6 @@
 | rq3 experiments | [SVG](erd/rq3_experiments.svg) |
 | rq1 original122 | [SVG](erd/rq1_original122.svg) |
 
-135 tables · 162 declared foreign-key constraints. Each source table has a separate target card for every declared constraint; repeated parent cards denote the same table. Straight arrows run from child FK columns to referenced parent columns. Only keys and relationship columns are shown. Tables with no outgoing constraints still appear. This is a relationship atlas, with no inferred JSON links or cardinality claims.
+Each table appears once within a diagram; related records connect to the same shared parent. Grey headers mark directly referenced tables from other subjects. All 135 tables and 162 declared FK constraints are covered across the subject diagrams. The overview shows a smaller core subset.
+
+Connectors contain only horizontal and vertical segments. Dense sections may retain crossings between distinct relationships. PK/FK columns and types are shown. Arrows point child to referenced parent, without inferred cardinalities. Composite FKs count as one constraint. Tables without declared relationships remain disconnected. JSON/prose links and historical enforcement are not inferred.

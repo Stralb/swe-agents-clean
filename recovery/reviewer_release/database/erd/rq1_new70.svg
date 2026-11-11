@@ -1,2 +1,552 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1480" height="5878" viewBox="0 0 1480 5878"><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#385a80"/></marker></defs><rect width="100%" height="100%" fill="#f6f8fb"/><text x="45" y="56" font-family="DejaVu Sans, sans-serif" font-size="30" font-weight="bold" fill="#243449">Rq1 New70</text><rect x="45" y="95" width="625" height="334" rx="8" fill="white" stroke="#667b95" stroke-width="1.5"/><text x="63" y="126" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="bold" fill="#243449">arno_new70_canonical_prelim_254</text><text x="63" y="160" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="normal" fill="#243449">PK  preliminary_finding_id</text><line x1="45" y1="180" x2="670" y2="180" stroke="#bbc6d4"/><text x="63" y="220" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">FK  source_key</text><rect x="825" y="189" width="610" height="96" rx="8" fill="#edf3fa" stroke="#667b95" stroke-width="1.5"/><text x="843" y="220" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#243449">arno_sources</text><text x="843" y="252" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">source_key</text><path d="M 670 237.0 H 822" fill="none" stroke="#385a80" stroke-width="2" marker-end="url(#arrow)"/><text x="63" y="340" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">FK  case_id</text><rect x="825" y="309" width="610" height="96" rx="8" fill="#edf3fa" stroke="#667b95" stroke-width="1.5"/><text x="843" y="340" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#243449">cases</text><text x="843" y="372" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">id</text><path d="M 670 357.0 H 822" fill="none" stroke="#385a80" stroke-width="2" marker-end="url(#arrow)"/><rect x="45" y="467" width="625" height="334" rx="8" fill="white" stroke="#667b95" stroke-width="1.5"/><text x="63" y="498" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="bold" fill="#243449">arno_new70_context_frozen</text><text x="63" y="532" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="normal" fill="#243449">PK  case_id</text><line x1="45" y1="552" x2="670" y2="552" stroke="#bbc6d4"/><text x="63" y="592" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">FK  source_key</text><rect x="825" y="561" width="610" height="96" rx="8" fill="#edf3fa" stroke="#667b95" stroke-width="1.5"/><text x="843" y="592" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#243449">arno_sources</text><text x="843" y="624" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">source_key</text><path d="M 670 609.0 H 822" fill="none" stroke="#385a80" stroke-width="2" marker-end="url(#arrow)"/><text x="63" y="712" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">FK  case_id</text><rect x="825" y="681" width="610" height="96" rx="8" fill="#edf3fa" stroke="#667b95" stroke-width="1.5"/><text x="843" y="712" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#243449">arno_new70_source_inputs</text><text x="843" y="744" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">case_id</text><path d="M 670 729.0 H 822" fill="none" stroke="#385a80" stroke-width="2" marker-end="url(#arrow)"/><rect x="45" y="839" width="625" height="334" rx="8" fill="white" stroke="#667b95" stroke-width="1.5"/><text x="63" y="870" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="bold" fill="#243449">arno_new70_final_finding_maps</text><text x="63" y="904" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="normal" fill="#243449">PK  canonical_finding_id</text><line x1="45" y1="924" x2="670" y2="924" stroke="#bbc6d4"/><text x="63" y="964" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">FK  producing_change_id</text><rect x="825" y="933" width="610" height="96" rx="8" fill="#edf3fa" stroke="#667b95" stroke-width="1.5"/><text x="843" y="964" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#243449">arno_new70_final_producing_changes</text><text x="843" y="996" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">producing_change_id</text><path d="M 670 981.0 H 822" fill="none" stroke="#385a80" stroke-width="2" marker-end="url(#arrow)"/><text x="63" y="1084" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">FK  canonical_finding_id</text><rect x="825" y="1053" width="610" height="96" rx="8" fill="#edf3fa" stroke="#667b95" stroke-width="1.5"/><text x="843" y="1084" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#243449">arno_new70_final_findings</text><text x="843" y="1116" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">canonical_finding_id</text><path d="M 670 1101.0 H 822" fill="none" stroke="#385a80" stroke-width="2" marker-end="url(#arrow)"/><rect x="45" y="1211" width="625" height="114" rx="8" fill="white" stroke="#667b95" stroke-width="1.5"/><text x="63" y="1242" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="bold" fill="#243449">arno_new70_final_findings</text><text x="63" y="1276" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="normal" fill="#243449">PK  canonical_finding_id</text><line x1="45" y1="1296" x2="670" y2="1296" stroke="#bbc6d4"/><rect x="45" y="1363" width="625" height="114" rx="8" fill="white" stroke="#667b95" stroke-width="1.5"/><text x="63" y="1394" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="bold" fill="#243449">arno_new70_final_freeze_manifest</text><text x="63" y="1428" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="normal" fill="#243449">PK  metric</text><line x1="45" y1="1448" x2="670" y2="1448" stroke="#bbc6d4"/><rect x="45" y="1515" width="625" height="114" rx="8" fill="white" stroke="#667b95" stroke-width="1.5"/><text x="63" y="1546" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="bold" fill="#243449">arno_new70_final_method_qc</text><text x="63" y="1580" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="normal" fill="#243449">PK  record_key</text><line x1="45" y1="1600" x2="670" y2="1600" stroke="#bbc6d4"/><rect x="45" y="1667" width="625" height="114" rx="8" fill="white" stroke="#667b95" stroke-width="1.5"/><text x="63" y="1698" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="bold" fill="#243449">arno_new70_final_producing_changes</text><text x="63" y="1732" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="normal" fill="#243449">PK  producing_change_id</text><line x1="45" y1="1752" x2="670" y2="1752" stroke="#bbc6d4"/><rect x="45" y="1819" width="625" height="114" rx="8" fill="white" stroke="#667b95" stroke-width="1.5"/><text x="63" y="1850" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="bold" fill="#243449">arno_new70_final_publication_status</text><text x="63" y="1884" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="normal" fill="#243449">PK  claim_key</text><line x1="45" y1="1904" x2="670" y2="1904" stroke="#bbc6d4"/><rect x="45" y="1971" width="625" height="214" rx="8" fill="white" stroke="#667b95" stroke-width="1.5"/><text x="63" y="2002" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="bold" fill="#243449">arno_new70_final_raw_finding_links</text><text x="63" y="2036" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="normal" fill="#243449">PK  raw_finding_id</text><line x1="45" y1="2056" x2="670" y2="2056" stroke="#bbc6d4"/><text x="63" y="2096" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">FK  canonical_finding_id</text><rect x="825" y="2065" width="610" height="96" rx="8" fill="#edf3fa" stroke="#667b95" stroke-width="1.5"/><text x="843" y="2096" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#243449">arno_new70_final_findings</text><text x="843" y="2128" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">canonical_finding_id</text><path d="M 670 2113.0 H 822" fill="none" stroke="#385a80" stroke-width="2" marker-end="url(#arrow)"/><rect x="45" y="2223" width="625" height="114" rx="8" fill="white" stroke="#667b95" stroke-width="1.5"/><text x="63" y="2254" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="bold" fill="#243449">arno_new70_final_source_blobs</text><text x="63" y="2288" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="normal" fill="#243449">PK  source_key</text><line x1="45" y1="2308" x2="670" y2="2308" stroke="#bbc6d4"/><rect x="45" y="2375" width="625" height="214" rx="8" fill="white" stroke="#667b95" stroke-width="1.5"/><text x="63" y="2406" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="bold" fill="#243449">arno_new70_final_source_id_audit</text><text x="63" y="2440" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="normal" fill="#243449">PK  canonical_finding_id</text><line x1="45" y1="2460" x2="670" y2="2460" stroke="#bbc6d4"/><text x="63" y="2500" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">FK  canonical_finding_id</text><rect x="825" y="2469" width="610" height="96" rx="8" fill="#edf3fa" stroke="#667b95" stroke-width="1.5"/><text x="843" y="2500" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#243449">arno_new70_final_findings</text><text x="843" y="2532" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">canonical_finding_id</text><path d="M 670 2517.0 H 822" fill="none" stroke="#385a80" stroke-width="2" marker-end="url(#arrow)"/><rect x="45" y="2627" width="625" height="214" rx="8" fill="white" stroke="#667b95" stroke-width="1.5"/><text x="63" y="2658" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="bold" fill="#243449">arno_new70_final_unresolved</text><text x="63" y="2692" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="normal" fill="#243449">PK  canonical_finding_id</text><line x1="45" y1="2712" x2="670" y2="2712" stroke="#bbc6d4"/><text x="63" y="2752" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">FK  canonical_finding_id</text><rect x="825" y="2721" width="610" height="96" rx="8" fill="#edf3fa" stroke="#667b95" stroke-width="1.5"/><text x="843" y="2752" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#243449">arno_new70_final_findings</text><text x="843" y="2784" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">canonical_finding_id</text><path d="M 670 2769.0 H 822" fill="none" stroke="#385a80" stroke-width="2" marker-end="url(#arrow)"/><rect x="45" y="2879" width="625" height="574" rx="8" fill="white" stroke="#667b95" stroke-width="1.5"/><text x="63" y="2910" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="bold" fill="#243449">arno_new70_id_version_conflicts</text><text x="63" y="2944" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="normal" fill="#243449">PK  preliminary_finding_id</text><line x1="45" y1="2964" x2="670" y2="2964" stroke="#bbc6d4"/><text x="63" y="3004" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">FK  audit_source_key</text><rect x="825" y="2973" width="610" height="96" rx="8" fill="#edf3fa" stroke="#667b95" stroke-width="1.5"/><text x="843" y="3004" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#243449">arno_sources</text><text x="843" y="3036" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">source_key</text><path d="M 670 3021.0 H 822" fill="none" stroke="#385a80" stroke-width="2" marker-end="url(#arrow)"/><text x="63" y="3124" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">FK  later_provenance_case_id</text><rect x="825" y="3093" width="610" height="96" rx="8" fill="#edf3fa" stroke="#667b95" stroke-width="1.5"/><text x="843" y="3124" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#243449">cases</text><text x="843" y="3156" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">id</text><path d="M 670 3141.0 H 822" fill="none" stroke="#385a80" stroke-width="2" marker-end="url(#arrow)"/><text x="63" y="3244" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">FK  preliminary_case_id</text><rect x="825" y="3213" width="610" height="96" rx="8" fill="#edf3fa" stroke="#667b95" stroke-width="1.5"/><text x="843" y="3244" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#243449">cases</text><text x="843" y="3276" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">id</text><path d="M 670 3261.0 H 822" fill="none" stroke="#385a80" stroke-width="2" marker-end="url(#arrow)"/><text x="63" y="3364" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">FK  preliminary_finding_id</text><rect x="825" y="3333" width="610" height="96" rx="8" fill="#edf3fa" stroke="#667b95" stroke-width="1.5"/><text x="843" y="3364" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#243449">arno_new70_canonical_prelim_254</text><text x="843" y="3396" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">preliminary_finding_id</text><path d="M 670 3381.0 H 822" fill="none" stroke="#385a80" stroke-width="2" marker-end="url(#arrow)"/><rect x="45" y="3491" width="625" height="334" rx="8" fill="white" stroke="#667b95" stroke-width="1.5"/><text x="63" y="3522" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="bold" fill="#243449">arno_new70_phase8_synthesis</text><text x="63" y="3556" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="normal" fill="#243449">PK  case_id</text><line x1="45" y1="3576" x2="670" y2="3576" stroke="#bbc6d4"/><text x="63" y="3616" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">FK  source_key</text><rect x="825" y="3585" width="610" height="96" rx="8" fill="#edf3fa" stroke="#667b95" stroke-width="1.5"/><text x="843" y="3616" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#243449">arno_sources</text><text x="843" y="3648" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">source_key</text><path d="M 670 3633.0 H 822" fill="none" stroke="#385a80" stroke-width="2" marker-end="url(#arrow)"/><text x="63" y="3736" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">FK  case_id</text><rect x="825" y="3705" width="610" height="96" rx="8" fill="#edf3fa" stroke="#667b95" stroke-width="1.5"/><text x="843" y="3736" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#243449">arno_new70_source_inputs</text><text x="843" y="3768" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">case_id</text><path d="M 670 3753.0 H 822" fill="none" stroke="#385a80" stroke-width="2" marker-end="url(#arrow)"/><rect x="45" y="3863" width="625" height="334" rx="8" fill="white" stroke="#667b95" stroke-width="1.5"/><text x="63" y="3894" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="bold" fill="#243449">arno_new70_phase9_full_source</text><text x="63" y="3928" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="normal" fill="#243449">PK  case_id</text><line x1="45" y1="3948" x2="670" y2="3948" stroke="#bbc6d4"/><text x="63" y="3988" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">FK  source_key</text><rect x="825" y="3957" width="610" height="96" rx="8" fill="#edf3fa" stroke="#667b95" stroke-width="1.5"/><text x="843" y="3988" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#243449">arno_sources</text><text x="843" y="4020" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">source_key</text><path d="M 670 4005.0 H 822" fill="none" stroke="#385a80" stroke-width="2" marker-end="url(#arrow)"/><text x="63" y="4108" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">FK  case_id</text><rect x="825" y="4077" width="610" height="96" rx="8" fill="#edf3fa" stroke="#667b95" stroke-width="1.5"/><text x="843" y="4108" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#243449">arno_new70_phase9_risk</text><text x="843" y="4140" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">case_id</text><path d="M 670 4125.0 H 822" fill="none" stroke="#385a80" stroke-width="2" marker-end="url(#arrow)"/><rect x="45" y="4235" width="625" height="334" rx="8" fill="white" stroke="#667b95" stroke-width="1.5"/><text x="63" y="4266" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="bold" fill="#243449">arno_new70_phase9_risk</text><text x="63" y="4300" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="normal" fill="#243449">PK  case_id</text><line x1="45" y1="4320" x2="670" y2="4320" stroke="#bbc6d4"/><text x="63" y="4360" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">FK  source_key</text><rect x="825" y="4329" width="610" height="96" rx="8" fill="#edf3fa" stroke="#667b95" stroke-width="1.5"/><text x="843" y="4360" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#243449">arno_sources</text><text x="843" y="4392" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">source_key</text><path d="M 670 4377.0 H 822" fill="none" stroke="#385a80" stroke-width="2" marker-end="url(#arrow)"/><text x="63" y="4480" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">FK  case_id</text><rect x="825" y="4449" width="610" height="96" rx="8" fill="#edf3fa" stroke="#667b95" stroke-width="1.5"/><text x="843" y="4480" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#243449">arno_new70_source_inputs</text><text x="843" y="4512" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">case_id</text><path d="M 670 4497.0 H 822" fill="none" stroke="#385a80" stroke-width="2" marker-end="url(#arrow)"/><rect x="45" y="4607" width="625" height="334" rx="8" fill="white" stroke="#667b95" stroke-width="1.5"/><text x="63" y="4638" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="bold" fill="#243449">arno_new70_phase9_risk_events</text><text x="63" y="4672" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="normal" fill="#243449">PK  case_id, event_stage</text><line x1="45" y1="4692" x2="670" y2="4692" stroke="#bbc6d4"/><text x="63" y="4732" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">FK  source_key</text><rect x="825" y="4701" width="610" height="96" rx="8" fill="#edf3fa" stroke="#667b95" stroke-width="1.5"/><text x="843" y="4732" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#243449">arno_sources</text><text x="843" y="4764" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">source_key</text><path d="M 670 4749.0 H 822" fill="none" stroke="#385a80" stroke-width="2" marker-end="url(#arrow)"/><text x="63" y="4852" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">FK  case_id</text><rect x="825" y="4821" width="610" height="96" rx="8" fill="#edf3fa" stroke="#667b95" stroke-width="1.5"/><text x="843" y="4852" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#243449">arno_new70_phase9_risk</text><text x="843" y="4884" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">case_id</text><path d="M 670 4869.0 H 822" fill="none" stroke="#385a80" stroke-width="2" marker-end="url(#arrow)"/><rect x="45" y="4979" width="625" height="334" rx="8" fill="white" stroke="#667b95" stroke-width="1.5"/><text x="63" y="5010" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="bold" fill="#243449">arno_new70_scanner_raw_frozen</text><text x="63" y="5044" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="normal" fill="#243449">PK  raw_finding_id</text><line x1="45" y1="5064" x2="670" y2="5064" stroke="#bbc6d4"/><text x="63" y="5104" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">FK  source_key</text><rect x="825" y="5073" width="610" height="96" rx="8" fill="#edf3fa" stroke="#667b95" stroke-width="1.5"/><text x="843" y="5104" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#243449">arno_sources</text><text x="843" y="5136" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">source_key</text><path d="M 670 5121.0 H 822" fill="none" stroke="#385a80" stroke-width="2" marker-end="url(#arrow)"/><text x="63" y="5224" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">FK  case_id</text><rect x="825" y="5193" width="610" height="96" rx="8" fill="#edf3fa" stroke="#667b95" stroke-width="1.5"/><text x="843" y="5224" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#243449">arno_new70_source_inputs</text><text x="843" y="5256" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">case_id</text><path d="M 670 5241.0 H 822" fill="none" stroke="#385a80" stroke-width="2" marker-end="url(#arrow)"/><rect x="45" y="5351" width="625" height="454" rx="8" fill="white" stroke="#667b95" stroke-width="1.5"/><text x="63" y="5382" font-family="DejaVu Sans, sans-serif" font-size="20" font-weight="bold" fill="#243449">arno_new70_source_inputs</text><text x="63" y="5416" font-family="DejaVu Sans, sans-serif" font-size="17" font-weight="normal" fill="#243449">PK  case_id</text><line x1="45" y1="5436" x2="670" y2="5436" stroke="#bbc6d4"/><text x="63" y="5476" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">FK  source_key</text><rect x="825" y="5445" width="610" height="96" rx="8" fill="#edf3fa" stroke="#667b95" stroke-width="1.5"/><text x="843" y="5476" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#243449">arno_sources</text><text x="843" y="5508" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">source_key</text><path d="M 670 5493.0 H 822" fill="none" stroke="#385a80" stroke-width="2" marker-end="url(#arrow)"/><text x="63" y="5596" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">FK  pr_id</text><rect x="825" y="5565" width="610" height="96" rx="8" fill="#edf3fa" stroke="#667b95" stroke-width="1.5"/><text x="843" y="5596" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#243449">pull_requests</text><text x="843" y="5628" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">id</text><path d="M 670 5613.0 H 822" fill="none" stroke="#385a80" stroke-width="2" marker-end="url(#arrow)"/><text x="63" y="5716" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">FK  case_id</text><rect x="825" y="5685" width="610" height="96" rx="8" fill="#edf3fa" stroke="#667b95" stroke-width="1.5"/><text x="843" y="5716" font-family="DejaVu Sans, sans-serif" font-size="19" font-weight="bold" fill="#243449">cases</text><text x="843" y="5748" font-family="DejaVu Sans, sans-serif" font-size="18" font-weight="normal" fill="#243449">id</text><path d="M 670 5733.0 H 822" fill="none" stroke="#385a80" stroke-width="2" marker-end="url(#arrow)"/></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+ "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generated by graphviz version 2.42.4 (0)
+ -->
+<!-- Title: erd Pages: 1 -->
+<svg width="1498pt" height="1629pt"
+ viewBox="0.00 0.00 1498.20 1628.70" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(21.6 1607.1)">
+<title>erd</title>
+<polygon fill="white" stroke="transparent" points="-21.6,21.6 -21.6,-1607.1 1476.6,-1607.1 1476.6,21.6 -21.6,21.6"/>
+<!-- arno_new70_canonical_prelim_254&#45;&gt;arno_sources -->
+<g id="edge1" class="edge">
+<title>arno_new70_canonical_prelim_254&#45;&gt;arno_sources</title>
+<g id="a_edge1"><a xlink:title="arno_new70_canonical_prelim_254.source_key u2192 arno_sources.source_key">
+<path fill="none" stroke="#4d6789" stroke-width="1.4" d="M928,-851.43C928,-726.13 928,-430.5 928,-430.5 928,-430.5 1018.32,-430.5 1018.32,-430.5"/>
+<polygon fill="#4d6789" stroke="#4d6789" stroke-width="1.4" points="1018.32,-433.13 1025.82,-430.5 1018.32,-427.88 1018.32,-433.13"/>
+</a>
+</g>
+</g>
+<!-- arno_new70_canonical_prelim_254&#45;&gt;cases -->
+<g id="edge2" class="edge">
+<title>arno_new70_canonical_prelim_254&#45;&gt;cases</title>
+<g id="a_edge2"><a xlink:title="arno_new70_canonical_prelim_254.case_id u2192 cases.id">
+<path fill="none" stroke="#4d6789" stroke-width="1.4" d="M939.27,-949C939.27,-949 1017.45,-949 1017.45,-949"/>
+<polygon fill="#4d6789" stroke="#4d6789" stroke-width="1.4" points="1017.45,-951.63 1024.95,-949 1017.45,-946.38 1017.45,-951.63"/>
+</a>
+</g>
+</g>
+<!-- arno_new70_context_frozen&#45;&gt;arno_new70_source_inputs -->
+<g id="edge4" class="edge">
+<title>arno_new70_context_frozen&#45;&gt;arno_new70_source_inputs</title>
+<g id="a_edge4"><a xlink:title="arno_new70_context_frozen.case_id u2192 arno_new70_source_inputs.case_id">
+<path fill="none" stroke="#4d6789" stroke-width="1.4" d="M566.81,-27.67C670.77,-27.67 817,-27.67 817,-27.67 817,-27.67 817,-203.91 817,-203.91"/>
+<polygon fill="#4d6789" stroke="#4d6789" stroke-width="1.4" points="814.38,-203.91 817,-211.41 819.63,-203.91 814.38,-203.91"/>
+</a>
+</g>
+</g>
+<!-- arno_new70_context_frozen&#45;&gt;arno_sources -->
+<g id="edge3" class="edge">
+<title>arno_new70_context_frozen&#45;&gt;arno_sources</title>
+<g id="a_edge3"><a xlink:title="arno_new70_context_frozen.source_key u2192 arno_sources.source_key">
+<path fill="none" stroke="#4d6789" stroke-width="1.4" d="M566.63,-55.33C585.81,-55.33 600,-55.33 600,-55.33 600,-55.33 600,-395.5 600,-395.5 600,-395.5 1018.32,-395.5 1018.32,-395.5"/>
+<polygon fill="#4d6789" stroke="#4d6789" stroke-width="1.4" points="1018.32,-398.13 1025.82,-395.5 1018.32,-392.88 1018.32,-398.13"/>
+</a>
+</g>
+</g>
+<!-- arno_new70_final_finding_maps&#45;&gt;arno_new70_final_findings -->
+<g id="edge6" class="edge">
+<title>arno_new70_final_finding_maps&#45;&gt;arno_new70_final_findings</title>
+<g id="a_edge6"><a xlink:title="arno_new70_final_finding_maps.canonical_finding_id u2192 arno_new70_final_findings.canonical_finding_id">
+<path fill="none" stroke="#4d6789" stroke-width="1.4" d="M535.25,-1445.75C647.44,-1445.75 799,-1445.75 799,-1445.75 799,-1445.75 799,-1311.11 799,-1311.11"/>
+<polygon fill="#4d6789" stroke="#4d6789" stroke-width="1.4" points="801.63,-1311.11 799,-1303.61 796.38,-1311.11 801.63,-1311.11"/>
+</a>
+</g>
+</g>
+<!-- arno_new70_final_finding_maps&#45;&gt;arno_new70_final_producing_changes -->
+<g id="edge5" class="edge">
+<title>arno_new70_final_finding_maps&#45;&gt;arno_new70_final_producing_changes</title>
+<g id="a_edge5"><a xlink:title="arno_new70_final_finding_maps.producing_change_id u2192 arno_new70_final_producing_changes.producing_change_id">
+<path fill="none" stroke="#4d6789" stroke-width="1.4" d="M535.11,-1480.5C535.11,-1480.5 622.48,-1480.5 622.48,-1480.5"/>
+<polygon fill="#4d6789" stroke="#4d6789" stroke-width="1.4" points="622.48,-1483.13 629.98,-1480.5 622.48,-1477.88 622.48,-1483.13"/>
+</a>
+</g>
+</g>
+<!-- arno_new70_final_raw_finding_links&#45;&gt;arno_new70_final_findings -->
+<g id="edge7" class="edge">
+<title>arno_new70_final_raw_finding_links&#45;&gt;arno_new70_final_findings</title>
+<g id="a_edge7"><a xlink:title="arno_new70_final_raw_finding_links.canonical_finding_id u2192 arno_new70_final_findings.canonical_finding_id">
+<path fill="none" stroke="#4d6789" stroke-width="1.4" d="M544.39,-1342.25C630.28,-1342.25 728,-1342.25 728,-1342.25 728,-1342.25 728,-1311.31 728,-1311.31"/>
+<polygon fill="#4d6789" stroke="#4d6789" stroke-width="1.4" points="730.63,-1311.31 728,-1303.81 725.38,-1311.31 730.63,-1311.31"/>
+</a>
+</g>
+</g>
+<!-- arno_new70_final_source_id_audit&#45;&gt;arno_new70_final_findings -->
+<g id="edge8" class="edge">
+<title>arno_new70_final_source_id_audit&#45;&gt;arno_new70_final_findings</title>
+<g id="a_edge8"><a xlink:title="arno_new70_final_source_id_audit.canonical_finding_id u2192 arno_new70_final_findings.canonical_finding_id">
+<path fill="none" stroke="#4d6789" stroke-width="1.4" d="M538.13,-1211.5C625.45,-1211.5 728,-1211.5 728,-1211.5 728,-1211.5 728,-1239.74 728,-1239.74"/>
+<polygon fill="#4d6789" stroke="#4d6789" stroke-width="1.4" points="725.38,-1239.74 728,-1247.24 730.63,-1239.74 725.38,-1239.74"/>
+</a>
+</g>
+</g>
+<!-- arno_new70_final_unresolved&#45;&gt;arno_new70_final_findings -->
+<g id="edge9" class="edge">
+<title>arno_new70_final_unresolved&#45;&gt;arno_new70_final_findings</title>
+<g id="a_edge9"><a xlink:title="arno_new70_final_unresolved.canonical_finding_id u2192 arno_new70_final_findings.canonical_finding_id">
+<path fill="none" stroke="#4d6789" stroke-width="1.4" d="M532.13,-1097.5C644.61,-1097.5 799,-1097.5 799,-1097.5 799,-1097.5 799,-1239.8 799,-1239.8"/>
+<polygon fill="#4d6789" stroke="#4d6789" stroke-width="1.4" points="796.38,-1239.8 799,-1247.3 801.63,-1239.8 796.38,-1239.8"/>
+</a>
+</g>
+</g>
+<!-- arno_new70_id_version_conflicts&#45;&gt;arno_new70_canonical_prelim_254 -->
+<g id="edge13" class="edge">
+<title>arno_new70_id_version_conflicts&#45;&gt;arno_new70_canonical_prelim_254</title>
+<g id="a_edge13"><a xlink:title="arno_new70_id_version_conflicts.preliminary_finding_id u2192 arno_new70_canonical_prelim_254.preliminary_finding_id">
+<path fill="none" stroke="#4d6789" stroke-width="1.4" d="M608.22,-942.75C608.22,-942.75 686.33,-942.75 686.33,-942.75"/>
+<polygon fill="#4d6789" stroke="#4d6789" stroke-width="1.4" points="686.33,-945.38 693.83,-942.75 686.33,-940.13 686.33,-945.38"/>
+</a>
+</g>
+</g>
+<!-- arno_new70_id_version_conflicts&#45;&gt;arno_sources -->
+<g id="edge10" class="edge">
+<title>arno_new70_id_version_conflicts&#45;&gt;arno_sources</title>
+<g id="a_edge10"><a xlink:title="arno_new70_id_version_conflicts.audit_source_key u2192 arno_sources.source_key">
+<path fill="none" stroke="#4d6789" stroke-width="1.4" d="M592,-923.87C592,-772.53 592,-423.5 592,-423.5 592,-423.5 1018.47,-423.5 1018.47,-423.5"/>
+<polygon fill="#4d6789" stroke="#4d6789" stroke-width="1.4" points="1018.47,-426.13 1025.97,-423.5 1018.47,-420.88 1018.47,-426.13"/>
+</a>
+</g>
+</g>
+<!-- arno_new70_id_version_conflicts&#45;&gt;cases -->
+<g id="edge11" class="edge">
+<title>arno_new70_id_version_conflicts&#45;&gt;cases</title>
+<g id="a_edge11"><a xlink:title="arno_new70_id_version_conflicts.later_provenance_case_id u2192 cases.id">
+<path fill="none" stroke="#4d6789" stroke-width="1.4" d="M608.23,-994.67C608.23,-994.67 1017.16,-994.67 1017.16,-994.67"/>
+<polygon fill="#4d6789" stroke="#4d6789" stroke-width="1.4" points="1017.16,-997.29 1024.66,-994.67 1017.16,-992.04 1017.16,-997.29"/>
+</a>
+</g>
+</g>
+<!-- arno_new70_id_version_conflicts&#45;&gt;cases -->
+<g id="edge12" class="edge">
+<title>arno_new70_id_version_conflicts&#45;&gt;cases</title>
+<g id="a_edge12"><a xlink:title="arno_new70_id_version_conflicts.preliminary_case_id u2192 cases.id">
+<path fill="none" stroke="#4d6789" stroke-width="1.4" d="M608.23,-1027.83C608.23,-1027.83 1017.16,-1027.83 1017.16,-1027.83"/>
+<polygon fill="#4d6789" stroke="#4d6789" stroke-width="1.4" points="1017.16,-1030.46 1024.66,-1027.83 1017.16,-1025.21 1017.16,-1030.46"/>
+</a>
+</g>
+</g>
+<!-- arno_new70_phase8_synthesis&#45;&gt;arno_new70_source_inputs -->
+<g id="edge15" class="edge">
+<title>arno_new70_phase8_synthesis&#45;&gt;arno_new70_source_inputs</title>
+<g id="a_edge15"><a xlink:title="arno_new70_phase8_synthesis.case_id u2192 arno_new70_source_inputs.case_id">
+<path fill="none" stroke="#4d6789" stroke-width="1.4" d="M576.7,-305.17C576.7,-305.17 709.77,-305.17 709.77,-305.17"/>
+<polygon fill="#4d6789" stroke="#4d6789" stroke-width="1.4" points="709.77,-307.79 717.27,-305.17 709.77,-302.54 709.77,-307.79"/>
+</a>
+</g>
+</g>
+<!-- arno_new70_phase8_synthesis&#45;&gt;arno_sources -->
+<g id="edge14" class="edge">
+<title>arno_new70_phase8_synthesis&#45;&gt;arno_sources</title>
+<g id="a_edge14"><a xlink:title="arno_new70_phase8_synthesis.source_key u2192 arno_sources.source_key">
+<path fill="none" stroke="#4d6789" stroke-width="1.4" d="M576.55,-350.75C753.57,-350.75 1079,-350.75 1079,-350.75 1079,-350.75 1079,-373.66 1079,-373.66"/>
+<polygon fill="#4d6789" stroke="#4d6789" stroke-width="1.4" points="1076.38,-373.66 1079,-381.16 1081.63,-373.66 1076.38,-373.66"/>
+</a>
+</g>
+</g>
+<!-- arno_new70_phase9_full_source&#45;&gt;arno_new70_phase9_risk -->
+<g id="edge17" class="edge">
+<title>arno_new70_phase9_full_source&#45;&gt;arno_new70_phase9_risk</title>
+<g id="a_edge17"><a xlink:title="arno_new70_phase9_full_source.case_id u2192 arno_new70_phase9_risk.case_id">
+<path fill="none" stroke="#4d6789" stroke-width="1.4" d="M233.06,-278C334.07,-278 465,-278 465,-278 465,-278 465,-243.75 465,-243.75"/>
+<polygon fill="#4d6789" stroke="#4d6789" stroke-width="1.4" points="467.63,-243.75 465,-236.25 462.38,-243.75 467.63,-243.75"/>
+</a>
+</g>
+</g>
+<!-- arno_new70_phase9_full_source&#45;&gt;arno_sources -->
+<g id="edge16" class="edge">
+<title>arno_new70_phase9_full_source&#45;&gt;arno_sources</title>
+<g id="a_edge16"><a xlink:title="arno_new70_phase9_full_source.source_key u2192 arno_sources.source_key">
+<path fill="none" stroke="#4d6789" stroke-width="1.4" d="M118,-342.02C118,-372.82 118,-409.5 118,-409.5 118,-409.5 1018.4,-409.5 1018.4,-409.5"/>
+<polygon fill="#4d6789" stroke="#4d6789" stroke-width="1.4" points="1018.4,-412.13 1025.9,-409.5 1018.4,-406.88 1018.4,-412.13"/>
+</a>
+</g>
+</g>
+<!-- arno_new70_phase9_risk&#45;&gt;arno_new70_source_inputs -->
+<g id="edge19" class="edge">
+<title>arno_new70_phase9_risk&#45;&gt;arno_new70_source_inputs</title>
+<g id="a_edge19"><a xlink:title="arno_new70_phase9_risk.case_id u2192 arno_new70_source_inputs.case_id">
+<path fill="none" stroke="#4d6789" stroke-width="1.4" d="M564.32,-219.67C564.32,-219.67 709.93,-219.67 709.93,-219.67"/>
+<polygon fill="#4d6789" stroke="#4d6789" stroke-width="1.4" points="709.93,-222.29 717.43,-219.67 709.93,-217.04 709.93,-222.29"/>
+</a>
+</g>
+</g>
+<!-- arno_new70_phase9_risk&#45;&gt;arno_sources -->
+<g id="edge18" class="edge">
+<title>arno_new70_phase9_risk&#45;&gt;arno_sources</title>
+<g id="a_edge18"><a xlink:title="arno_new70_phase9_risk.source_key u2192 arno_sources.source_key">
+<path fill="none" stroke="#4d6789" stroke-width="1.4" d="M564.1,-227.83C573.15,-227.83 579,-227.83 579,-227.83 579,-227.83 579,-402.5 579,-402.5 579,-402.5 1018.47,-402.5 1018.47,-402.5"/>
+<polygon fill="#4d6789" stroke="#4d6789" stroke-width="1.4" points="1018.47,-405.13 1025.97,-402.5 1018.47,-399.88 1018.47,-405.13"/>
+</a>
+</g>
+</g>
+<!-- arno_new70_phase9_risk_events&#45;&gt;arno_new70_phase9_risk -->
+<g id="edge21" class="edge">
+<title>arno_new70_phase9_risk_events&#45;&gt;arno_new70_phase9_risk</title>
+<g id="a_edge21"><a xlink:title="arno_new70_phase9_risk_events.case_id u2192 arno_new70_phase9_risk.case_id">
+<path fill="none" stroke="#4d6789" stroke-width="1.4" d="M236.45,-122.67C336.97,-122.67 465,-122.67 465,-122.67 465,-122.67 465,-145.21 465,-145.21"/>
+<polygon fill="#4d6789" stroke="#4d6789" stroke-width="1.4" points="462.38,-145.21 465,-152.71 467.63,-145.21 462.38,-145.21"/>
+</a>
+</g>
+</g>
+<!-- arno_new70_phase9_risk_events&#45;&gt;arno_sources -->
+<g id="edge20" class="edge">
+<title>arno_new70_phase9_risk_events&#45;&gt;arno_sources</title>
+<g id="a_edge20"><a xlink:title="arno_new70_phase9_risk_events.source_key u2192 arno_sources.source_key">
+<path fill="none" stroke="#4d6789" stroke-width="1.4" d="M236.29,-102.83C393.32,-102.83 651,-102.83 651,-102.83 651,-102.83 651,-388.5 651,-388.5 651,-388.5 1018.42,-388.5 1018.42,-388.5"/>
+<polygon fill="#4d6789" stroke="#4d6789" stroke-width="1.4" points="1018.42,-391.13 1025.92,-388.5 1018.42,-385.88 1018.42,-391.13"/>
+</a>
+</g>
+</g>
+<!-- arno_new70_scanner_raw_frozen&#45;&gt;arno_new70_source_inputs -->
+<g id="edge23" class="edge">
+<title>arno_new70_scanner_raw_frozen&#45;&gt;arno_new70_source_inputs</title>
+<g id="a_edge23"><a xlink:title="arno_new70_scanner_raw_frozen.case_id u2192 arno_new70_source_inputs.case_id">
+<path fill="none" stroke="#4d6789" stroke-width="1.4" d="M580,-444.4C580,-389.5 580,-313.33 580,-313.33 580,-313.33 709.73,-313.33 709.73,-313.33"/>
+<polygon fill="#4d6789" stroke="#4d6789" stroke-width="1.4" points="709.73,-315.96 717.23,-313.33 709.73,-310.71 709.73,-315.96"/>
+</a>
+</g>
+</g>
+<!-- arno_new70_scanner_raw_frozen&#45;&gt;arno_sources -->
+<g id="edge22" class="edge">
+<title>arno_new70_scanner_raw_frozen&#45;&gt;arno_sources</title>
+<g id="a_edge22"><a xlink:title="arno_new70_scanner_raw_frozen.source_key u2192 arno_sources.source_key">
+<path fill="none" stroke="#4d6789" stroke-width="1.4" d="M582,-444.14C582,-428.91 582,-416.5 582,-416.5 582,-416.5 1018.35,-416.5 1018.35,-416.5"/>
+<polygon fill="#4d6789" stroke="#4d6789" stroke-width="1.4" points="1018.35,-419.13 1025.85,-416.5 1018.35,-413.88 1018.35,-419.13"/>
+</a>
+</g>
+</g>
+<!-- arno_new70_source_inputs&#45;&gt;arno_sources -->
+<g id="edge24" class="edge">
+<title>arno_new70_source_inputs&#45;&gt;arno_sources</title>
+<g id="a_edge24"><a xlink:title="arno_new70_source_inputs.source_key u2192 arno_sources.source_key">
+<path fill="none" stroke="#4d6789" stroke-width="1.4" d="M915.89,-312.5C1008.37,-312.5 1132,-312.5 1132,-312.5 1132,-312.5 1132,-373.94 1132,-373.94"/>
+<polygon fill="#4d6789" stroke="#4d6789" stroke-width="1.4" points="1129.38,-373.94 1132,-381.44 1134.63,-373.94 1129.38,-373.94"/>
+</a>
+</g>
+</g>
+<!-- arno_new70_source_inputs&#45;&gt;cases -->
+<g id="edge26" class="edge">
+<title>arno_new70_source_inputs&#45;&gt;cases</title>
+<g id="a_edge26"><a xlink:title="arno_new70_source_inputs.case_id u2192 cases.id">
+<path fill="none" stroke="#4d6789" stroke-width="1.4" d="M915.64,-317C950.89,-317 982,-317 982,-317 982,-317 982,-936.5 982,-936.5 982,-936.5 1017.17,-936.5 1017.17,-936.5"/>
+<polygon fill="#4d6789" stroke="#4d6789" stroke-width="1.4" points="1017.17,-939.13 1024.67,-936.5 1017.17,-933.88 1017.17,-939.13"/>
+</a>
+</g>
+</g>
+<!-- arno_new70_source_inputs&#45;&gt;pull_requests -->
+<g id="edge25" class="edge">
+<title>arno_new70_source_inputs&#45;&gt;pull_requests</title>
+<g id="a_edge25"><a xlink:title="arno_new70_source_inputs.pr_id u2192 pull_requests.id">
+<path fill="none" stroke="#4d6789" stroke-width="1.4" d="M915.79,-266.5C915.79,-266.5 1018.98,-266.5 1018.98,-266.5"/>
+<polygon fill="#4d6789" stroke="#4d6789" stroke-width="1.4" points="1018.98,-269.13 1026.48,-266.5 1018.98,-263.88 1018.98,-269.13"/>
+</a>
+</g>
+</g>
+<!-- arno_new70_canonical_prelim_254 -->
+<g id="node1" class="node">
+<title>arno_new70_canonical_prelim_254</title>
+<polygon fill="white" stroke="transparent" points="694,-851.5 694,-961.5 939,-961.5 939,-851.5 694,-851.5"/>
+<polygon fill="#d7e9ff" stroke="transparent" points="695.5,-933.5 695.5,-960.5 938.5,-960.5 938.5,-933.5 695.5,-933.5"/>
+<text text-anchor="start" x="702.5" y="-944.9" font-family="DejaVu Sans" font-weight="bold" font-size="12.00">arno_new70_canonical_prelim_254</text>
+<text text-anchor="start" x="702.5" y="-916.9" font-family="DejaVu Sans" font-size="12.00">PK</text>
+<text text-anchor="start" x="732.5" y="-916.9" font-family="DejaVu Sans" font-size="12.00">preliminary_finding_id</text>
+<text text-anchor="start" x="877.5" y="-916.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">TEXT</text>
+<text text-anchor="start" x="702.5" y="-889.9" font-family="DejaVu Sans" font-size="12.00">FK</text>
+<text text-anchor="start" x="732.5" y="-889.9" font-family="DejaVu Sans" font-size="12.00">case_id</text>
+<text text-anchor="start" x="877.5" y="-889.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">INTEGER</text>
+<text text-anchor="start" x="702.5" y="-862.9" font-family="DejaVu Sans" font-size="12.00">FK</text>
+<text text-anchor="start" x="732.5" y="-862.9" font-family="DejaVu Sans" font-size="12.00">source_key</text>
+<text text-anchor="start" x="877.5" y="-862.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">TEXT</text>
+<polygon fill="none" stroke="#70849d" points="694,-851.5 694,-961.5 939,-961.5 939,-851.5 694,-851.5"/>
+</g>
+<!-- arno_new70_context_frozen -->
+<g id="node2" class="node">
+<title>arno_new70_context_frozen</title>
+<polygon fill="white" stroke="transparent" points="363.5,0 363.5,-83 566.5,-83 566.5,0 363.5,0"/>
+<polygon fill="#d7e9ff" stroke="transparent" points="365,-54.5 365,-81.5 566,-81.5 566,-54.5 365,-54.5"/>
+<text text-anchor="start" x="372" y="-65.9" font-family="DejaVu Sans" font-weight="bold" font-size="12.00">arno_new70_context_frozen</text>
+<text text-anchor="start" x="372" y="-37.9" font-family="DejaVu Sans" font-size="12.00">PK/FK</text>
+<text text-anchor="start" x="422" y="-37.9" font-family="DejaVu Sans" font-size="12.00">case_id</text>
+<text text-anchor="start" x="504" y="-37.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">INTEGER</text>
+<text text-anchor="start" x="372" y="-10.9" font-family="DejaVu Sans" font-size="12.00">FK</text>
+<text text-anchor="start" x="422" y="-10.9" font-family="DejaVu Sans" font-size="12.00">source_key</text>
+<text text-anchor="start" x="504" y="-10.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">TEXT</text>
+<polygon fill="none" stroke="#70849d" points="363.5,0 363.5,-83 566.5,-83 566.5,0 363.5,0"/>
+</g>
+<!-- arno_new70_final_finding_maps -->
+<g id="node3" class="node">
+<title>arno_new70_final_finding_maps</title>
+<polygon fill="white" stroke="transparent" points="299,-1439 299,-1522 535,-1522 535,-1439 299,-1439"/>
+<polygon fill="#d7e9ff" stroke="transparent" points="300,-1493.5 300,-1520.5 534,-1520.5 534,-1493.5 300,-1493.5"/>
+<text text-anchor="start" x="311.5" y="-1504.9" font-family="DejaVu Sans" font-weight="bold" font-size="12.00">arno_new70_final_finding_maps</text>
+<text text-anchor="start" x="307" y="-1476.9" font-family="DejaVu Sans" font-size="12.00">PK/FK</text>
+<text text-anchor="start" x="355" y="-1476.9" font-family="DejaVu Sans" font-size="12.00">canonical_finding_id</text>
+<text text-anchor="start" x="496" y="-1476.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">TEXT</text>
+<text text-anchor="start" x="307" y="-1449.9" font-family="DejaVu Sans" font-size="12.00">FK</text>
+<text text-anchor="start" x="355" y="-1449.9" font-family="DejaVu Sans" font-size="12.00">producing_change_id</text>
+<text text-anchor="start" x="496" y="-1449.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">TEXT</text>
+<polygon fill="none" stroke="#70849d" points="299,-1439 299,-1522 535,-1522 535,-1439 299,-1439"/>
+</g>
+<!-- arno_new70_final_findings -->
+<g id="node4" class="node">
+<title>arno_new70_final_findings</title>
+<polygon fill="white" stroke="transparent" points="657,-1247.5 657,-1303.5 869,-1303.5 869,-1247.5 657,-1247.5"/>
+<polygon fill="#d7e9ff" stroke="transparent" points="658,-1275.5 658,-1302.5 868,-1302.5 868,-1275.5 658,-1275.5"/>
+<text text-anchor="start" x="675" y="-1286.9" font-family="DejaVu Sans" font-weight="bold" font-size="12.00">arno_new70_final_findings</text>
+<text text-anchor="start" x="665" y="-1258.9" font-family="DejaVu Sans" font-size="12.00">PK</text>
+<text text-anchor="start" x="695" y="-1258.9" font-family="DejaVu Sans" font-size="12.00">canonical_finding_id</text>
+<text text-anchor="start" x="830" y="-1258.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">TEXT</text>
+<polygon fill="none" stroke="#70849d" points="657,-1247.5 657,-1303.5 869,-1303.5 869,-1247.5 657,-1247.5"/>
+</g>
+<!-- arno_new70_final_freeze_manifest -->
+<g id="node5" class="node">
+<title>arno_new70_final_freeze_manifest</title>
+<polygon fill="white" stroke="transparent" points="469,-1529.5 469,-1585.5 717,-1585.5 717,-1529.5 469,-1529.5"/>
+<polygon fill="#d7e9ff" stroke="transparent" points="470,-1557.5 470,-1584.5 716,-1584.5 716,-1557.5 470,-1557.5"/>
+<text text-anchor="start" x="477" y="-1568.9" font-family="DejaVu Sans" font-weight="bold" font-size="12.00">arno_new70_final_freeze_manifest</text>
+<text text-anchor="start" x="477" y="-1540.9" font-family="DejaVu Sans" font-size="12.00">PK</text>
+<text text-anchor="start" x="565" y="-1540.9" font-family="DejaVu Sans" font-size="12.00">metric</text>
+<text text-anchor="start" x="648" y="-1540.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">TEXT</text>
+<polygon fill="none" stroke="#70849d" points="469,-1529.5 469,-1585.5 717,-1585.5 717,-1529.5 469,-1529.5"/>
+</g>
+<!-- arno_new70_final_method_qc -->
+<g id="node6" class="node">
+<title>arno_new70_final_method_qc</title>
+<polygon fill="white" stroke="transparent" points="1218,-502.5 1218,-558.5 1430,-558.5 1430,-502.5 1218,-502.5"/>
+<polygon fill="#d7e9ff" stroke="transparent" points="1219,-530.5 1219,-557.5 1429,-557.5 1429,-530.5 1219,-530.5"/>
+<text text-anchor="start" x="1226" y="-541.9" font-family="DejaVu Sans" font-weight="bold" font-size="12.00">arno_new70_final_method_qc</text>
+<text text-anchor="start" x="1226" y="-513.9" font-family="DejaVu Sans" font-size="12.00">PK</text>
+<text text-anchor="start" x="1283" y="-513.9" font-family="DejaVu Sans" font-size="12.00">record_key</text>
+<text text-anchor="start" x="1377" y="-513.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">TEXT</text>
+<polygon fill="none" stroke="#70849d" points="1218,-502.5 1218,-558.5 1430,-558.5 1430,-502.5 1218,-502.5"/>
+</g>
+<!-- arno_new70_final_producing_changes -->
+<g id="node7" class="node">
+<title>arno_new70_final_producing_changes</title>
+<polygon fill="white" stroke="transparent" points="630,-1452.5 630,-1508.5 896,-1508.5 896,-1452.5 630,-1452.5"/>
+<polygon fill="#d7e9ff" stroke="transparent" points="631,-1480.5 631,-1507.5 895,-1507.5 895,-1480.5 631,-1480.5"/>
+<text text-anchor="start" x="638" y="-1491.9" font-family="DejaVu Sans" font-weight="bold" font-size="12.00">arno_new70_final_producing_changes</text>
+<text text-anchor="start" x="638" y="-1463.9" font-family="DejaVu Sans" font-size="12.00">PK</text>
+<text text-anchor="start" x="692" y="-1463.9" font-family="DejaVu Sans" font-size="12.00">producing_change_id</text>
+<text text-anchor="start" x="845" y="-1463.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">TEXT</text>
+<polygon fill="none" stroke="#70849d" points="630,-1452.5 630,-1508.5 896,-1508.5 896,-1452.5 630,-1452.5"/>
+</g>
+<!-- arno_new70_final_publication_status -->
+<g id="node8" class="node">
+<title>arno_new70_final_publication_status</title>
+<polygon fill="white" stroke="transparent" points="1193,-1267.5 1193,-1323.5 1455,-1323.5 1455,-1267.5 1193,-1267.5"/>
+<polygon fill="#d7e9ff" stroke="transparent" points="1194,-1295.5 1194,-1322.5 1454,-1322.5 1454,-1295.5 1194,-1295.5"/>
+<text text-anchor="start" x="1201" y="-1306.9" font-family="DejaVu Sans" font-weight="bold" font-size="12.00">arno_new70_final_publication_status</text>
+<text text-anchor="start" x="1201" y="-1278.9" font-family="DejaVu Sans" font-size="12.00">PK</text>
+<text text-anchor="start" x="1286" y="-1278.9" font-family="DejaVu Sans" font-size="12.00">claim_key</text>
+<text text-anchor="start" x="1388" y="-1278.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">TEXT</text>
+<polygon fill="none" stroke="#70849d" points="1193,-1267.5 1193,-1323.5 1455,-1323.5 1455,-1267.5 1193,-1267.5"/>
+</g>
+<!-- arno_new70_final_raw_finding_links -->
+<g id="node9" class="node">
+<title>arno_new70_final_raw_finding_links</title>
+<polygon fill="white" stroke="transparent" points="290,-1298 290,-1381 544,-1381 544,-1298 290,-1298"/>
+<polygon fill="#d7e9ff" stroke="transparent" points="291,-1352.5 291,-1379.5 543,-1379.5 543,-1352.5 291,-1352.5"/>
+<text text-anchor="start" x="298" y="-1363.9" font-family="DejaVu Sans" font-weight="bold" font-size="12.00">arno_new70_final_raw_finding_links</text>
+<text text-anchor="start" x="298" y="-1335.9" font-family="DejaVu Sans" font-size="12.00">PK</text>
+<text text-anchor="start" x="349" y="-1335.9" font-family="DejaVu Sans" font-size="12.00">raw_finding_id</text>
+<text text-anchor="start" x="494" y="-1335.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">TEXT</text>
+<text text-anchor="start" x="298" y="-1308.9" font-family="DejaVu Sans" font-size="12.00">FK</text>
+<text text-anchor="start" x="349" y="-1308.9" font-family="DejaVu Sans" font-size="12.00">canonical_finding_id</text>
+<text text-anchor="start" x="494" y="-1308.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">TEXT</text>
+<polygon fill="none" stroke="#70849d" points="290,-1298 290,-1381 544,-1381 544,-1298 290,-1298"/>
+</g>
+<!-- arno_new70_final_source_blobs -->
+<g id="node10" class="node">
+<title>arno_new70_final_source_blobs</title>
+<polygon fill="white" stroke="transparent" points="1211,-1529.5 1211,-1585.5 1437,-1585.5 1437,-1529.5 1211,-1529.5"/>
+<polygon fill="#d7e9ff" stroke="transparent" points="1212,-1557.5 1212,-1584.5 1436,-1584.5 1436,-1557.5 1212,-1557.5"/>
+<text text-anchor="start" x="1219" y="-1568.9" font-family="DejaVu Sans" font-weight="bold" font-size="12.00">arno_new70_final_source_blobs</text>
+<text text-anchor="start" x="1219" y="-1540.9" font-family="DejaVu Sans" font-size="12.00">PK</text>
+<text text-anchor="start" x="1283" y="-1540.9" font-family="DejaVu Sans" font-size="12.00">source_key</text>
+<text text-anchor="start" x="1381" y="-1540.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">TEXT</text>
+<polygon fill="none" stroke="#70849d" points="1211,-1529.5 1211,-1585.5 1437,-1585.5 1437,-1529.5 1211,-1529.5"/>
+</g>
+<!-- arno_new70_final_source_id_audit -->
+<g id="node11" class="node">
+<title>arno_new70_final_source_id_audit</title>
+<polygon fill="white" stroke="transparent" points="296,-1183.5 296,-1239.5 538,-1239.5 538,-1183.5 296,-1183.5"/>
+<polygon fill="#d7e9ff" stroke="transparent" points="297,-1211.5 297,-1238.5 537,-1238.5 537,-1211.5 297,-1211.5"/>
+<text text-anchor="start" x="304" y="-1222.9" font-family="DejaVu Sans" font-weight="bold" font-size="12.00">arno_new70_final_source_id_audit</text>
+<text text-anchor="start" x="304" y="-1194.9" font-family="DejaVu Sans" font-size="12.00">PK/FK</text>
+<text text-anchor="start" x="358" y="-1194.9" font-family="DejaVu Sans" font-size="12.00">canonical_finding_id</text>
+<text text-anchor="start" x="496" y="-1194.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">TEXT</text>
+<polygon fill="none" stroke="#70849d" points="296,-1183.5 296,-1239.5 538,-1239.5 538,-1183.5 296,-1183.5"/>
+</g>
+<!-- arno_new70_final_unresolved -->
+<g id="node12" class="node">
+<title>arno_new70_final_unresolved</title>
+<polygon fill="white" stroke="transparent" points="302,-1069.5 302,-1125.5 532,-1125.5 532,-1069.5 302,-1069.5"/>
+<polygon fill="#d7e9ff" stroke="transparent" points="303,-1097.5 303,-1124.5 531,-1124.5 531,-1097.5 303,-1097.5"/>
+<text text-anchor="start" x="318.5" y="-1108.9" font-family="DejaVu Sans" font-weight="bold" font-size="12.00">arno_new70_final_unresolved</text>
+<text text-anchor="start" x="310" y="-1080.9" font-family="DejaVu Sans" font-size="12.00">PK/FK</text>
+<text text-anchor="start" x="358" y="-1080.9" font-family="DejaVu Sans" font-size="12.00">canonical_finding_id</text>
+<text text-anchor="start" x="493" y="-1080.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">TEXT</text>
+<polygon fill="none" stroke="#70849d" points="302,-1069.5 302,-1125.5 532,-1125.5 532,-1069.5 302,-1069.5"/>
+</g>
+<!-- arno_new70_id_version_conflicts -->
+<g id="node13" class="node">
+<title>arno_new70_id_version_conflicts</title>
+<polygon fill="white" stroke="transparent" points="322,-924 322,-1061 608,-1061 608,-924 322,-924"/>
+<polygon fill="#d7e9ff" stroke="transparent" points="323,-1032.5 323,-1059.5 607,-1059.5 607,-1032.5 323,-1032.5"/>
+<text text-anchor="start" x="356.5" y="-1043.9" font-family="DejaVu Sans" font-weight="bold" font-size="12.00">arno_new70_id_version_conflicts</text>
+<text text-anchor="start" x="330" y="-1015.9" font-family="DejaVu Sans" font-size="12.00">PK/FK</text>
+<text text-anchor="start" x="378" y="-1015.9" font-family="DejaVu Sans" font-size="12.00">preliminary_finding_id</text>
+<text text-anchor="start" x="547" y="-1015.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">TEXT</text>
+<text text-anchor="start" x="330" y="-988.9" font-family="DejaVu Sans" font-size="12.00">FK</text>
+<text text-anchor="start" x="378" y="-988.9" font-family="DejaVu Sans" font-size="12.00">preliminary_case_id</text>
+<text text-anchor="start" x="547" y="-988.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">INTEGER</text>
+<text text-anchor="start" x="330" y="-961.9" font-family="DejaVu Sans" font-size="12.00">FK</text>
+<text text-anchor="start" x="378" y="-961.9" font-family="DejaVu Sans" font-size="12.00">later_provenance_case_id</text>
+<text text-anchor="start" x="547" y="-961.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">INTEGER</text>
+<text text-anchor="start" x="330" y="-934.9" font-family="DejaVu Sans" font-size="12.00">FK</text>
+<text text-anchor="start" x="378" y="-934.9" font-family="DejaVu Sans" font-size="12.00">audit_source_key</text>
+<text text-anchor="start" x="547" y="-934.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">TEXT</text>
+<polygon fill="none" stroke="#70849d" points="322,-924 322,-1061 608,-1061 608,-924 322,-924"/>
+</g>
+<!-- arno_new70_phase8_synthesis -->
+<g id="node14" class="node">
+<title>arno_new70_phase8_synthesis</title>
+<polygon fill="white" stroke="transparent" points="353.5,-297 353.5,-380 576.5,-380 576.5,-297 353.5,-297"/>
+<polygon fill="#d7e9ff" stroke="transparent" points="355,-351.5 355,-378.5 576,-378.5 576,-351.5 355,-351.5"/>
+<text text-anchor="start" x="362" y="-362.9" font-family="DejaVu Sans" font-weight="bold" font-size="12.00">arno_new70_phase8_synthesis</text>
+<text text-anchor="start" x="362" y="-334.9" font-family="DejaVu Sans" font-size="12.00">PK/FK</text>
+<text text-anchor="start" x="422" y="-334.9" font-family="DejaVu Sans" font-size="12.00">case_id</text>
+<text text-anchor="start" x="509" y="-334.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">INTEGER</text>
+<text text-anchor="start" x="362" y="-307.9" font-family="DejaVu Sans" font-size="12.00">FK</text>
+<text text-anchor="start" x="422" y="-307.9" font-family="DejaVu Sans" font-size="12.00">source_key</text>
+<text text-anchor="start" x="509" y="-307.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">TEXT</text>
+<polygon fill="none" stroke="#70849d" points="353.5,-297 353.5,-380 576.5,-380 576.5,-297 353.5,-297"/>
+</g>
+<!-- arno_new70_phase9_full_source -->
+<g id="node15" class="node">
+<title>arno_new70_phase9_full_source</title>
+<polygon fill="white" stroke="transparent" points="3,-259 3,-342 233,-342 233,-259 3,-259"/>
+<polygon fill="#d7e9ff" stroke="transparent" points="4,-313.5 4,-340.5 232,-340.5 232,-313.5 4,-313.5"/>
+<text text-anchor="start" x="11" y="-324.9" font-family="DejaVu Sans" font-weight="bold" font-size="12.00">arno_new70_phase9_full_source</text>
+<text text-anchor="start" x="11" y="-296.9" font-family="DejaVu Sans" font-size="12.00">PK/FK</text>
+<text text-anchor="start" x="75" y="-296.9" font-family="DejaVu Sans" font-size="12.00">case_id</text>
+<text text-anchor="start" x="164" y="-296.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">INTEGER</text>
+<text text-anchor="start" x="11" y="-269.9" font-family="DejaVu Sans" font-size="12.00">FK</text>
+<text text-anchor="start" x="75" y="-269.9" font-family="DejaVu Sans" font-size="12.00">source_key</text>
+<text text-anchor="start" x="164" y="-269.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">TEXT</text>
+<polygon fill="none" stroke="#70849d" points="3,-259 3,-342 233,-342 233,-259 3,-259"/>
+</g>
+<!-- arno_new70_phase9_risk -->
+<g id="node16" class="node">
+<title>arno_new70_phase9_risk</title>
+<polygon fill="white" stroke="transparent" points="366,-153 366,-236 564,-236 564,-153 366,-153"/>
+<polygon fill="#d7e9ff" stroke="transparent" points="367,-207.5 367,-234.5 563,-234.5 563,-207.5 367,-207.5"/>
+<text text-anchor="start" x="381" y="-218.9" font-family="DejaVu Sans" font-weight="bold" font-size="12.00">arno_new70_phase9_risk</text>
+<text text-anchor="start" x="374" y="-190.9" font-family="DejaVu Sans" font-size="12.00">PK/FK</text>
+<text text-anchor="start" x="422" y="-190.9" font-family="DejaVu Sans" font-size="12.00">case_id</text>
+<text text-anchor="start" x="503" y="-190.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">INTEGER</text>
+<text text-anchor="start" x="374" y="-163.9" font-family="DejaVu Sans" font-size="12.00">FK</text>
+<text text-anchor="start" x="422" y="-163.9" font-family="DejaVu Sans" font-size="12.00">source_key</text>
+<text text-anchor="start" x="503" y="-163.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">TEXT</text>
+<polygon fill="none" stroke="#70849d" points="366,-153 366,-236 564,-236 564,-153 366,-153"/>
+</g>
+<!-- arno_new70_phase9_risk_events -->
+<g id="node17" class="node">
+<title>arno_new70_phase9_risk_events</title>
+<polygon fill="white" stroke="transparent" points="0,-32.5 0,-142.5 236,-142.5 236,-32.5 0,-32.5"/>
+<polygon fill="#d7e9ff" stroke="transparent" points="1,-114.5 1,-141.5 235,-141.5 235,-114.5 1,-114.5"/>
+<text text-anchor="start" x="8" y="-125.9" font-family="DejaVu Sans" font-weight="bold" font-size="12.00">arno_new70_phase9_risk_events</text>
+<text text-anchor="start" x="8" y="-97.9" font-family="DejaVu Sans" font-size="12.00">PK/FK</text>
+<text text-anchor="start" x="72" y="-97.9" font-family="DejaVu Sans" font-size="12.00">case_id</text>
+<text text-anchor="start" x="167" y="-97.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">INTEGER</text>
+<text text-anchor="start" x="8" y="-70.9" font-family="DejaVu Sans" font-size="12.00">PK</text>
+<text text-anchor="start" x="72" y="-70.9" font-family="DejaVu Sans" font-size="12.00">event_stage</text>
+<text text-anchor="start" x="167" y="-70.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">TEXT</text>
+<text text-anchor="start" x="8" y="-43.9" font-family="DejaVu Sans" font-size="12.00">FK</text>
+<text text-anchor="start" x="72" y="-43.9" font-family="DejaVu Sans" font-size="12.00">source_key</text>
+<text text-anchor="start" x="167" y="-43.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">TEXT</text>
+<polygon fill="none" stroke="#70849d" points="0,-32.5 0,-142.5 236,-142.5 236,-32.5 0,-32.5"/>
+</g>
+<!-- arno_new70_scanner_raw_frozen -->
+<g id="node18" class="node">
+<title>arno_new70_scanner_raw_frozen</title>
+<polygon fill="white" stroke="transparent" points="346.5,-444.5 346.5,-554.5 583.5,-554.5 583.5,-444.5 346.5,-444.5"/>
+<polygon fill="#d7e9ff" stroke="transparent" points="348,-526.5 348,-553.5 583,-553.5 583,-526.5 348,-526.5"/>
+<text text-anchor="start" x="355" y="-537.9" font-family="DejaVu Sans" font-weight="bold" font-size="12.00">arno_new70_scanner_raw_frozen</text>
+<text text-anchor="start" x="355" y="-509.9" font-family="DejaVu Sans" font-size="12.00">PK</text>
+<text text-anchor="start" x="404" y="-509.9" font-family="DejaVu Sans" font-size="12.00">raw_finding_id</text>
+<text text-anchor="start" x="513" y="-509.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">INTEGER</text>
+<text text-anchor="start" x="355" y="-482.9" font-family="DejaVu Sans" font-size="12.00">FK</text>
+<text text-anchor="start" x="404" y="-482.9" font-family="DejaVu Sans" font-size="12.00">case_id</text>
+<text text-anchor="start" x="513" y="-482.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">INTEGER</text>
+<text text-anchor="start" x="355" y="-455.9" font-family="DejaVu Sans" font-size="12.00">FK</text>
+<text text-anchor="start" x="404" y="-455.9" font-family="DejaVu Sans" font-size="12.00">source_key</text>
+<text text-anchor="start" x="513" y="-455.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">TEXT</text>
+<polygon fill="none" stroke="#70849d" points="346.5,-444.5 346.5,-554.5 583.5,-554.5 583.5,-444.5 346.5,-444.5"/>
+</g>
+<!-- arno_new70_source_inputs -->
+<g id="node19" class="node">
+<title>arno_new70_source_inputs</title>
+<polygon fill="white" stroke="transparent" points="717.5,-211.5 717.5,-321.5 915.5,-321.5 915.5,-211.5 717.5,-211.5"/>
+<polygon fill="#d7e9ff" stroke="transparent" points="718.5,-293.5 718.5,-320.5 914.5,-320.5 914.5,-293.5 718.5,-293.5"/>
+<text text-anchor="start" x="726" y="-304.9" font-family="DejaVu Sans" font-weight="bold" font-size="12.00">arno_new70_source_inputs</text>
+<text text-anchor="start" x="725.5" y="-276.9" font-family="DejaVu Sans" font-size="12.00">PK/FK</text>
+<text text-anchor="start" x="773.5" y="-276.9" font-family="DejaVu Sans" font-size="12.00">case_id</text>
+<text text-anchor="start" x="854.5" y="-276.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">INTEGER</text>
+<text text-anchor="start" x="725.5" y="-249.9" font-family="DejaVu Sans" font-size="12.00">FK</text>
+<text text-anchor="start" x="773.5" y="-249.9" font-family="DejaVu Sans" font-size="12.00">pr_id</text>
+<text text-anchor="start" x="854.5" y="-249.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">INTEGER</text>
+<text text-anchor="start" x="725.5" y="-222.9" font-family="DejaVu Sans" font-size="12.00">FK</text>
+<text text-anchor="start" x="773.5" y="-222.9" font-family="DejaVu Sans" font-size="12.00">source_key</text>
+<text text-anchor="start" x="854.5" y="-222.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">TEXT</text>
+<polygon fill="none" stroke="#70849d" points="717.5,-211.5 717.5,-321.5 915.5,-321.5 915.5,-211.5 717.5,-211.5"/>
+</g>
+<!-- arno_sources -->
+<g id="node20" class="node">
+<title>arno_sources</title>
+<polygon fill="white" stroke="transparent" points="1026,-381.5 1026,-437.5 1184,-437.5 1184,-381.5 1026,-381.5"/>
+<polygon fill="#e8eef6" stroke="transparent" points="1027,-409.5 1027,-436.5 1183,-436.5 1183,-409.5 1027,-409.5"/>
+<text text-anchor="start" x="1060" y="-420.9" font-family="DejaVu Sans" font-weight="bold" font-size="12.00">arno_sources</text>
+<text text-anchor="start" x="1034" y="-392.9" font-family="DejaVu Sans" font-size="12.00">PK</text>
+<text text-anchor="start" x="1064" y="-392.9" font-family="DejaVu Sans" font-size="12.00">source_key</text>
+<text text-anchor="start" x="1145" y="-392.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">TEXT</text>
+<polygon fill="none" stroke="#70849d" points="1026,-381.5 1026,-437.5 1184,-437.5 1184,-381.5 1026,-381.5"/>
+</g>
+<!-- cases -->
+<g id="node21" class="node">
+<title>cases</title>
+<polygon fill="white" stroke="transparent" points="1025,-924 1025,-1061 1185,-1061 1185,-924 1025,-924"/>
+<polygon fill="#e8eef6" stroke="transparent" points="1026,-1032.5 1026,-1059.5 1184,-1059.5 1184,-1032.5 1026,-1032.5"/>
+<text text-anchor="start" x="1085.5" y="-1043.9" font-family="DejaVu Sans" font-weight="bold" font-size="12.00">cases</text>
+<text text-anchor="start" x="1033" y="-1015.9" font-family="DejaVu Sans" font-size="12.00">PK</text>
+<text text-anchor="start" x="1063" y="-1015.9" font-family="DejaVu Sans" font-size="12.00">id</text>
+<text text-anchor="start" x="1124" y="-1015.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">INTEGER</text>
+<text text-anchor="start" x="1033" y="-988.9" font-family="DejaVu Sans" font-size="12.00">FK</text>
+<text text-anchor="start" x="1063" y="-988.9" font-family="DejaVu Sans" font-size="12.00">repo_id</text>
+<text text-anchor="start" x="1124" y="-988.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">INTEGER</text>
+<text text-anchor="start" x="1033" y="-961.9" font-family="DejaVu Sans" font-size="12.00">FK</text>
+<text text-anchor="start" x="1063" y="-961.9" font-family="DejaVu Sans" font-size="12.00">issue_id</text>
+<text text-anchor="start" x="1124" y="-961.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">INTEGER</text>
+<text text-anchor="start" x="1033" y="-934.9" font-family="DejaVu Sans" font-size="12.00">FK</text>
+<text text-anchor="start" x="1063" y="-934.9" font-family="DejaVu Sans" font-size="12.00">pr_id</text>
+<text text-anchor="start" x="1124" y="-934.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">INTEGER</text>
+<polygon fill="none" stroke="#70849d" points="1025,-924 1025,-1061 1185,-1061 1185,-924 1025,-924"/>
+</g>
+<!-- pull_requests -->
+<g id="node22" class="node">
+<title>pull_requests</title>
+<polygon fill="white" stroke="transparent" points="1026.5,-225 1026.5,-308 1183.5,-308 1183.5,-225 1026.5,-225"/>
+<polygon fill="#e8eef6" stroke="transparent" points="1028,-279.5 1028,-306.5 1183,-306.5 1183,-279.5 1028,-279.5"/>
+<text text-anchor="start" x="1060" y="-290.9" font-family="DejaVu Sans" font-weight="bold" font-size="12.00">pull_requests</text>
+<text text-anchor="start" x="1035" y="-262.9" font-family="DejaVu Sans" font-size="12.00">PK</text>
+<text text-anchor="start" x="1065" y="-262.9" font-family="DejaVu Sans" font-size="12.00">id</text>
+<text text-anchor="start" x="1123" y="-262.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">INTEGER</text>
+<text text-anchor="start" x="1035" y="-235.9" font-family="DejaVu Sans" font-size="12.00">FK</text>
+<text text-anchor="start" x="1065" y="-235.9" font-family="DejaVu Sans" font-size="12.00">repo_id</text>
+<text text-anchor="start" x="1123" y="-235.9" font-family="DejaVu Sans" font-size="12.00" fill="#64748b">INTEGER</text>
+<polygon fill="none" stroke="#70849d" points="1026.5,-225 1026.5,-308 1183.5,-308 1183.5,-225 1026.5,-225"/>
+</g>
+</g>
+</svg>
