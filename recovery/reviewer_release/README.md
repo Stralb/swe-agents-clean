@@ -93,3 +93,7 @@ python3 artifact_reader.py list --run OWP14_CASE03429_O
 
 Keep this database private. Preservation was not a separate disclosure/redaction
 review. This release does not certify export of the entire ChatGPT project.
+
+Construction note: the raw snapshot copy was SHA-256 verified before adding review objects. Original row counts in the catalog come from that snapshot's integrity-checked certificate; large operational tables were not recounted in the resumed build. Original schemas and targeted research/view counts were validated afterward.
+
+The source construction scripts include a cluster-specific resume procedure. Reviewers can use the supplied SQLite views and REPRODUCE.sql directly; running the construction/resume scripts is not required to inspect the results.

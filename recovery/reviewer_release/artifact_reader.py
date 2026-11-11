@@ -4,6 +4,7 @@ import argparse
 import gzip
 import hashlib
 import json
+import lzma
 import sqlite3
 import zlib
 from pathlib import Path
@@ -53,11 +54,11 @@ def main():
                 if row is None or row[0] is None:raise ValueError('Referenced payload is absent')
                 raw=row[0].encode('utf-8') if isinstance(row[0],str) else bytes(row[0])
                 enc=(a['encoding'] or '').lower()
-                if enc in ('zlib','zlib+base64'): 
-                    if enc!='zlib':raise ValueError('Unsupported base64 envelope; consult source schema')
+                if enc in ('zlib','zlib/bytes','zlib/utf8'):
                     raw=zlib.decompress(raw)
+                elif enc=='xz/json-utf8':raw=lzma.decompress(raw)
                 elif enc in ('gzip','gz'):raw=gzip.decompress(raw)
-                elif enc not in ('raw','utf-8','utf8','text','none','identity'):raise ValueError('Unsupported encoding: '+enc)
+                elif enc not in ('raw','utf-8','utf8','text','none','identity','csv/utf-8','json/utf-8','raw/original-file','raw/utf-8-sig;csv','original_gzip_tar'):raise ValueError('Unsupported encoding: '+enc)
                 f.write(raw);digest.update(raw);size=len(raw)
         if a['sha256'] and digest.hexdigest()!=a['sha256']:raise ValueError('Artifact SHA-256 mismatch')
         if a['original_bytes'] is not None and size!=a['original_bytes']:raise ValueError('Artifact size mismatch')
