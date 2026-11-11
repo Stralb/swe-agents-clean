@@ -81,10 +81,29 @@ def main():
  if a.publish:publish(out,frames,manifest,card,prefix,a.path_token)
  print(json.dumps({'state':'EXPORT_VALIDATED','counts':manifest['counts'],'output':str(out)},indent=2),flush=True)
 
+def artifact_interface(records,tokens):
+ import re
+ result=[]
+ for row in records:
+  if 'artifact_id' in row:result.append(row);continue
+  source=row['source_table']
+  alias='study_'+source.split('_',1)[1] if '_' in source and any(token.casefold() in source.split('_',1)[0].casefold() for token in tokens) else source
+  role=row.get('role')
+  if role:
+   for token in tokens:role=re.sub(re.escape(token),'record',role,flags=re.I)
+  result.append({'artifact_id':'artifact_'+hashlib.sha256(row['artifact_key'].encode()).hexdigest(),'case_id':row.get('case_id'),'run_id':row.get('run_id'),'role':role,'source_table_alias':alias,'sha256':row.get('sha256'),'original_bytes':row.get('original_bytes'),'embedded':bool(row.get('embedded')),'encoding':row.get('encoding')})
+ return result
+
 def publish(out,frames,manifest,card,prefix,path_tokens):
  import re,yaml
  from huggingface_hub import HfApi,CommitOperationAdd,CommitOperationCopy,CommitOperationDelete,hf_hub_download
  from datasets import load_dataset
+ frames['artifacts']=artifact_interface(frames['artifacts'],path_tokens)
+ import pyarrow as pa,pyarrow.parquet as pq
+ artifact_file=out/'artifacts.parquet';artifact_table=pa.Table.from_pylist(frames['artifacts']);pq.write_table(artifact_table,artifact_file,compression='zstd')
+ assert pq.read_table(artifact_file).to_pylist()==frames['artifacts']
+ manifest['files']['artifacts.parquet']={'rows':len(frames['artifacts']),'sha256':sha(artifact_file),'columns':artifact_table.column_names}
+ manifest['artifact_id_policy']='artifact_ followed by full SHA-256 of the frozen artifact_key; source_table_alias is a neutral display label. Use resolve_artifact.py against the original snapshot to recover the exact source record.'
  repo='Stralb/malicious-issue-miner-data';api=HfApi();info=api.repo_info(repo,repo_type='dataset',files_metadata=True)
  assert info.private,'Expected the existing private dataset; access permissions will not be changed'
  before=info.sha;items={f.rfilename:f for f in info.siblings}
@@ -122,6 +141,10 @@ def publish(out,frames,manifest,card,prefix,path_tokens):
   archive_index.append({'path':target,**ident(f)})
  # Preserve the previous card bytes without keeping them in the default interface.
  if old_card:ops.append(CommitOperationAdd(path_in_repo=archive_prefix+'/original_dataset_card.md',path_or_fileobj=old_card))
+ if 'archives/INDEX.json' in items:
+  prior_index=json.loads(Path(hf_hub_download(repo,'archives/INDEX.json',repo_type='dataset',revision=before)).read_text())
+  by_path={entry['path']:entry for entry in prior_index.get('files',[])}
+  by_path.update({entry['path']:entry for entry in archive_index});archive_index=list(by_path.values())
  archive_info={'source_revision':before,'preservation_ref':branch,'files':archive_index,'note':'Original snapshots and evidence retain their original bytes and may contain historical identifiers. These files are not the default case table.'}
  # Keep an audit of verbatim source-text occurrences. Source text is never silently redacted.
  exceptions=[]
@@ -131,7 +154,9 @@ def publish(out,frames,manifest,card,prefix,path_tokens):
    if n:exceptions.append({'table':name,'column':col,'rows':n,'policy':'VERBATIM_SOURCE_RECORD_OR_IDENTIFIER_RETAINED'})
  (out/'SOURCE_TEXT_EXCEPTIONS.json').write_text(json.dumps(exceptions,indent=2))
  (out/'ARCHIVE_INDEX.json').write_text(json.dumps(archive_info,indent=2))
+ (out/'resolve_artifact.py').write_text('"""Resolve a neutral artifact ID against a preserved evidence snapshot."""\nimport argparse,hashlib,json,sqlite3\nfrom pathlib import Path\np=argparse.ArgumentParser();p.add_argument(\'--db\',type=Path,required=True);p.add_argument(\'--artifact-id\',required=True);a=p.parse_args()\nc=sqlite3.connect(a.db.resolve().as_uri()+\'?mode=ro\',uri=True);c.row_factory=sqlite3.Row\nfor r in c.execute(\'SELECT * FROM review_artifact_index\'):\n if \'artifact_\'+hashlib.sha256(r[\'artifact_key\'].encode()).hexdigest()==a.artifact_id:\n  print(json.dumps(dict(r),indent=2));break\nelse:raise SystemExit(\'Artifact ID not found in this snapshot\')\n')
  card=card.replace('The preserved database and review documentation are in [archives/INDEX.json](archives/INDEX.json).','Historical snapshot availability is recorded in [the archive index](archives/INDEX.json). The source snapshot hash in the manifest identifies the input; it does not imply that a full snapshot matching that hash has been uploaded.')
+ card+='\nArtifact locators use stable IDs and neutral table aliases. Run `python resolve_artifact.py --db evidence_snapshot.sqlite --artifact-id ID` to recover an exact frozen source record.\n'
  card+='\nOriginal author credits, case text, identifiers and evidence are preserved verbatim. [Source-text exceptions]('+prefix+'/SOURCE_TEXT_EXCEPTIONS.json) identifies fields retaining historical wording.\n'
  # These are exact neutral schema aliases, not a claim that archived SQLite identifiers changed.
  manifest['source_schema_alias_policy']='Column sources use neutral study_* aliases. Frozen source snapshot identifiers and source records are unchanged.'
@@ -145,6 +170,8 @@ def publish(out,frames,manifest,card,prefix,path_tokens):
  print(json.dumps({'state':'UPLOAD_PLAN','archive_moves':len(moves),'new_tables':len(frames),'old_revision':before,'preservation_ref':branch}),flush=True)
  commit=api.create_commit(repo_id=repo,repo_type='dataset',parent_commit=before,operations=ops,commit_message='Organise canonical paper cases and preserve historical snapshots under archives')
  after=api.repo_info(repo,repo_type='dataset',revision=commit.oid,files_metadata=True);remote={f.rfilename:f for f in after.siblings}
+ for entry in archive_info['files']:
+  assert entry['path'] in remote and ident(remote[entry['path']])=={k:entry[k] for k in ('kind','digest','bytes')},'Archived object identity mismatch'
  for source,target,want in moves:
   assert target in remote and ident(remote[target])==want,'Archive object identity mismatch'
   assert source not in remote,'Old path unexpectedly retained'
@@ -159,7 +186,7 @@ def publish(out,frames,manifest,card,prefix,path_tokens):
  assert sum(loaded['in_original122'])==122 and sum(loaded['in_new70'])==70
  assert sum(loaded['in_mapped191'])==191
  pair_data=load_dataset(repo,'matched_pairs',split='train',revision=commit.oid,token=True);assert len(pair_data)==190
- receipt={'state':'REMOTE_FILES_AND_LOAD_DATASET_VERIFIED','commit':commit.oid,'previous_commit':before,'preservation_ref':branch,'default_config':'paper_cases','case_rows':3809,'positive_cases':192,'matched_pairs':190,'archived_files_verified':len(moves),'source_text_exception_fields':len(exceptions),'permissions_unchanged':True,'history_rewritten':False}
+ receipt={'state':'REMOTE_FILES_AND_LOAD_DATASET_VERIFIED','commit':commit.oid,'previous_commit':before,'preservation_ref':branch,'default_config':'paper_cases','case_rows':3809,'positive_cases':192,'matched_pairs':190,'archived_files_verified':len(archive_info['files']),'archive_moves_this_commit':len(moves),'source_text_exception_fields':len(exceptions),'permissions_unchanged':True,'history_rewritten':False}
  (out/'UPLOAD_RECEIPT.json').write_text(json.dumps(receipt,indent=2));api.upload_file(repo_id=repo,repo_type='dataset',path_or_fileobj=str(out/'UPLOAD_RECEIPT.json'),path_in_repo='UPLOAD_RECEIPT.json',commit_message='Record verified dataset entry point and archived object identities')
  print(json.dumps(receipt,indent=2),flush=True)
 
