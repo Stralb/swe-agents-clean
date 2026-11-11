@@ -165,7 +165,7 @@ def publish(out,frames,manifest,card,prefix,path_tokens):
  for package in ('pyarrow','datasets','huggingface_hub','PyYAML'):manifest['python_dependencies'][package]=importlib.metadata.version(package)
  (out/'MANIFEST.json').write_text(json.dumps(manifest,indent=2));(out/'DATASET_CARD.md').write_text(card)
  for p in out.iterdir():
-  if p.is_file():ops.append(CommitOperationAdd(path_in_repo=prefix+'/'+p.name,path_or_fileobj=str(p)))
+  if p.is_file() and p.name!='UPLOAD_RECEIPT.json':ops.append(CommitOperationAdd(path_in_repo=prefix+'/'+p.name,path_or_fileobj=str(p)))
  ops.extend([CommitOperationAdd(path_in_repo='README.md',path_or_fileobj=card.encode()),CommitOperationAdd(path_in_repo='archives/INDEX.json',path_or_fileobj=json.dumps(archive_info,indent=2).encode()),CommitOperationAdd(path_in_repo='DATASET.json',path_or_fileobj=json.dumps({'release':manifest['release'],'default_config':'paper_cases','manifest':prefix+'/MANIFEST.json','primary_key':'case_id','counts':manifest['counts']},indent=2).encode())])
  print(json.dumps({'state':'UPLOAD_PLAN','archive_moves':len(moves),'new_tables':len(frames),'old_revision':before,'preservation_ref':branch}),flush=True)
  commit=api.create_commit(repo_id=repo,repo_type='dataset',parent_commit=before,operations=ops,commit_message='Organise canonical paper cases and preserve historical snapshots under archives')
@@ -178,7 +178,7 @@ def publish(out,frames,manifest,card,prefix,path_tokens):
  if old_card:assert Path(hf_hub_download(repo,archive_prefix+'/original_dataset_card.md',repo_type='dataset',revision=commit.oid)).read_bytes()==old_card
  assert Path(hf_hub_download(repo,'README.md',repo_type='dataset',revision=commit.oid)).read_bytes()==card.encode()
  for p in out.iterdir():
-  if p.is_file():assert sha(Path(hf_hub_download(repo,prefix+'/'+p.name,repo_type='dataset',revision=commit.oid)))==sha(p),p.name
+  if p.is_file() and p.name!='UPLOAD_RECEIPT.json':assert sha(Path(hf_hub_download(repo,prefix+'/'+p.name,repo_type='dataset',revision=commit.oid)))==sha(p),p.name
  # Exercise the real consumer interface at the pinned uploaded revision.
  loaded=load_dataset(repo,split='train',revision=commit.oid,token=True)
  assert len(loaded)==3809 and len(set(loaded['case_id']))==3809
