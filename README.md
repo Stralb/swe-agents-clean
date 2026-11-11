@@ -4,6 +4,8 @@ Code and analysis for an observational study of GitHub issues and pull requests 
 
 **Status:** Research in progress. The included aggregates can be checked offline, but the full historical study cannot yet be reproduced from this repository alone.
 
+**Dataset:** [Hugging Face — research cases](https://huggingface.co/datasets/Stralb/malicious-issue-miner-data) *(private access required)*. The default `paper_cases` configuration contains 3,809 cases with explicit flags for the 192 finding-positive cases. [Pinned data revision](https://huggingface.co/datasets/Stralb/malicious-issue-miner-data/tree/e71e8b39ed56ffb1c2198b9df2384495b8404317) · [Dataset guide and verification](dataset/README.md).
+
 ## Repository
 
 | Directory | Contents |
