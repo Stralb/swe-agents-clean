@@ -70,3 +70,13 @@ The recorded population comprises 3,809 linked workflows, including 192 scanner-
 A scanner finding is not proof of an exploitable vulnerability or a malicious issue. Matching also does not establish causality.
 
 See [methods and results](docs/methods.md) and [reproduction notes](docs/reproducibility.md) for exactly what has been checked and what remains unavailable.
+
+## Research database and review edition
+
+The preserved master includes an additive review layer for navigating cases, experiments, annotations and embedded evidence. Original records remain intact; historical experiments and later tests are separately identified.
+
+- [Dataset guide: contents, version, checksum, access and limitations](recovery/reviewer_release/DATASET.md)
+- [Full database ERD](recovery/reviewer_release/database/erd/FULL_DATABASE_ERD.svg)
+- [Private dataset release on Hugging Face](https://huggingface.co/datasets/Stralb/malicious-issue-miner-data/tree/main/research/arno-review-20261111-v1)
+
+The small reviewer files are verified uploaded. Full database transfer remains unverified in the last recorded status; consult [BUILD_STATUS.json](recovery/reviewer_release/BUILD_STATUS.json) and the remote upload receipt before claiming completion. Private data access must be arranged for reviewers.
