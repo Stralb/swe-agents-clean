@@ -165,7 +165,7 @@ def high_yield_surface_reasons(files: Iterable[dict[str, Any] | str]) -> list[st
             if any(term in added_text for term in SECURITY_SENSITIVE_PATCH_TERMS):
                 reasons.append(f"security_patch:{path}")
                 continue
-            # General source files are observable, but UI/style-only source files
+            # General source files are observable, but style-only source files
             # are lower-yield for introduced security evidence. They remain
             # structural cases when structural-only mode is added, but by default
             # do not drive expensive evidence mining.
@@ -173,7 +173,7 @@ def high_yield_surface_reasons(files: Iterable[dict[str, Any] | str]) -> list[st
                 if not _strict_evidence_surface():
                     reasons.append(f"general_source:{path}")
                     continue
-    # Deduplicate and cap for stable logs/UI.
+    # Deduplicate and cap for stable logs.
     out=[]
     seen=set()
     for r in reasons:

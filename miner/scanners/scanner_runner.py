@@ -646,7 +646,7 @@ def scan_case(db: Database, case: dict[str, Any], config: dict) -> None:
                         )
                 else:
                     blocking_errors.append(language)
-            # Compatibility aggregate runs for the existing scheduler/UI.
+            # Compatibility aggregate runs for the job scheduler.
             if blocking_errors:
                 _insert_run(db, case_id, pr_id, "codeql-base", "error", "", "One or more language base scans failed: " + ",".join(blocking_errors))
                 _insert_run(db, case_id, pr_id, "codeql-head", "error", "", "One or more language head scans failed: " + ",".join(blocking_errors))

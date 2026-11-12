@@ -141,8 +141,8 @@ def _advisory_ids(f: dict[str, Any]) -> tuple[str, ...]:
     """Return all equivalent advisory identifiers known for an OSV finding.
 
     OSV may report the same vulnerability twice under IDs such as PYSEC-* and
-    GHSA-*. Treat aliases/related IDs as the same advisory family so the UI does
-    not show duplicate dependency regressions.
+    GHSA-*. Treat aliases/related IDs as the same advisory family so duplicate
+    dependency regressions are not reported.
     """
     ids: set[str] = set()
     for key in ("vuln_id", "id"):

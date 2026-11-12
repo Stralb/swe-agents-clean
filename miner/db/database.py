@@ -14,9 +14,9 @@ T = TypeVar("T")
 
 
 class Database:
-    """Small SQLite wrapper tuned for long-running collector/scanner/UI workflows.
+    """Small SQLite wrapper tuned for long-running collector and scanner workflows.
 
-    SQLite is fine for this project, but the collector, scanner, and Streamlit UI can
+    SQLite is fine for this project, but the collector and scanner can
     briefly overlap. WAL mode + busy timeouts + small retry loop prevent transient
     `database is locked` crashes.
     """
@@ -252,7 +252,7 @@ class Database:
                 conn.execute("DELETE FROM scanner_jobs WHERE job_type IN ('source_code','dependency')")
 
                 # Artifact-region methodology tables. Kept here as additive
-                # migrations so existing cluster DBs can be upgraded in-place.
+                # migrations so existing databases can be upgraded in place.
                 conn.executescript("""
                 CREATE TABLE IF NOT EXISTS artifact_regions (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,

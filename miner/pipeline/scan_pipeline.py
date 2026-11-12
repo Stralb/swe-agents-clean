@@ -40,7 +40,7 @@ LIMIT ?
 
 def _scope_filter(settings: Settings) -> str:
     # SCOPE=ai remains available as a narrow marker-positive cohort scan.
-    # The recommended methodology is SCOPE=all, then filter/rank by agentic markers in the UI.
+    # The recommended methodology is SCOPE=all, then filter or rank by agentic markers.
     return "AND c.ai_cohort != 'AI-unknown'" if settings.config.get("scan", {}).get("ai_only", False) else ""
 
 

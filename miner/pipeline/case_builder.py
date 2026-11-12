@@ -76,7 +76,7 @@ def _status_from_runs(db: Database, case_id: int) -> str:
     """Infer status for the legacy/direct scanner path that writes scanner_runs.
 
     The worker path uses scanner_jobs.  make scan currently writes scanner_runs
-    directly, so the UI must not mark a case clean after only the cheap stage.
+    directly, so a case must not be marked clean after only the cheap stage.
     This function treats missing applicable downstream runs as still scanning.
     """
     runs = db.query("SELECT scanner, status FROM scanner_runs WHERE case_id=?", (case_id,))
@@ -109,8 +109,7 @@ def update_case_tags_and_status(db: Database) -> None:
     Important methodology rule: a case is clean only after every applicable
     downstream worker has a terminal ok/not_applicable result.  Findings always
     move the case to needs_review.  Missing jobs/runs remain scanner_running,
-    which fixes the UI showing stale or prematurely-clean statuses during staged
-    fast/full scans.
+    so staged fast/full scans never report a prematurely clean status.
     """
     cases = db.query("SELECT id, ai_cohort, status FROM cases")
     types_by_case, _ = _signal_tags_from_findings(db)

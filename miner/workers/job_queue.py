@@ -364,11 +364,10 @@ def _job_status_from_runs(db: Database, case_id: int, job_type: str) -> str | No
 
 
 def sync_jobs_from_scanner_runs(db: Database, case_id: int) -> None:
-    """Mirror direct make-scan scanner_runs into scanner_jobs for the UI.
+    """Mirror direct make-scan scanner_runs into scanner_jobs.
 
-    The cluster/evaluator path updates scanner_jobs directly.  The synchronous
-    make scan path writes scanner_runs, so this bridge keeps the overview and
-    review UI accurate without changing the scanner implementation.
+    The worker path updates scanner_jobs directly.  The synchronous
+    make scan path writes scanner_runs, so this bridge keeps scanner_jobs accurate without changing the scanner implementation.
     """
     jobs = db.query("SELECT id, job_type, status FROM scanner_jobs WHERE case_id=?", (case_id,))
     for job in jobs:
@@ -386,7 +385,7 @@ def update_case_stages(db: Database) -> None:
     """Keep case.status aligned with current scanner_jobs.
 
     The old implementation mixed historical scanner_runs with current jobs, which
-    left repaired/rerun cases stuck as scanner_running or scan_blocked in the UI.
+    left repaired/rerun cases stuck as scanner_running or scan_blocked.
     This delegates to the job-table source of truth while preserving tag updates.
     """
     update_case_tags_and_status(db)

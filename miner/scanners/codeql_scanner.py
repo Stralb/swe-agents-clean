@@ -36,7 +36,7 @@ def _codeql_tmp_parent() -> Path:
     CodeQL database creation can leave files briefly open while Python exits the
     temporary context, especially under WSL/Windows-mounted paths. Keep CodeQL
     temp work under a Linux filesystem by default and make the location
-    overrideable for clusters.
+    overridable.
     """
     raw = (
         os.environ.get("MINER_CODEQL_TMPDIR")

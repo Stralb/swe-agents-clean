@@ -143,7 +143,7 @@ def _targeted_base_query(settings: Settings | None = None) -> str:
     return f'is:pr is:merged language:{language} stars:>={min_stars} archived:false merged:>={lookback} in:title,body'
 
 
-# Backwards-compatible constant for tests/UI helpers; runtime uses _targeted_base_query(settings).
+# Default query constant; runtime uses _targeted_base_query(settings).
 TARGETED_BASE_QUERY = _targeted_base_query(None)
 
 
@@ -1738,7 +1738,7 @@ def _collect_ai_search(
 
 
 def _collect_targeted_stream_search(db: Database, gh: GitHubClient, settings: Settings, start: float, initial_case_count: int = 0) -> int:
-    """Collect using the UI-visible base+stream PR search strategy.
+    """Collect using the base+stream PR search strategy.
 
     This is the default for live/mine. It avoids broad repo-walking and instead
     asks GitHub for merged Python PRs from popular non-archived repos that match

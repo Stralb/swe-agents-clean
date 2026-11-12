@@ -10,7 +10,7 @@ def sync_case_statuses(db: Database) -> None:
     """Make cases.status reflect current scanner_jobs and introduced findings.
 
     This is deliberately based on scanner_jobs, not stale historical scanner_runs,
-    so reruns/repairs cannot leave the UI claiming that completed cases still need
+    so reruns/repairs cannot leave completed cases marked as still needing
     scanning.
     """
     cases = db.query("SELECT id FROM cases WHERE status NOT IN ('reviewed','excluded') ORDER BY id")

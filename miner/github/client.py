@@ -183,7 +183,7 @@ class GitHubClient:
         request_context: str,
         request_id: str | None,
     ) -> tuple[int, int]:
-        """Atomically publish a process-wide/cluster-wide exponential cooldown."""
+        """Atomically publish a process-wide exponential cooldown."""
         now = int(time.time())
         path = self.secondary_cooldown_path
         if path is None:
