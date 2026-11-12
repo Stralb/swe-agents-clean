@@ -37,6 +37,7 @@ With Docker instead: `docker build -t checks . && docker run --rm checks`.
 | `miner/` | ([README](miner/README.md)) The pipeline: collection, issue linking, filters, scanners, database, workers. Run with `python -m miner {init-db,collect,scan,export}` |
 | `checks/` | ([README](checks/README.md)) Recomputes the paper's paired tests and bootstrap checks and verifies the cohort totals, from `data/` |
 | `replay/` | The O/W/P patch replay and CodeQL comparison (RQ3) ([README](replay/README.md)) |
+| `annotation/` | Prompts, coding protocols and codebooks for the annotation stages ([README](annotation/README.md)) |
 | `data/` | Aggregate results, database schema and dataset guide ([README](data/README.md)) |
 | `tests/` | Unit tests |
 | `paper/` | Manuscript |
