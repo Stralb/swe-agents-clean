@@ -2,7 +2,7 @@
 
 Code and analysis for an observational study of GitHub issues and pull requests associated with coding agents. The study traces scanner-reported findings in the resulting changes back to the changed operations responsible for them, and compares the affected workflows with matched controls.
 
-**Paper:** [paper/paper.pdf](paper/main.pdf) · [source](paper/main.tex)
+**Paper:** [paper/paper.pdf](paper/paper.pdf) · [source](paper/main.tex)
 **Dataset:** [Hugging Face](https://huggingface.co/datasets/Stralb/adversarial-swe-agents) *(private access required)* · [data guide](data/README.md)
 **Database:** [full ERD](data/erd/full.svg) · [schema](data/study_schema.sql)
 **Archive (DOI):** *to be added*
