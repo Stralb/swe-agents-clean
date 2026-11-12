@@ -1,5 +1,6 @@
 use Cwd qw(abs_path);
-$ENV{'TEXMFHOME'} = abs_path('vendor/texmf');
+$ENV{'TEXMFHOME'} = abs_path('assets/vendor/texmf');
 $pdf_mode = 1;
+$jobname = 'paper';
 $pdflatex = 'pdflatex -interaction=nonstopmode -halt-on-error -file-line-error %O %S';
 $max_repeat = 5;

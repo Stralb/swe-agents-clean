@@ -1,4 +1,4 @@
-\input{font-maps.tex}
+\input{assets/font-maps.tex}
 \documentclass[acmsmall,screen,nonacm]{acmart}
 \usepackage[T1]{fontenc}
 \usepackage{pdfpages}
@@ -50,7 +50,7 @@ The central distinction is between what an issue requests and how a change imple
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\linewidth]{figures/Fig1_Conceptual.pdf}
+\includegraphics[width=\linewidth]{assets/figures/Fig1_Conceptual.pdf}
 \caption{Workflow overview showing issue-driven implementation, possible context sources, base/head checks and warning-informed reimplementation. The RQ2 marker denotes the new-finding comparison used to define the matched groups, rather than the wording analysis itself. This is a conceptual workflow, not a verified execution trace.}
 \Description{The workflow depicts an issue author, a coding agent, possible human, tool and repository context, implementation changes, a pull request, before-and-after security checks and warning-informed reimplementation.}
 \label{fig:original-workflow}
@@ -190,7 +190,7 @@ Figure~\ref{fig:rq1-method} shows how retained findings are linked to responsibl
 
 \begin{figure}[!tbp]
 \centering
-\includegraphics[width=0.9\textwidth]{figures/RQ1_Methodology.pdf}
+\includegraphics[width=0.9\textwidth]{assets/figures/RQ1_Methodology.pdf}
 \caption{From findings to responsible changes and implementation choices. Blue bars mark model-assisted steps; teal callouts identify admissible evidence, and red marks unsupported links or later evidence excluded from origin coding. Dark outlines show retained counts. The first yes/no decision tests link support; the second distinguishes changes grouped into choices. The dashed final box denotes explanation tiers for $M$ choices. Retained links require a changed file, line or hunk and a supporting explanation (Section~\ref{sec:attrib}).}
 \Description{Scanner findings are deduplicated and linked to changed operations using code evidence. Operations receive task roles and are grouped into implementation choices, which are classified using earlier public evidence.}
 \label{fig:rq1-method}
@@ -255,7 +255,7 @@ In the first 122 finding-positive instances annotated, 605 scanner findings were
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.7\linewidth]{figures/Fig5_Concentration.pdf}
+\includegraphics[width=0.7\linewidth]{assets/figures/Fig5_Concentration.pdf}
 \caption{A few instances hold many findings but almost none of the source-code changes. Each bar splits one total between the seven instances with the most findings and the other 115 in the original cohort. The seven hold 52\% of all findings but only 3\% of source-code responsible changes. Counts for the seven are the totals minus the excluded-seven counts in Table~\ref{tab:concentration}.}
 \Description{The seven instances with the most findings account for more than half of findings but only five of 166 source-code responsible changes. Dependency and data-flow reports account for much of the concentration.}
 \label{fig:concentration}
@@ -354,7 +354,7 @@ The GSD tool-call case (Case~2) illustrates the distinction. Its finding-positiv
 
 \subsection{RQ3 --- Alerts and Implementations in Replays}\label{sec:rq3-res}
 
-\input{tables/owp_replays.tex}
+\input{assets/tables/owp_replays.tex}
 
 Across the 12 tasks with all three conditions, recorded new CodeQL alerts totalled 21 for the issue alone, 10 with the historical warning and 15 with a warning-derived property (Table~\ref{tab:replays}). These totals compare separately generated patches, one per condition, so they cannot separate the supplied information from ordinary variation between generations. Warning-informed patches were also often smaller, and functional equivalence was not established, so a lower count may reflect less implemented functionality rather than a safer implementation. The results therefore describe differences in scanner outcomes rather than demonstrated security improvement.
 
@@ -449,8 +449,8 @@ The study data and code can be found in the \href{https://github.com/Stralb/adve
 \end{thebibliography}
 \endgroup
 
-\input{supplement.tex}
+\input{assets/supplement.tex}
 
 \clearpage
-\includepdf[pages=-,fitpaper=true,pagecommand={\thispagestyle{empty}}]{declaration/AI_declaration_signed.pdf}
+\includepdf[pages=-,fitpaper=true,pagecommand={\thispagestyle{empty}}]{assets/declaration/AI_declaration_signed.pdf}
 \end{document}

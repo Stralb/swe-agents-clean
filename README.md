@@ -2,7 +2,7 @@
 
 Code and analysis for an observational study of GitHub issues and pull requests associated with coding agents. The study traces scanner-reported findings in the resulting changes back to the changed operations responsible for them, and compares the affected workflows with matched controls.
 
-**Paper:** [paper/main.pdf](paper/main.pdf) · [source](paper/README.md)
+**Paper:** [paper/paper.pdf](paper/main.pdf) · [source](paper/main.tex)
 **Dataset:** [Hugging Face](https://huggingface.co/datasets/Stralb/adversarial-swe-agents) *(private access required)* · [data guide](data/README.md)
 **Database:** [full ERD](data/erd/full.svg) · [schema](data/study_schema.sql)
 **Archive (DOI):** *to be added*
@@ -40,7 +40,7 @@ With Docker instead: `docker build -t checks . && docker run --rm checks`.
 | `annotation/` | Prompts, blinding protocols and codebooks for the annotation stages ([README](annotation/README.md)) |
 | `data/` | Aggregate results, database schema and dataset guide ([README](data/README.md)) |
 | `tests/` | Unit tests |
-| `paper/` | LaTeX source and PDF of the paper ([README](paper/README.md)) |
+| `paper/` | LaTeX source and PDF of the paper ([build notes](paper/assets/README.md)) |
 | `config.yml` | Collection and scanner configuration used for the study |
 
 ## Study
