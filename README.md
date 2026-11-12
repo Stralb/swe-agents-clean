@@ -4,6 +4,7 @@ Code and analysis for an observational study of GitHub issues and pull requests 
 
 **Paper:** [paper/main.pdf](paper/main.pdf)
 **Dataset:** [Hugging Face](https://huggingface.co/datasets/Stralb/adversarial-swe-agents) *(private access required)* · [data guide](data/README.md)
+**Database:** [full ERD](data/database_erd.svg) · [schema](data/schema.sql)
 **Archive (DOI):** *to be added*
 
 ## Quick start
@@ -52,6 +53,12 @@ Five categorical comparisons use Stuart-Maxwell marginal-homogeneity tests, thre
 Explicit instructions occur in 121 of 190 positive issues (63.7%) and 148 of 190 controls (77.9%); positives suggest a solution without fully specifying it in 33 cases (17.4%) against 9 controls (4.7%). The PR is aligned with the issue goal in 160 of 190 positives (84.2%) and 183 of 190 controls (96.3%).
 
 The comparisons are observational. A scanner finding is not proof of an exploitable vulnerability or of a malicious issue, and matching does not establish causality.
+
+## Database
+
+The study database (111 tables, 18 views) is documented in [`data/schema.sql`](data/schema.sql). The overview below shows how its main parts connect; the [full ERD](data/database_erd.svg) shows every table.
+
+![Database overview](data/database_overview.svg)
 
 ## Reproducing the results
 
