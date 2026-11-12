@@ -1,6 +1,6 @@
 """Regression checks for the aggregate matched-results package."""
 import unittest
-from analysis.matched_results import DATA, exact_mcnemar, replay, stuart_maxwell
+from reproduce.matched_results import DATA, exact_mcnemar, replay, stuart_maxwell
 
 class MatchedResultsTests(unittest.TestCase):
     @classmethod

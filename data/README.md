@@ -1,6 +1,6 @@
 # Data
 
-Aggregate results used by the `analysis/` checks, plus documentation for the study dataset.
+Aggregate results used by the `reproduce/` checks, plus documentation for the study dataset.
 
 ## Files
 
