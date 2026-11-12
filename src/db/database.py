@@ -7,7 +7,6 @@ import json
 import os
 import sqlite3
 import time
-import uuid
 from pathlib import Path
 from typing import Any, Callable, Iterable, TypeVar
 
@@ -27,7 +26,6 @@ class Database:
         path: str | Path,
         *,
         read_only: bool | None = None,
-        command_spool: str | Path | None = None,
     ):
         self.path = Path(path)
         if read_only is None:
@@ -38,8 +36,6 @@ class Database:
                 "on",
             }
         self.read_only = bool(read_only)
-        configured_spool = command_spool or os.getenv("UI_COMMAND_SPOOL")
-        self.command_spool = Path(configured_spool) if configured_spool else None
         if not self.read_only:
             self.path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -110,24 +106,7 @@ class Database:
         sql: str,
         params: tuple[Any, ...],
     ) -> None:
-        if self.command_spool is None:
-            raise RuntimeError(
-                "Read-only database received a write without UI_COMMAND_SPOOL"
-            )
-        from src.distributed.spool import DistributedSpool
-
-        spool = DistributedSpool(self.command_spool)
-        task_id = f"ui-{time.time_ns()}-{uuid.uuid4().hex}"
-        created = spool.enqueue(
-            "ui_commands",
-            task_id,
-            {
-                "sql": sql,
-                "params": list(params),
-            },
-        )
-        if not created:
-            raise RuntimeError("Failed to enqueue UI database command")
+        raise RuntimeError("Read-only database cannot execute writes")
 
     def _retry(self, fn: Callable[[], T], attempts: int = 5, base_sleep: float = 0.25) -> T:
         last_exc: Exception | None = None

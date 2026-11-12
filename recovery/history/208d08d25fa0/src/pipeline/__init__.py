@@ -1,1 +1,0 @@
-"""Recovered pure pipeline helpers."""

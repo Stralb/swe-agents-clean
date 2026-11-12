@@ -355,7 +355,7 @@ def selected_evidence_zip(db: Database, case_ids: Iterable[int]) -> bytes:
     buf = io.BytesIO()
     with zipfile.ZipFile(buf, "w", compression=zipfile.ZIP_DEFLATED) as zf:
         index = []
-        index_md = ["# Malicious Issue Miner evidence bundle\n\n", f"Exported: {datetime.now(timezone.utc).isoformat()}\n\n"]
+        index_md = ["# Miner evidence bundle\n\n", f"Exported: {datetime.now(timezone.utc).isoformat()}\n\n"]
         for cid in ids:
             evidence = get_case_evidence(db, cid)
             repo_slug = _clean_id(evidence["repo"]["full_name"])
@@ -409,10 +409,6 @@ def database_export_zip(db_path: Path, *, config_path: Path | None = None, expor
     root = Path(project_root or Path.cwd()).resolve()
     db_path = Path(db_path).resolve()
     buf = io.BytesIO()
-    try:
-        from ui.retrieval import methodology_snapshot
-    except Exception:  # pragma: no cover - defensive for non-UI contexts
-        methodology_snapshot = lambda: {"note": "methodology snapshot unavailable"}
 
     with zipfile.ZipFile(buf, "w", compression=zipfile.ZIP_DEFLATED) as zf:
         for candidate in (db_path, Path(str(db_path) + "-wal"), Path(str(db_path) + "-shm")):
@@ -420,13 +416,12 @@ def database_export_zip(db_path: Path, *, config_path: Path | None = None, expor
                 zf.write(candidate, f"{safe_name}/{candidate.name}")
         if config_path and Path(config_path).exists():
             zf.write(Path(config_path), f"{safe_name}/config.yml")
-        zf.writestr(f"{safe_name}/methodology_snapshot.json", json.dumps(methodology_snapshot(), indent=2, ensure_ascii=False))
         zf.writestr(
             f"{safe_name}/README_EXPORT.md",
-            "# Malicious Issue Miner DB export\n\n"
+            "# Miner database export\n\n"
             f"Exported: {datetime.now(timezone.utc).isoformat()}\n\n"
-            "This archive contains the SQLite database plus available WAL/SHM files, "
-            "config, and the retrieval-methodology snapshot used by the UI. If evidence "
+            "This archive contains the SQLite database plus available WAL/SHM files "
+            "and the collection config. If evidence "
             "files exist outside SQLite, they are included under `evidence_files/`.\n",
         )
         evidence_dirs = [root / "data" / "evidence", root / "evidence"]

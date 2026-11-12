@@ -1,14 +1,10 @@
-#Group members:
-#Tazeem Tayob - 2659956
-#Arno Strauss - 2613224
-#Zeeshaan Ebrahim - 2543004.
-
 from __future__ import annotations
 
 import argparse
 import copy
 import csv
 import json
+import os
 import sqlite3
 import traceback
 from pathlib import Path
@@ -19,8 +15,10 @@ from src.db.database import Database
 from src.scanners.scanner_runner import scan_case
 
 
+# Directory holding the historical database, audit CSV and config used for
+# the scanner revalidation. Defaults to the repository root.
 ROOT = Path(
-    "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart"
+    os.getenv("MINER_ROOT", str(Path(__file__).resolve().parents[1]))
 )
 
 SOURCE_DB = (

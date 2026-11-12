@@ -1,5 +1,0 @@
-# Optional for the isolated research-evidence ingestion module.
-# No original miner scanner dependency is modified by this file.
-openpyxl==3.1.5
-# Required only for explicitly approved private HF publishing:
-huggingface_hub==1.16.1

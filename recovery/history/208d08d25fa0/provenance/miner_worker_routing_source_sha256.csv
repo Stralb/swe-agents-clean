@@ -1,3 +1,0 @@
-active_path,sha256,source_archives,origin_bytes,review_state
-src/artifacts/regions.py,d5445509284912dd2809eca249123063016f644a8c70859e6ec9f530ea5e6e17,aug17|aug19|live,8331,ORIGINAL_BYTES_ROUTING_TESTED
-src/filters/tool_applicability.py,34053e60b685666f54bf6afb587e92850ccce3e87c5d59d9ae7efe5abfeffce0,aug17|aug19|live,11322,ORIGINAL_BYTES_ROUTING_TESTED

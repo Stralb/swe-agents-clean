@@ -46,4 +46,4 @@ The [completion receipt](HUGGINGFACE_RELEASE.json) attests remote file checks an
 
 The verified Hugging Face Parquet schemas are those recorded in its release manifest. The database content is unchanged. Its canonical filename is `adversarial-swe-agents.sqlite`; a compatibility alias keeps older local scripts working.
 
-[Dataset exporter and cleanup](clean_hub.py) · [Cluster launcher](run_hub_cleanup.py)
+[Dataset exporter and cleanup](clean_hub.py)

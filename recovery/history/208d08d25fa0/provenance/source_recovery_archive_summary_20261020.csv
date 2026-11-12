@@ -1,8 +1,0 @@
-source_set,archive,archive_sha256,archive_bytes,regular_members,staged_files,staged_bytes,excluded_member_count,blocked_sensitive_paths,blocked_potential_credentials,python_parse_failures,source_state
-MINER_AUG17,malicious-issue-miner-rate-smart-main(1).zip,e1276adcd4fb1b91100b0cfe8f6a7a2445aef3779da4322f47d6b2e8bc10e1b9,404844,211,210,1355898,1,1,0,0,HISTORICAL_UNREVIEWED
-MINER_AUG19,malicious-issue-miner-upstream-downstream-review-ui(1).zip,497b2bb8f4a9c9b18be70bf93182caf16718bdc7f2aa2b7e9debea5cc3f8b717,449300,218,216,1491620,2,2,0,0,HISTORICAL_UNREVIEWED
-MINER_LIVE,miner_live_source_readonly.tar.gz,de81ea1dd2b452034aec34491ddc60223c8618136dee3c8c8a1039bf088d43c4,47065722,5427,518,8377798,4909,5,0,0,HISTORICAL_UNREVIEWED
-DISCOVERY_V21,full_corpus_deep_discovery_v2_1_cluster.tar(1).gz,dc7645386d3f8964d06c9d93f2d627c17ffa27592d5eb18c094adfa5a89f0ea7,39907,14,14,134061,0,0,0,0,HISTORICAL_UNREVIEWED
-DISCOVERY_V22,full_corpus_deep_discovery_v2_2_cluster.tar(2).gz,d6cfaea08dc515928958593834423fb8845c101b9e3d738599159fe1d347f7d1,23340,10,10,74494,0,0,0,0,HISTORICAL_UNREVIEWED
-DECISION_STEP7,DECISION_LEVEL_CONTROLS_STEP7_COLLECTOR_v1.0.tar(1).gz,374da099d13751131190ed4652b3c3cb2a62e45cbd7efcd91301f71cea0bcac9,28642,5,3,17101,2,1,0,0,HISTORICAL_UNREVIEWED
-OCTOBER_JOBS,07_AGENT_PROMPTS_AND_TRACES.zip,d004abaafea36b9e54c8620ac456072ae74937b483608b469f9198d103c135c3,423491,601,104,475499,497,0,0,1,HISTORICAL_UNREVIEWED

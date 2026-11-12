@@ -1,6 +1,6 @@
 PYTHON ?= python3
 
-.PHONY: help setup install check test collect scan ui
+.PHONY: help setup install check test collect scan
 
 help:
 	@printf 'setup    Install dependencies for offline checks\n'
@@ -9,7 +9,6 @@ help:
 	@printf 'test     Run selected miner unit tests\n'
 	@printf 'collect  Collect issue-linked pull requests\n'
 	@printf 'scan     Scan the configured cases\n'
-	@printf 'ui       Launch the case review interface\n'
 
 setup:
 	$(PYTHON) -m pip install pytest pytest-timeout requests PyYAML python-dotenv packaging langdetect
@@ -18,7 +17,7 @@ install:
 	$(PYTHON) -m pip install -r requirements.txt
 
 check:
-	$(PYTHON) -m compileall -q src scripts analysis ui tests
+	$(PYTHON) -m compileall -q src scripts analysis dataset tests
 	$(PYTHON) -m analysis.matched_results --check
 	$(PYTHON) -m analysis.cohort_lineage audit-recorded
 	$(PYTHON) -m analysis.pathway_tables replay-indexed
@@ -44,6 +43,3 @@ collect:
 scan:
 	$(PYTHON) -m scripts.ensure_db
 	$(PYTHON) -m scripts.scan
-
-ui:
-	$(PYTHON) -m streamlit run ui/app.py
