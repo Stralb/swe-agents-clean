@@ -11,6 +11,8 @@ Frozen prompt text given to the model.
 | [implementation_description.txt](prompts/implementation_description.txt) | Blind description of what a patch changes (Stage 4B) |
 | [root_grouping_coder.md](prompts/root_grouping_coder.md) | Grouping producing changes into implementation choices |
 | [root_grouping_adjudicator.md](prompts/root_grouping_adjudicator.md) | Resolving grouping disagreements |
+| [later_cases_nine_phase_request.txt](prompts/later_cases_nine_phase_request.txt) | Full request for the 70 later cases: issue coding, PR coding and alignment, blind implementation coding, context, finding verification, finding-to-change mapping, task-role attribution, synthesis and risk assessment |
+| [mechanism_origin_pass_b_request.txt](prompts/mechanism_origin_pass_b_request.txt) | Full blind Pass-B request classifying the production route of all 342 implementation choices |
 
 ## Protocols
 
@@ -39,4 +41,6 @@ What each coder could see, and in what order. These are the instructions followe
 
 ## Scope
 
-Exact request text is given for the prompts above. The other stages are documented by their protocols and codebooks; their full chat requests were not preserved verbatim.
+The prompts above are the original request text. References to later review feedback were removed from the protocols and shortened in the nine-phase request; no method wording changed, and line endings were normalised.
+
+The other stages are documented by their protocols and codebooks. These full requests were not preserved: the mechanism-origin Pass-A, adjudication and final-coding requests, the matched-control coding requests, and the per-case requests for the original 122 cases.

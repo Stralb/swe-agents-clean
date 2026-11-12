@@ -1,0 +1,769 @@
+You are continuing an empirical software-engineering research study on real GitHub issue → agent-associated PR workflows.
+
+CRITICAL: THIS CHAT MUST REPRODUCE THE EXACT FROZEN METHODOLOGY USED FOR THE ORIGINAL 122 CASES.
+
+Do NOT improve, simplify, reinterpret, modernize, or redesign the methodology.
+
+Do NOT incorporate any later suggestions.
+
+Do NOT use:
+- the later stricter “exact risky mechanism” attribution;
+- Explicitly requested / Agent-introduced;
+- F1–F5 fingerprints;
+- later scope-removal suggestions;
+- matched controls;
+- new taxonomies;
+- new research questions;
+- literature-derived attack structures;
+- any methodological modification discussed after the original 122-case workflow was frozen.
+
+Those can be considered in a separate later analysis, NOT here.
+
+============================================================
+1. CURRENT STUDY STATE
+============================================================
+
+The project mined:
+
+3,809 real agent-associated GitHub issue → merged-PR workflows.
+
+A case consists of:
+- GitHub issue;
+- linked merged PR;
+- changed code;
+- public evidence that a coding agent was associated with the workflow.
+
+The original scanner-positive cohort was manually processed using a frozen staged methodology:
+
+138 apparent positives
+→ 16 excluded during validation
+→ 122 validated cases.
+
+Those 122 were analyzed using a carefully staged/blinded methodology.
+
+The purpose of THIS chat is to apply THAT SAME FROZEN METHODOLOGY to ONLY the newly discovered cases.
+
+Do not redo, inspect, modify, recode, or merge the old 122.
+
+After full scanner completion, there were 70 additional scanner-positive candidate workflows.
+
+Their raw scanner results were already subjected to Step 1 canonicalization:
+
+70 new candidate cases
+255 raw scanner finding rows
+→ 237 frozen canonical findings.
+
+Step 1 is COMPLETE and FROZEN.
+
+Do not redo Step 1 unless a concrete factual error is discovered.
+
+The task now is to reproduce the remaining original methodology on these 70 new cases.
+
+============================================================
+2. FILES I WILL UPLOAD
+============================================================
+
+I will upload several ZIPs/files, likely including:
+
+NEW70_01_ISSUE_PASS1_BLIND.zip
+NEW70_02_PR_PASS1_BLIND.zip
+NEW70_03_STAGE4B_BLIND.zip
+NEW70_90_LOCKED_FOR_LATER.zip
+NEW70_FULL_FROZEN_METHOD_ARCHIVE.zip
+
+and:
+
+Step1_NEW70_FINAL.zip
+
+There may also be:
+- the original 122-case master workbook;
+- frozen method/codebook files;
+- manifests/checksums.
+
+IMPORTANT:
+
+The fact that files have been uploaded DOES NOT give you permission to inspect all of them.
+
+You must maintain methodological blinding by opening ONLY the files permitted for the current phase.
+
+Do not search across all uploaded files.
+
+Do not inspect filenames/content inside future-stage ZIPs unless the current phase explicitly permits it.
+
+In particular:
+
+NEVER open:
+NEW70_90_LOCKED_FOR_LATER.zip
+
+until I explicitly authorize the unblinding stage.
+
+NEVER use:
+NEW70_FULL_FROZEN_METHOD_ARCHIVE.zip
+
+as analysis input during a blind phase. It is a backup/archive only.
+
+Do not inspect Step1_NEW70_FINAL.zip during the blind issue, blind PR, or blind implementation phases.
+
+If the old 122 workbook is uploaded, treat it only as a frozen methodology/codebook reference when appropriate. Do not use its substantive case results to infer labels for the new cases.
+
+============================================================
+3. NON-NEGOTIABLE SEQUENTIAL WORKFLOW
+============================================================
+
+You must work ONE PHASE AT A TIME.
+
+At the end of every phase:
+
+1. complete the phase fully;
+2. QC every row;
+3. create downloadable/frozen artifacts;
+4. report counts and any unresolved cases;
+5. STOP;
+6. ask me for permission to continue.
+
+DO NOT automatically begin the next phase.
+
+Even if all files for later phases are already uploaded, do not inspect them.
+
+My explicit message such as:
+
+“continue”
+“next phase”
+“go to phase 2”
+
+is required before proceeding.
+
+============================================================
+PHASE 1 — BLIND ISSUE ANALYSIS
+============================================================
+
+ONLY open:
+
+NEW70_01_ISSUE_PASS1_BLIND.zip
+
+Do NOT inspect:
+- PR text;
+- code diffs;
+- changed files;
+- scanner evidence;
+- canonical findings;
+- CVEs;
+- downstream findings;
+- actor/context data;
+- risk labels;
+- any locked-later material.
+
+Follow the original 122 methodology.
+
+PASS 1A — FACTUAL ISSUE SUMMARIES
+
+For all 70 cases:
+
+Input:
+- Case ID
+- Issue title
+- full issue body
+
+Produce:
+- one neutral factual sentence stating what the issue requests;
+- short exact supporting excerpt.
+
+Rules:
+- factual only;
+- preserve ambiguity;
+- do not infer motivation;
+- do not infer security consequences;
+- do not infer maliciousness;
+- do not look downstream;
+- do not classify while writing the first factual summary.
+
+QC all 70 summaries.
+
+Freeze them before continuing within Phase 1.
+
+PASS 1B — ISSUE PURPOSE
+
+After summaries are frozen, apply exactly the EXISTING frozen six categories:
+
+1. Bug / Regression / Reliability
+2. Feature / Capability
+3. Compatibility / Migration
+4. Dependency / Toolchain Maintenance
+5. Security Hardening
+6. Internal Engineering / Test / CI
+
+Do not derive new categories.
+
+PASS 1C — INSTRUCTION SPECIFICITY
+
+Use exactly the original frozen labels:
+
+- Problem only
+- Suggests a solution
+- Explicit / precise instruction
+- Unclear
+
+PASS 1D — REQUEST SCOPE
+
+IMPORTANT:
+Although later discussion suggested removing scope, THIS replication must preserve the original methodology.
+
+Use the original frozen labels:
+
+- Narrow
+- Broad
+- Unclear
+
+Do not remove or redefine this field.
+
+At the end of Phase 1 create a frozen artifact containing:
+- Case ID
+- issue title
+- issue factual summary
+- supporting excerpt
+- issue purpose
+- instruction specificity
+- request scope
+- QC fields/notes
+
+Preserve the raw source separately.
+
+Then STOP.
+
+Do not open the PR ZIP.
+
+Wait for my approval.
+
+============================================================
+PHASE 2 — BLIND PR STATED-GOAL ANALYSIS
+============================================================
+
+ONLY after I explicitly authorize Phase 2:
+
+Open:
+
+NEW70_02_PR_PASS1_BLIND.zip
+
+You may retain the frozen Phase-1 output, but:
+
+When creating PR summaries, DO NOT inspect/use the issue text or Phase-1 classifications.
+
+PASS 2A — PR FACTUAL SUMMARY
+
+Input:
+- Case ID
+- PR title
+- full PR body
+
+Produce:
+- neutral factual one-sentence PR stated-goal summary;
+- short exact supporting excerpt.
+
+Do not infer actual implementation from the PR statement.
+Do not inspect code.
+Do not inspect scanner evidence.
+Do not infer security impact.
+
+Freeze all 70 PR summaries.
+
+PASS 2B — PR PURPOSE
+
+Apply exactly the SAME six frozen purpose categories:
+
+1. Bug / Regression / Reliability
+2. Feature / Capability
+3. Compatibility / Migration
+4. Dependency / Toolchain Maintenance
+5. Security Hardening
+6. Internal Engineering / Test / CI
+
+Do not derive new categories.
+
+PASS 2C — ISSUE ↔ PR GOAL ALIGNMENT
+
+Only AFTER both issue summaries and PR summaries are independently frozen may you compare them.
+
+Use exactly:
+
+- Aligned
+- Expanded
+- Diverged
+- Unclear
+
+Record a short evidence-based alignment note.
+
+At the end:
+- create frozen PR-stage artifacts;
+- preserve original blind summaries;
+- QC all 70;
+- report category counts;
+- STOP.
+
+Do not open the Stage4B ZIP.
+
+Wait for my approval.
+
+============================================================
+PHASE 3 — STAGE 4B BLIND ACTUAL IMPLEMENTATION
+============================================================
+
+Only after I explicitly authorize Phase 3:
+
+Open:
+
+NEW70_03_STAGE4B_BLIND.zip
+
+CRITICAL BLINDING:
+
+During the factual implementation pass you must NOT use:
+- issue title/body;
+- issue summaries/categories;
+- PR title/body;
+- PR stated-goal summary;
+- goal alignment;
+- scanner results;
+- canonical findings;
+- CVEs/rules/severity;
+- risk labels;
+- actor/context information.
+
+The input is ONLY:
+- Case ID;
+- PR ID;
+- patch/diff;
+- changed-file metadata;
+- evidence-completeness information.
+
+Use the EXACT original frozen Stage 4B prompt:
+
+“Describe the substantive implementation changes made by this patch. Be factual, do not infer motivation, security impact, or correctness. Summarize the main changes in one sentence.”
+
+For all 70 cases produce:
+- original blind implementation summary;
+- concise implementation evidence/basis;
+- evidence completeness;
+- QC status;
+- correction field if factual QC requires correction.
+
+Correction policy:
+
+NEVER silently overwrite the initial blind summary.
+
+Store:
+- Original Blind Summary
+- QC Correction
+- Effective Summary
+
+Effective Summary =
+QC Correction if nonblank,
+otherwise Original Blind Summary.
+
+Do not infer WHY a change happened.
+
+Do not mention scanner findings.
+
+Do not call code vulnerable/insecure.
+
+After all summaries are frozen, apply the ORIGINAL frozen Stage 4C implementation taxonomy:
+
+1. Capability / Integration Expansion
+2. Behavior / Reliability Correction
+3. Dependency / Build / Toolchain Change
+4. Data / Persistence / State Management
+5. Runtime / Infrastructure / Configuration Change
+6. Validation / Access / Boundary Control
+7. Internal Tooling / CI / Refactor
+
+Do not derive new categories.
+
+At the end:
+- QC all 70;
+- report evidence-completeness problems;
+- freeze outputs;
+- STOP.
+
+Do not open scanner/canonical-finding evidence.
+
+Wait for my approval.
+
+============================================================
+PHASE 4 — CONTEXT
+============================================================
+
+Only after I explicitly authorize Phase 4:
+
+Use the context information in the later/locked material.
+
+Reproduce ONLY the original context variables:
+
+Requester/upstream:
+- Issue Author Account Age at Issue (Days)
+- Issue Author Association
+- Prior Repo Issues/PRs Before Issue
+- Same Issue/PR Author
+
+Timing/oversight:
+- signed Issue → PR Creation Delay (Hours)
+- PR Time-to-Merge (Hours)
+- Human Review Present Before Merge
+
+Agent provenance:
+- Primary Agentic Tool
+- Primary Provenance Evidence
+
+These are factual context fields.
+
+Do not convert them into suspicion scores.
+Do not infer maliciousness.
+
+QC and freeze.
+
+STOP.
+
+Wait for approval.
+
+============================================================
+PHASE 5 — STEP 1 VERIFICATION ONLY
+============================================================
+
+Only after authorization:
+
+Open:
+
+Step1_NEW70_FINAL.zip
+
+Step 1 is ALREADY frozen:
+
+255 raw scanner rows
+→ 237 canonical findings.
+
+Verify:
+- expected files present;
+- 237 canonical findings;
+- 70 candidate cases represented;
+- QC says zero unresolved manual-QC findings;
+- source map/audit is internally consistent.
+
+Do NOT recanonicalize.
+Do NOT change rules.
+Do NOT regenerate Step 1 unless a concrete factual error is proven.
+
+Freeze/checkpoint the verified Step-1 input for use in Step 2.
+
+STOP.
+
+Wait for approval.
+
+============================================================
+PHASE 6 — UNBLINDING STEP 2:
+CANONICAL FINDING → FINDING-PRODUCING CHANGE
+============================================================
+
+Only after I explicitly authorize Phase 6 may you open the relevant locked scanner evidence.
+
+Now use:
+
+- frozen 237 canonical findings;
+- corresponding raw scanner evidence;
+- actual PR diff/change evidence.
+
+For EACH canonical finding answer:
+
+“What exact code/dependency change in the PR produced this finding?”
+
+This is FACTUAL evidence tracing.
+
+Do not compare to the issue yet.
+Do not label Direct/Side-effect yet.
+Do not infer maliciousness.
+
+Required original Step-2 fields:
+
+- Canonical Finding ID
+- Case ID
+- Finding Family
+- Canonical Finding
+- Finding-Producing Change
+- Mapping Status
+- Mapping Basis
+- Producing Change ID
+- Changed Location(s)
+- Diff Evidence
+- Diff Evidence Source
+- Mapping Note
+- QC Status / QC Note
+
+Use the original mapping-basis vocabulary where applicable:
+
+- scanner_flow_added_line
+- targeted_dependency_package_version_introduction
+- scanner_primary_added_line
+- dependency_package_version_hunk
+- dependency_diff_same_hunk
+- gitleaks_content_anchor
+
+IMPORTANT:
+
+Multiple canonical findings may map to ONE Producing Change ID.
+
+Example:
+
+CVE-A
+CVE-B
+CVE-C
+
+may all arise from one dependency version transition.
+
+Do not invent separate producing changes merely because scanners emitted separate findings.
+
+Every retained canonical finding must have:
+- a mapped changed location;
+- diff evidence;
+- Producing Change ID.
+
+If evidence cannot establish a mapping:
+record that explicitly rather than guessing.
+
+After all 237 mappings:
+- deduplicate producing changes;
+- produce the distinct producing-change table;
+- run QC analogous to the old 122 methodology;
+- freeze Step 2.
+
+STOP.
+
+Do not compare producing changes to issues.
+
+Wait for my approval.
+
+============================================================
+PHASE 7 — UNBLINDING STEP 3:
+ORIGINAL DIRECT / SIDE-EFFECT / UNCLEAR ATTRIBUTION
+============================================================
+
+Only after I explicitly authorize Phase 7:
+
+Use the ORIGINAL frozen attribution methodology.
+
+DO NOT USE THE LATER CORRECTION.
+
+Unit of annotation:
+one distinct Producing Change ID.
+
+Findings sharing that Producing Change ID inherit the same attribution.
+
+Allowed evidence:
+
+- frozen issue request summary;
+- exact issue supporting excerpt;
+- finding-producing change;
+- changed location/diff only where needed to understand that producing change;
+- issue title only as fallback.
+
+DO NOT use:
+- PR title/body;
+- PR purpose;
+- issue↔PR alignment;
+- Stage4B summary/category;
+- scanner/CVE/severity/finding counts as persuasive evidence;
+- actor/timing/review;
+- F1–F5;
+- maliciousness labels.
+
+Use EXACTLY:
+
+DIRECT:
+The producing change is explicitly requested OR directly implements the requested behavior itself. Removing it would materially undermine the requested outcome.
+
+SIDE-EFFECT:
+The producing change arose while implementing the request but is collateral/supporting work, a test/fixture, an incidental implementation choice, or a non-requested dependency/lockfile consequence.
+
+UNCLEAR:
+The available upstream request and producing-change evidence do not support a confident Direct-vs-Side-effect distinction.
+
+ORIGINAL tie-break:
+
+Direct vs Side-effect:
+Require positive evidence for Direct.
+If the change clearly supports the task but is not the requested behavior itself, use Side-effect.
+
+Side-effect vs Unclear:
+Use Side-effect only when the collateral relationship is clear.
+Otherwise use Unclear.
+
+Multiple explicit subtasks:
+Direct if the producing change implements ANY explicitly requested subtask.
+
+Transitive dependencies:
+A non-requested transitive package/version is Side-effect even when dependency resolution requires it.
+Direct only when that dependency/change itself is explicitly targeted or itself forms the requested compatibility change.
+
+Tests/fixtures/snapshots:
+Side-effect unless explicitly requested.
+
+Docs/examples:
+Direct only when explicitly requested.
+
+IMPORTANT:
+Do not reinterpret Direct according to later discussion.
+We intentionally need comparability with the original 122 first.
+
+For each producing change record:
+- Frozen Issue Request Summary
+- Finding-Producing Change
+- First-pass Attribution
+- Final Attribution
+- Attribution Basis
+- Attribution Reason
+- QC Note
+
+Freeze Step 3.
+
+Report:
+- number of distinct producing changes;
+- Direct count;
+- Side-effect count;
+- Unclear count.
+
+STOP.
+
+Wait for approval.
+
+============================================================
+PHASE 8 — CASE SYNTHESIS
+============================================================
+
+Only after approval:
+
+For each new case create a factual evidence-chain synthesis from the already frozen stages:
+
+- issue request;
+- PR stated goal/alignment;
+- actual implementation;
+- finding-producing change attribution profile;
+- requester/context;
+- agent provenance.
+
+IMPORTANT:
+Do NOT look at or generate a risk label while writing the factual synthesis.
+
+Freeze all factual syntheses.
+
+STOP.
+
+Wait for approval.
+
+============================================================
+PHASE 9 — ORIGINAL RISK ASSESSMENT
+============================================================
+
+Only after approval:
+
+Apply the exact original 122 risk framework.
+
+Labels:
+
+- Clearly malicious
+- Disguised malicious
+- Potentially malicious
+- Benign ambiguous
+- Benign ordinary
+- Non-actionable spam/generated
+
+Do not introduce F1–F5.
+Do not use the later strict mechanism attribution.
+Do not make scanner positivity itself evidence of malicious intent.
+Do not equate Direct with malicious.
+
+Stronger malicious labels require affirmative evidence, not simply a security-sensitive downstream finding.
+
+Perform:
+- first-pass risk coding;
+- consistency QC;
+- final provisional risk label;
+- rationale;
+- uncertainty/evidence basis.
+
+Preserve first-pass and corrected labels separately.
+
+Freeze the result.
+
+STOP.
+
+Wait for approval before ANY later methodological extension.
+
+============================================================
+4. ARTIFACT RULES
+============================================================
+
+Every phase must produce downloadable artifacts.
+
+Prefer CSV/XLSX + a short method/QC note.
+
+Never silently overwrite a frozen result.
+
+Use versioned names such as:
+
+NEW70_Phase1_Issue_FINAL
+NEW70_Phase2_PR_FINAL
+NEW70_Phase3_Stage4B_FINAL
+...
+NEW70_Step2_Finding_Changes_FINAL
+NEW70_Step3_Attribution_FINAL
+
+Also retain:
+- source map;
+- QC table;
+- correction audit where applicable;
+- counts;
+- unresolved rows;
+- hash/manifest when practical.
+
+At the end of a phase explicitly state:
+
+PHASE X STATUS = PASS / NEEDS QC
+
+and then STOP.
+
+============================================================
+5. BEHAVIOR RULES FOR YOU
+============================================================
+
+Do not ask me to redesign the method.
+
+Do not suggest “better” categories during this replication.
+
+Do not incorporate later feedback.
+
+Do not start later phases automatically.
+
+Do not browse the web unless evidence necessary for the frozen methodology is genuinely absent from the supplied artifacts and you tell me first.
+
+Do not inspect future-stage ZIPs merely because they are uploaded.
+
+Do not use scanner evidence during blind issue/PR/implementation coding.
+
+Do not use issue/PR evidence during blind Stage4B coding.
+
+Never manufacture evidence.
+
+Use Unclear / unresolved when the frozen evidence does not support a conclusion.
+
+If you discover a concrete methodological/data problem:
+STOP and explain it before changing anything.
+
+============================================================
+6. START NOW
+============================================================
+
+After I upload the files:
+
+1. inventory the uploaded filenames WITHOUT opening future-stage contents;
+2. verify the Phase-1 blind issue ZIP is present;
+3. open ONLY the Phase-1 blind issue material;
+4. execute PHASE 1 fully;
+5. produce the Phase-1 frozen artifacts;
+6. report QC/counts;
+7. STOP and wait for me to authorize Phase 2.
+
+Do not proceed beyond Phase 1 in your first response/work cycle.

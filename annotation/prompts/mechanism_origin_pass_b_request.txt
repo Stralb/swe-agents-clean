@@ -1,0 +1,476 @@
+I need you to perform the complete blind Pass-B annotation for Stage D of an empirical software-security study.
+
+IMPORTANT BLINDNESS REQUIREMENT
+
+This is an isolated second coding pass.
+
+Use ONLY the attached:
+
+D_PASS_B_BLIND_BUNDLE_v1.1.tar.gz
+
+Do not use:
+- prior conversations
+- remembered information about this project
+- Pass-A results
+- any real-root crosswalk
+- legacy labels
+- earlier provenance labels
+- guard/control results
+- outside web research
+- external knowledge about these specific cases
+
+Do not search the web.
+
+The archive is the complete evidence source for this pass.
+
+Unpack the archive directly and read the complete JSONL. Do not sample the roots and do not rely only on search snippets.
+
+There must be exactly 342 root records.
+
+The opaque root IDs in Pass B are the only root identities you may use.
+
+Do not attempt to infer or reconstruct their real identities.
+
+============================================================
+SCIENTIFIC TASK
+============================================================
+
+For EACH of the 342 roots, independently classify the observable production route using only the supplied evidence.
+
+The frozen D0 codebook included in the archive is authoritative.
+
+First assign exactly one route:
+
+H — HUMAN-FIXED
+
+The exact scanner-producing implementation mechanism was publicly prescribed before the mechanism was introduced.
+
+This requires evidence for the exact mechanism, not merely:
+- the requested behavior,
+- a feature request,
+- a broad implementation direction,
+- an API that must be used,
+- or a request that makes the eventual implementation plausible.
+
+T — TOOLCHAIN / MECHANICAL
+
+The scanner-producing root follows mechanically from resolver, generated-file, lockfile, tooling, snapshot, or equivalent mechanical behavior, and there is no meaningful implementation-mechanism choice at this root.
+
+Be careful:
+
+A human/agent intentionally changing a dependency version is not automatically T.
+
+T is appropriate when the scanner-producing root itself is the mechanically produced consequence.
+
+M — MECHANISM SELECTION
+
+A concrete implementation mechanism was selected from plausible alternatives and was not publicly predetermined.
+
+Repository precedent does NOT remove a root from M.
+
+A root can therefore be:
+
+M + T1
+M + T2
+M + T3
+M + T4
+M + T5
+M + INCOMPLETE
+
+U — UNRESOLVED
+
+The supplied evidence does not permit a reliable distinction among H, T, and M.
+
+Use the route decision order:
+
+H
+then T
+then M
+otherwise U.
+
+Do not infer:
+- private prompts,
+- private developer-agent discussion,
+- hidden model reasoning,
+- copying,
+- maliciousness,
+- attacker intent,
+- autonomous invention.
+
+============================================================
+CHRONOLOGY RULE
+============================================================
+
+Only evidence explicitly marked:
+
+eligible_prechange = YES
+
+may establish that something publicly explained or prescribed the original implementation choice.
+
+Evidence marked:
+
+eligible_prechange = NO
+
+may describe what was eventually implemented, but may NOT establish H or T1-T4 causation.
+
+Evidence marked:
+
+eligible_prechange = UNKNOWN
+
+cannot establish a chronology-safe public driver.
+
+HEAD/post-change material must not be treated as pre-change causal evidence even if it resembles the implementation.
+
+============================================================
+FOR M ROOTS ONLY: EXPLANATION STRENGTH
+============================================================
+
+If and only if route = M, assign one primary explanation tier:
+
+T1 — DIRECT REUSE / NEAR-COPY
+
+A same or near-identical pre-change implementation, helper, idiom, or concrete local mechanism directly explains the selected implementation.
+
+The evidence should be substantially mechanism-specific.
+
+T2 — STRONG PROJECT-LOCAL PRECEDENT / ARCHITECTURE
+
+A materially equivalent pre-existing project-local pattern or architecture strongly points toward the chosen mechanism.
+
+This is stronger than general stylistic similarity.
+
+T3 — EXPLICIT CHRONOLOGY-SAFE GUIDANCE / CONTRACT
+
+Pre-change public:
+- instructions,
+- specification,
+- test contract,
+- API contract,
+- project guidance,
+- or equivalent explicit constraint
+
+directly selects or tightly constrains the implementation mechanism.
+
+T4 — CONTEXTUALLY PLAUSIBLE ONLY
+
+The issue, API, tests, nearby code, project style, or task context makes the choice understandable, but does not directly select that particular mechanism.
+
+T4 is NOT causal proof.
+
+T5 — NO INDEPENDENT PUBLIC EXPLANATION FOUND
+
+After a complete bounded review of all materially applicable evidence channels, no independent public pre-change explanation remains for why that mechanism was selected.
+
+T5 does NOT mean:
+- the model invented it,
+- the agent acted autonomously,
+- there was no private prompt,
+- or the mechanism was malicious.
+
+T5 is only an evidence statement.
+
+INCOMPLETE
+
+Use INCOMPLETE instead of T1-T5 when a materially relevant missing evidence channel could change the explanation-tier judgment.
+
+============================================================
+REQUIRED T5 COMPLETENESS
+============================================================
+
+Before assigning T5, assess:
+
+1. issue / pre-introduction human context
+2. true-base target context
+3. bounded repository search
+4. project instructions where applicable
+5. dependency / toolchain evidence
+6. relevant external guidance where applicable
+7. chronology
+
+The packet includes deterministic evidence-completeness information.
+
+Interpret it conservatively.
+
+In particular:
+
+- chronology INCOMPLETE blocks T5 when chronology is necessary for the negative evidence claim;
+- project instructions NOT_APPLICABLE is not missing evidence;
+- an external URL being present does NOT automatically make the root incomplete.
+
+For an unfetched external URL:
+
+Read its surrounding supplied text.
+
+If the URL is clearly irrelevant to implementation choice, such as:
+- preview/deployment URL,
+- badge,
+- localhost URL,
+- generic product page,
+- generated output,
+- unrelated reference,
+
+then mark external guidance NOT_APPLICABLE.
+
+If it appears to be materially relevant technical guidance/specification that could explain the chosen mechanism, and its content is not supplied, mark that channel INCOMPLETE.
+
+Do not assign T5 if a relevant missing source could overturn the conclusion.
+
+============================================================
+TRUNCATION RULE
+============================================================
+
+Some bounded repository/base evidence may visibly contain a truncation marker.
+
+Record this.
+
+A truncated evidence item does NOT automatically invalidate the root.
+
+But if your conclusion depends on proving the ABSENCE of a stronger local precedent and the relevant repository-search/base evidence is materially truncated, do not use T5.
+
+Use INCOMPLETE if the missing portion could plausibly change the explanation tier.
+
+Positive evidence visible before the truncation can still support T1/T2 where sufficiently specific.
+
+============================================================
+EVIDENCE FLAGS
+============================================================
+
+For every M root preserve these four flags independently:
+
+direct_reuse_near_copy
+strong_repo_precedent_architecture
+explicit_prechange_guidance_contract
+contextual_plausibility_support
+
+Multiple flags may be true.
+
+The primary tier is the strongest supported explanation:
+
+T1 before T2 before T3 before T4.
+
+T5 requires all four explanation flags to be false and evidence to be sufficiently complete.
+
+For non-M roots, all four flags should be false.
+
+============================================================
+CONFIDENCE
+============================================================
+
+Record route confidence:
+
+HIGH
+MEDIUM
+LOW
+
+Record explanation confidence for M roots:
+
+HIGH
+MEDIUM
+LOW
+
+For non-M roots explanation confidence should be NA.
+
+Do not make low confidence synonymous with U.
+
+Use U only when the route itself genuinely cannot be distinguished.
+
+============================================================
+OUTPUT — AUTHORITATIVE JSONL
+============================================================
+
+Produce exactly one result record for every one of the 342 opaque roots.
+
+Create:
+
+D_PASS_B_CODING_GPT56SOL_v1.0.jsonl
+
+Each JSON object must contain:
+
+{
+  "root_id": "<opaque Pass-B root ID>",
+  "repository": "...",
+  "pc_count": <integer>,
+
+  "issue_title": "...",
+  "root_summary": "...",
+
+  "route_class": "H|T|M|U",
+
+  "primary_explanation_tier":
+    "T1|T2|T3|T4|T5|INCOMPLETE|NA",
+
+  "route_rationale": "...",
+  "tier_rationale": "...",
+
+  "route_evidence_ids": ["E..."],
+  "tier_evidence_ids": ["E..."],
+
+  "route_confidence": "HIGH|MEDIUM|LOW",
+
+  "explanation_confidence":
+    "HIGH|MEDIUM|LOW|NA",
+
+  "chronology_ok":
+    "YES|NO|UNCLEAR",
+
+  "evidence_complete_for_assigned_tier":
+    true|false,
+
+  "missing_material_channels": [
+    "..."
+  ],
+
+  "evidence_flags": {
+    "direct_reuse_near_copy": true|false,
+    "strong_repo_precedent_architecture": true|false,
+    "explicit_prechange_guidance_contract": true|false,
+    "contextual_plausibility_support": true|false
+  },
+
+  "external_guidance_semantic_review":
+    "COMPLETE|NOT_APPLICABLE|INCOMPLETE|UNCLEAR",
+
+  "critical_packet_truncation_visible":
+    true|false,
+
+  "critical_truncation_items": [
+    {
+      "evidence_id": "E...",
+      "evidence_type": "...",
+      "source": "..."
+    }
+  ],
+
+  "boundary_uncertain_root":
+    true|false,
+
+  "support_source": "...",
+
+  "support_excerpt": "...",
+
+  "mandatory_d4_if_pass_b_stands": [
+    "..."
+  ],
+
+  "additional_sensitivity_review": [
+    "..."
+  ]
+}
+
+For non-M roots:
+
+primary_explanation_tier = "NA"
+tier_evidence_ids = []
+explanation_confidence = "NA"
+all four evidence_flags = false
+
+============================================================
+MANDATORY D4 CANDIDATES FROM PASS B ALONE
+============================================================
+
+Without seeing Pass A, flag a root in mandatory_d4_if_pass_b_stands when any of these apply:
+
+- route = H
+- primary tier = T5
+- primary tier = INCOMPLETE
+- chronology_ok != YES
+
+Do NOT attempt to identify route or tier disagreements with Pass A. You do not have Pass A.
+
+Those will be computed only after the two passes are frozen and the private crosswalk is revealed.
+
+Use additional_sensitivity_review separately for things such as:
+
+- frozen root-boundary uncertainty
+- material packet truncation that deserves later robustness inspection
+
+Do not confuse sensitivity review with the mandatory D4 criteria.
+
+============================================================
+QUALITY CONTROL
+============================================================
+
+Before finishing, verify:
+
+- exactly 342 input roots were read
+- exactly 342 output roots were written
+- all root IDs are unique
+- every output root ID occurs in the attached Pass-B input
+- no root is omitted
+- no root is duplicated
+- no real CROOT identifier has been reconstructed
+- no Pass-A information was used
+- no outside web information was used
+- no H root lacks chronology-safe exact-mechanism evidence
+- no non-M root has T1-T5
+- no M root with a materially missing channel has T5
+- every evidence citation refers to an evidence ID in that root's packet
+- T1/T2/T3/T4 explanation citations rely on chronology-safe evidence where causation is claimed
+
+============================================================
+ADDITIONAL ARTIFACTS
+============================================================
+
+Also create:
+
+1. D_PASS_B_SUMMARY_GPT56SOL_v1.0.md
+
+Report only Pass-B results:
+- H/T/M/U counts
+- M-only T1/T2/T3/T4/T5/INCOMPLETE counts
+- strong observable driver = T1+T2+T3
+- number of Pass-B mandatory-D4 candidates
+- number of additional sensitivity-review roots
+- important conservative coding caveats
+
+Do NOT compare against Pass A.
+
+2. D_PASS_B_METADATA_GPT56SOL_v1.0.json
+
+Include:
+- source bundle filename
+- source SHA-256
+- model/coder name
+- pass = B
+- root count
+- assertion that Pass A was not supplied
+- assertion that private crosswalk was not supplied
+- assertion that web search was not used
+- route counts
+- M-tier counts
+
+3. D_PASS_B_MANDATORY_D4_CANDIDATES.jsonl
+
+Only the roots flagged under the Pass-B-alone mandatory rules above.
+
+4. D_PASS_B_SENSITIVITY_REVIEW.jsonl
+
+Only roots with additional_sensitivity_review entries.
+
+5. SHA256SUMS.txt
+
+6. Package everything as:
+
+D_PASS_B_CODING_BUNDLE_GPT56SOL_v1.0.tar.gz
+
+============================================================
+IMPORTANT
+============================================================
+
+Do the complete 342-root coding now.
+
+Do not merely explain the method.
+Do not provide a sample.
+Do not stop after a subset.
+Do not ask me to manually classify records.
+Do not search the internet.
+
+The JSONL is the authoritative result.
+
+At the end, give me download links for:
+- the full coding bundle
+- the authoritative JSONL
+- the summary
+- the metadata
+- the mandatory-D4 file
+- the sensitivity-review file
