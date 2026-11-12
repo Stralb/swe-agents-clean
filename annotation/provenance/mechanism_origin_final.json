@@ -1,0 +1,186 @@
+{
+  "stage": "D_FINAL_ADJUDICATED_ROOT_CENSUS",
+  "status": "PASS",
+  "analytical_unit": "frozen root implementation decision",
+  "roots": 342,
+  "pc_memberships": 455,
+  "workflows": 191,
+  "coding_design": "two isolated GPT-5.6 Sol coding passes using different root identities/order; same model family, not independent model families",
+  "route_agreement": {
+    "n": 342,
+    "exact_agreement": 337,
+    "agreement_rate": 0.9853801169590644,
+    "cohen_kappa": 0.9669111244412625,
+    "pass_a_marginals": {
+      "M": 233,
+      "H": 6,
+      "T": 103
+    },
+    "pass_b_marginals": {
+      "M": 235,
+      "H": 4,
+      "T": 102,
+      "U": 1
+    },
+    "matrix_A_rows_B_cols": {
+      "H": {
+        "H": 3,
+        "T": 0,
+        "M": 3,
+        "U": 0
+      },
+      "T": {
+        "H": 0,
+        "T": 102,
+        "M": 0,
+        "U": 1
+      },
+      "M": {
+        "H": 1,
+        "T": 0,
+        "M": 232,
+        "U": 0
+      },
+      "U": {
+        "H": 0,
+        "T": 0,
+        "M": 0,
+        "U": 0
+      }
+    }
+  },
+  "M_tier_agreement": {
+    "n": 232,
+    "exact_agreement": 88,
+    "agreement_rate": 0.3793103448275862,
+    "cohen_kappa": 0.09325806101400498,
+    "pass_a_marginals": {
+      "T4": 133,
+      "T3": 55,
+      "T1": 21,
+      "T2": 10,
+      "T5": 8,
+      "INCOMPLETE": 5
+    },
+    "pass_b_marginals": {
+      "INCOMPLETE": 58,
+      "T3": 27,
+      "T4": 110,
+      "T2": 16,
+      "T1": 19,
+      "T5": 2
+    },
+    "matrix_A_rows_B_cols": {
+      "T1": {
+        "T1": 5,
+        "T2": 1,
+        "T3": 5,
+        "T4": 7,
+        "T5": 1,
+        "INCOMPLETE": 2
+      },
+      "T2": {
+        "T1": 1,
+        "T2": 1,
+        "T3": 0,
+        "T4": 5,
+        "T5": 1,
+        "INCOMPLETE": 2
+      },
+      "T3": {
+        "T1": 6,
+        "T2": 3,
+        "T3": 9,
+        "T4": 26,
+        "T5": 0,
+        "INCOMPLETE": 11
+      },
+      "T4": {
+        "T1": 7,
+        "T2": 8,
+        "T3": 10,
+        "T4": 71,
+        "T5": 0,
+        "INCOMPLETE": 37
+      },
+      "T5": {
+        "T1": 0,
+        "T2": 0,
+        "T3": 3,
+        "T4": 1,
+        "T5": 0,
+        "INCOMPLETE": 4
+      },
+      "INCOMPLETE": {
+        "T1": 0,
+        "T2": 3,
+        "T3": 0,
+        "T4": 0,
+        "T5": 0,
+        "INCOMPLETE": 2
+      }
+    }
+  },
+  "mandatory_D4": {
+    "roots": 198,
+    "reason_counts": {
+      "TIER_DISAGREEMENT": 144,
+      "INCOMPLETE_EVIDENCE": 61,
+      "CHRONOLOGY_REVIEW": 76,
+      "H_CANDIDATE": 7,
+      "ROUTE_DISAGREEMENT": 5,
+      "T5_CANDIDATE": 10
+    }
+  },
+  "final_route_counts": {
+    "M": 233,
+    "H": 6,
+    "T": 103
+  },
+  "final_M_tier_counts": {
+    "INCOMPLETE": 24,
+    "T3": 33,
+    "T4": 128,
+    "T1": 32,
+    "T2": 12,
+    "T5": 4
+  },
+  "strong_observable_driver_T1_T3": {
+    "roots": 77,
+    "denominator_all_M": 233,
+    "share_all_M": 0.33047210300429186,
+    "denominator_complete_M": 209,
+    "share_complete_M": 0.3684210526315789
+  },
+  "T4": {
+    "roots": 128,
+    "share_complete_M": 0.6124401913875598
+  },
+  "T5": {
+    "roots": 4,
+    "share_complete_M": 0.019138755980861243,
+    "interpretation": "No independent public pre-change explanation found after complete bounded review; this does not mean the model invented the mechanism."
+  },
+  "incomplete_M_roots": 24,
+  "source_sha256": {
+    "D_PASS_A_CODING_BUNDLE_GPT56SOL_v1.0.tar.gz": "ec13af5a90fc85a75656e8e2a82002bc78a6dc821574028cdcc8d1ccdc80815c",
+    "D_PASS_B_CODING_BUNDLE_GPT56SOL_v1.0.tar(1).gz": "5f59cd98ca68c5a56ef3bf2f8f2f6db4a12637f9c8a18f7798b62cea8c252638",
+    "D_PRIVATE_CROSSWALK_v1.1.tar.gz": "42ae613f1c30c8be7261657be9c3d031cbc52cbea9614d2238bd7123dc7acf5f",
+    "D_PASS_A_BUNDLE_v1.1.tar.gz": "cb6612a776b605ca91b3febc6afe2095ee4a64c1500b27c90310676a0b4d9515"
+  },
+  "adjudication_source_accounting": {
+    "route": {
+      "route_agreement_retained": 337,
+      "route_pass_b": 2,
+      "route_pass_a": 3
+    },
+    "M_tier": {
+      "tier_pass_b": 67,
+      "tier_agreement_retained": 88,
+      "tier_pass_a": 75,
+      "tier_third": 3
+    }
+  },
+  "methodological_caveat": "Pass A, Pass B, and adjudication use GPT-5.6 Sol. The two coding passes are blinded repeated coding passes, not independent human annotators or independent model families.",
+  "qa_errors": []
+}

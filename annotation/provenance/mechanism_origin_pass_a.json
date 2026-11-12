@@ -1,0 +1,82 @@
+{
+  "schema": "D_PASS_A_CODING_GPT56SOL_v1.0",
+  "status": "PASS_A_FROZEN_PROVISIONAL_PENDING_BLIND_PASS_B_AND_ADJUDICATION",
+  "model": "GPT-5.6 Sol",
+  "source_bundle": "D_PASS_A_BUNDLE_v1.1.tar.gz",
+  "source_bundle_sha256": "cb6612a776b605ca91b3febc6afe2095ee4a64c1500b27c90310676a0b4d9515",
+  "frozen_codebook_sha256": "d8ad00d3d4903597dcd91a4568e0ca77a3bee1f8951d9f9789d0e10d95e557f4",
+  "analytical_unit": "frozen C root implementation decision",
+  "root_count": 342,
+  "pc_memberships": 455,
+  "semantic_inputs_revealed": [
+    "Pass A evidence bundle only"
+  ],
+  "semantic_inputs_not_revealed": [
+    "Pass B blind bundle",
+    "private B alias crosswalk",
+    "legacy-55 discovery labels",
+    "guard/control outcomes"
+  ],
+  "decision_order": [
+    "H",
+    "T",
+    "M",
+    "U"
+  ],
+  "route_counts": {
+    "M": 233,
+    "H": 6,
+    "T": 103
+  },
+  "route_pc_memberships": {
+    "H": 9,
+    "T": 118,
+    "M": 328,
+    "U": 0
+  },
+  "M_tier_counts": {
+    "T4": 133,
+    "T3": 56,
+    "T1": 21,
+    "T2": 10,
+    "T5": 8,
+    "INCOMPLETE": 5
+  },
+  "M_tier_pc_memberships": {
+    "T1": 27,
+    "T2": 11,
+    "T3": 73,
+    "T5": 9,
+    "INCOMPLETE": 8,
+    "T4": 200
+  },
+  "M_roots": 233,
+  "M_complete_explanation_roots": 228,
+  "strong_observable_driver_T1_T3_roots": 87,
+  "strong_observable_driver_T1_T3_pct_of_M": 37.33905579399141,
+  "strong_observable_driver_T1_T3_pct_of_complete_M": 38.1578947368421,
+  "T4_pct_of_complete_M": 58.333333333333336,
+  "T5_pct_of_complete_M": 3.508771929824561,
+  "incomplete_M_roots": 5,
+  "notes": [
+    "This is Pass A only, not the final adjudicated D census.",
+    "H/T/M/U assigned in the frozen mandatory order.",
+    "T1-T5/INCOMPLETE applied only to M roots.",
+    "T5 used only where materially applicable channels were sufficiently complete in the delivered packet; materially relevant missing/truncated evidence was coded INCOMPLETE.",
+    "HEAD/post-change files were not used as pre-change causal explanations even where the exporter marked them eligible.",
+    "Visible packet truncation is separately flagged; T4 roots with such truncation are not treated as T5.",
+    "Unfetched URLs were only treated as blocking when materially relevant to the mechanism; CROOT-17077-01 is conservatively INCOMPLETE for that reason."
+  ],
+  "pass_a_mandatory_d4_candidate_roots": 60,
+  "pass_a_sensitivity_review_roots": 71,
+  "pass_a_mandatory_reason_counts": {
+    "H_CANDIDATE": 6,
+    "CHRONOLOGY_REVIEW": 41,
+    "T5_CANDIDATE": 8,
+    "INCOMPLETE_EVIDENCE": 5
+  },
+  "sensitivity_reason_counts": {
+    "PACKET_TRUNCATION_CAVEAT": 63,
+    "ROOT_BOUNDARY_UNCERTAIN": 12
+  }
+}

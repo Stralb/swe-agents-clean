@@ -1,0 +1,408 @@
+{
+  "stage": "D7_DISCOVERY_HOLDOUT_GENERALIZATION",
+  "status": "PASS",
+  "qa_errors": [],
+  "definitions": {
+    "discovery_derived": "Final roots mapped from the 55 legacy choice roots. Because two legacy roots split under Stage C, the 55 legacy choice decisions map to 57 final roots; 56 are final M and one is final H.",
+    "new_holdout": "Final M roots not mapped from any of the 55 legacy choice roots.",
+    "important": "The C7 Legacy Population values Pilot/Holdout/Gap closure are historical labels and are not the D7 discovery-vs-new-holdout split."
+  },
+  "accounting": {
+    "final_roots": 342,
+    "final_M_roots": 233,
+    "legacy56_rows": 56,
+    "legacy_choice_rows": 55,
+    "legacy56_mapped_final_roots": 58,
+    "legacy_choice_mapped_final_roots": 57,
+    "discovery_derived_final_M_roots": 56,
+    "new_holdout_final_M_roots": 177,
+    "discovery_choice_root_reclassified_final_H": 1
+  },
+  "final_M_overall": {
+    "roots": 233,
+    "tier_counts": {
+      "T1": 32,
+      "T2": 12,
+      "T3": 33,
+      "T4": 128,
+      "T5": 4,
+      "INCOMPLETE": 24
+    },
+    "complete_M": 209,
+    "strong_T1_T3": {
+      "count": 77,
+      "share_all_M": 0.33047210300429186,
+      "wilson95_all_M": [
+        0.27325260692029574,
+        0.39319092710721326
+      ],
+      "count_complete": 77,
+      "share_complete_M": 0.3684210526315789,
+      "wilson95_complete_M": [
+        0.30594772310602014,
+        0.4356439747486063
+      ]
+    },
+    "T4": {
+      "count": 128,
+      "share_all_M": 0.5493562231759657,
+      "wilson95_all_M": [
+        0.48518366164610294,
+        0.6119277145231032
+      ],
+      "count_complete": 128,
+      "share_complete_M": 0.6124401913875598,
+      "wilson95_complete_M": [
+        0.5449276282425786,
+        0.6758940117725587
+      ]
+    },
+    "T5": {
+      "count": 4,
+      "share_all_M": 0.017167381974248927,
+      "wilson95_all_M": [
+        0.006695797203206479,
+        0.04330160983716712
+      ],
+      "count_complete": 4,
+      "share_complete_M": 0.019138755980861243,
+      "wilson95_complete_M": [
+        0.007467237593175743,
+        0.04816787638464108
+      ]
+    },
+    "INCOMPLETE": {
+      "count": 24,
+      "share_all_M": 0.10300429184549356,
+      "wilson95_all_M": [
+        0.0701998266608615,
+        0.14868693023900123
+      ]
+    }
+  },
+  "discovery_derived_M": {
+    "roots": 56,
+    "tier_counts": {
+      "T1": 2,
+      "T2": 3,
+      "T3": 8,
+      "T4": 36,
+      "T5": 0,
+      "INCOMPLETE": 7
+    },
+    "complete_M": 49,
+    "strong_T1_T3": {
+      "count": 13,
+      "share_all_M": 0.23214285714285715,
+      "wilson95_all_M": [
+        0.14099379109208618,
+        0.35768153215010845
+      ],
+      "count_complete": 13,
+      "share_complete_M": 0.2653061224489796,
+      "wilson95_complete_M": [
+        0.16211282134957414,
+        0.4026228897131079
+      ]
+    },
+    "T4": {
+      "count": 36,
+      "share_all_M": 0.6428571428571429,
+      "wilson95_all_M": [
+        0.5119388780139953,
+        0.755434282923501
+      ],
+      "count_complete": 36,
+      "share_complete_M": 0.7346938775510204,
+      "wilson95_complete_M": [
+        0.5973771102868922,
+        0.837887178650426
+      ]
+    },
+    "T5": {
+      "count": 0,
+      "share_all_M": 0.0,
+      "wilson95_all_M": [
+        0.0,
+        0.06419393671876339
+      ],
+      "count_complete": 0,
+      "share_complete_M": 0.0,
+      "wilson95_complete_M": [
+        0.0,
+        0.07269781922049635
+      ]
+    },
+    "INCOMPLETE": {
+      "count": 7,
+      "share_all_M": 0.125,
+      "wilson95_all_M": [
+        0.061890686957171204,
+        0.23625476558190134
+      ]
+    }
+  },
+  "new_holdout_M": {
+    "roots": 177,
+    "tier_counts": {
+      "T1": 30,
+      "T2": 9,
+      "T3": 25,
+      "T4": 92,
+      "T5": 4,
+      "INCOMPLETE": 17
+    },
+    "complete_M": 160,
+    "strong_T1_T3": {
+      "count": 64,
+      "share_all_M": 0.3615819209039548,
+      "wilson95_all_M": [
+        0.2944352048446036,
+        0.43460922822102466
+      ],
+      "count_complete": 64,
+      "share_complete_M": 0.4,
+      "wilson95_complete_M": [
+        0.32729407600252003,
+        0.4773951630317811
+      ]
+    },
+    "T4": {
+      "count": 92,
+      "share_all_M": 0.519774011299435,
+      "wilson95_all_M": [
+        0.4465363581642867,
+        0.5921715799691949
+      ],
+      "count_complete": 92,
+      "share_complete_M": 0.575,
+      "wilson95_complete_M": [
+        0.4975265689227389,
+        0.6489565018015353
+      ]
+    },
+    "T5": {
+      "count": 4,
+      "share_all_M": 0.022598870056497175,
+      "wilson95_all_M": [
+        0.008822532035141915,
+        0.05665724731365793
+      ],
+      "count_complete": 4,
+      "share_complete_M": 0.025,
+      "wilson95_complete_M": [
+        0.00976399254626252,
+        0.0625098928666674
+      ]
+    },
+    "INCOMPLETE": {
+      "count": 17,
+      "share_all_M": 0.096045197740113,
+      "wilson95_all_M": [
+        0.06083240306868014,
+        0.1484197179187659
+      ]
+    }
+  },
+  "exploratory_distribution_test": {
+    "categories": [
+      "T1",
+      "T2",
+      "T3",
+      "T4",
+      "T5",
+      "INCOMPLETE"
+    ],
+    "table_discovery_then_holdout": [
+      [
+        2,
+        3,
+        8,
+        36,
+        0,
+        7
+      ],
+      [
+        30,
+        9,
+        25,
+        92,
+        4,
+        17
+      ]
+    ],
+    "pearson_chi_square": 8.335229947782913,
+    "df": 5,
+    "asymptotic_p": 0.1387025895608209,
+    "fixed_margin_monte_carlo_p": 0.13679772640454718,
+    "monte_carlo_draws": 500000,
+    "seed": 20260905,
+    "cramers_v": 0.18913888835772788,
+    "interpretation": "No clear evidence of an overall final-tier distribution shift between discovery-derived and new-holdout M roots."
+  },
+  "prespecified_complete_M_contrasts": {
+    "strong_T1_T3_complete_M": {
+      "discovery_count": 13,
+      "discovery_denominator": 49,
+      "discovery_share": 0.2653061224489796,
+      "holdout_count": 64,
+      "holdout_denominator": 160,
+      "holdout_share": 0.4,
+      "risk_difference_holdout_minus_discovery": 0.1346938775510204,
+      "odds_ratio_discovery_vs_holdout": 0.5416666666666666,
+      "fisher_two_sided_p": 0.09359361300891562,
+      "holm_adjusted_p": 0.18718722601783125
+    },
+    "T4_complete_M": {
+      "discovery_count": 36,
+      "discovery_denominator": 49,
+      "discovery_share": 0.7346938775510204,
+      "holdout_count": 92,
+      "holdout_denominator": 160,
+      "holdout_share": 0.575,
+      "risk_difference_holdout_minus_discovery": -0.1596938775510205,
+      "odds_ratio_discovery_vs_holdout": 2.0468227424749164,
+      "fisher_two_sided_p": 0.04646933197708734,
+      "holm_adjusted_p": 0.13940799593126202
+    },
+    "T5_complete_M": {
+      "discovery_count": 0,
+      "discovery_denominator": 49,
+      "discovery_share": 0.0,
+      "holdout_count": 4,
+      "holdout_denominator": 160,
+      "holdout_share": 0.025,
+      "risk_difference_holdout_minus_discovery": 0.025,
+      "odds_ratio_discovery_vs_holdout": 0.0,
+      "fisher_two_sided_p": 0.5750057263909434,
+      "holm_adjusted_p": 0.5750057263909434
+    }
+  },
+  "legacy_selected_reference": {
+    "legacy_choice_decisions": 55,
+    "tier_counts": {
+      "T1": 3,
+      "T2": 6,
+      "T3": 6,
+      "T4": 29,
+      "T5": 11
+    },
+    "strong_T1_T3": {
+      "count": 15,
+      "share": 0.2727272727272727
+    },
+    "T4": {
+      "count": 29,
+      "share": 0.5272727272727272
+    },
+    "T5": {
+      "count": 11,
+      "share": 0.2
+    },
+    "note": "Historical discovery labels were produced under the earlier selected-root analysis and are not method-identical to final D labels; comparisons to final holdout are descriptive, not a same-instrument prevalence test."
+  },
+  "legacy_to_final_reaudit": {
+    "legacy_choice_roots": 55,
+    "mapping": {
+      "exact": 52,
+      "split": 2,
+      "expanded": 1,
+      "final_roots_derived_from_legacy_choice_roots": 57,
+      "final_M_roots_derived_from_legacy_choice_roots": 56,
+      "final_H_roots_derived_from_legacy_choice_roots": 1
+    },
+    "one_to_one_legacy_choice_roots": 53,
+    "one_to_one_exact_same_tier": 20,
+    "one_to_one_exact_same_tier_share": 0.37735849056603776,
+    "one_to_one_transition_matrix": {
+      "T1": {
+        "H": 0,
+        "INCOMPLETE": 0,
+        "T1": 0,
+        "T2": 1,
+        "T3": 0,
+        "T4": 2
+      },
+      "T2": {
+        "H": 0,
+        "INCOMPLETE": 1,
+        "T1": 0,
+        "T2": 1,
+        "T3": 3,
+        "T4": 1
+      },
+      "T3": {
+        "H": 0,
+        "INCOMPLETE": 0,
+        "T1": 2,
+        "T2": 1,
+        "T3": 0,
+        "T4": 3
+      },
+      "T4": {
+        "H": 1,
+        "INCOMPLETE": 2,
+        "T1": 0,
+        "T2": 0,
+        "T3": 5,
+        "T4": 19
+      },
+      "T5": {
+        "H": 0,
+        "INCOMPLETE": 2,
+        "T1": 0,
+        "T2": 0,
+        "T3": 0,
+        "T4": 9
+      }
+    },
+    "old_T5_final_outcomes_one_to_one": {
+      "T4": 9,
+      "INCOMPLETE": 2
+    },
+    "strong_driver_transition_one_to_one": {
+      "old_strong_and_final_strong": 8,
+      "old_strong_final_nonstrong": 7,
+      "old_nonstrong_final_strong": 5,
+      "old_nonstrong_final_nonstrong": 33
+    },
+    "split_roots": [
+      {
+        "legacy_root_id": "G8461-01",
+        "legacy_population_historical": "Pilot",
+        "legacy_scope": "Core 52",
+        "case_id": 8461,
+        "legacy_pc_count": 2,
+        "legacy_producing_change_ids": "P50-PC-0117; P50-PC-0118",
+        "legacy_root_decision": "GitHub-style heading anchor normalization",
+        "legacy_tier": "T4",
+        "primary_relation": "Split",
+        "final_child_root_count": 2,
+        "final_child_root_ids": "CROOT-08461-01 | CROOT-08461-02",
+        "final_child_labels": "CROOT-08461-01=T4 | CROOT-08461-02=T4",
+        "exact_same_tier_all_children": true
+      },
+      {
+        "legacy_root_id": "G17080-01",
+        "legacy_population_historical": "Pilot",
+        "legacy_scope": "Core 52",
+        "case_id": 17080,
+        "legacy_pc_count": 2,
+        "legacy_producing_change_ids": "P50-PC-0065; P50-PC-0066",
+        "legacy_root_decision": "CLI banner file loading",
+        "legacy_tier": "T4",
+        "primary_relation": "Split",
+        "final_child_root_count": 2,
+        "final_child_root_ids": "CROOT-17080-01 | CROOT-17080-02",
+        "final_child_labels": "CROOT-17080-01=INCOMPLETE | CROOT-17080-02=INCOMPLETE",
+        "exact_same_tier_all_children": false
+      }
+    ],
+    "interpretation": "Legacy tiers were discovery-era labels under an earlier evidence/coding design. Reclassification quantifies how those discovery labels changed under the frozen final D method; it is not inter-rater reliability."
+  },
+  "headline": {
+    "T4_replication": "The broad T4 pattern reproduces: historical selected roots had 29/55 (52.7%) T4; new holdout final M roots have 92/177 (52.0%) T4 on the all-M denominator.",
+    "strong_driver_replication": "Strong observable drivers do not disappear in unseen roots: historical selected roots had 15/55 (27.3%) T1-T3; new holdout final M roots have 64/177 (36.2%) T1-T3, or 64/160 (40.0%) among complete M.",
+    "T5_nonreplication": "The old high T5 rate does not reproduce: historical selected roots had 11/55 (20.0%) T5; new holdout final M roots have 4/177 (2.3%) T5, or 4/160 (2.5%) among complete M. Under final D re-audit, none of the 11 old T5 roots remains T5 (9 become T4; 2 become INCOMPLETE)."
+  }
+}

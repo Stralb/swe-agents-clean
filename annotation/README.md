@@ -35,6 +35,20 @@ What each coder could see, and in what order. These are the instructions followe
 | [mechanism_origin.md](codebooks/mechanism_origin.md) | H/T/M/U production routes and T1 to T5 explanation strength |
 | [control_coding.csv](codebooks/control_coding.csv) | Purpose, specificity, alignment and implementation codes for matched controls |
 
+## Provenance
+
+Records saved when the later stages ran.
+
+| File | Contents |
+| --- | --- |
+| [control_first_pass_report.md](provenance/control_first_pass_report.md) | First-pass coding of the 190 matched controls: what was coded, blinding safeguards, first-pass counts |
+| [control_qc_report.md](provenance/control_qc_report.md) | Second blinded pass over the controls, with pass-to-pass stability and the frozen control counts |
+| [mechanism_origin_pass_a.json](provenance/mechanism_origin_pass_a.json) | Pass-A metadata: model, inputs revealed and withheld, route and tier counts |
+| [mechanism_origin_final.json](provenance/mechanism_origin_final.json) | Final adjudicated census metadata, including Pass-A/Pass-B agreement |
+| [discovery_holdout_results.json](provenance/discovery_holdout_results.json) | Comparison of the final census with the earlier discovery cohort, run after the labels were frozen |
+
+The recorded annotation model was GPT-5.6 Sol. The two mechanism-origin passes used the same model family with different root identities and ordering, so their agreement is within-pipeline stability and not independent human reliability.
+
 [classification_corrections.csv](classification_corrections.csv) records the one file-type correction made after the original annotation.
 
 "Side-effect" in these files is the earlier label for what the paper calls Supporting.
@@ -43,4 +57,4 @@ What each coder could see, and in what order. These are the instructions followe
 
 The prompts above are the original request text. References to later review feedback were removed from the protocols and shortened in the nine-phase request; no method wording changed, and line endings were normalised.
 
-The other stages are documented by their protocols and codebooks. These full requests were not preserved: the mechanism-origin Pass-A, adjudication and final-coding requests, the matched-control coding requests, and the per-case requests for the original 122 cases.
+The other stages are documented by their protocols, codebooks and provenance records. These requests were not preserved: the mechanism-origin Pass-A and adjudication requests, the matched-control coding requests, and the per-case requests for the original 122 cases. The discovery/holdout comparison was an analysis run after the labels were frozen, not an annotation pass.
