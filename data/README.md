@@ -13,6 +13,10 @@ Aggregate results used by the `checks/` modules, plus documentation for the stud
 | `database_erd.svg`, `database_overview.svg` | Full and overview entity-relationship diagrams |
 | `queries.sql` | Descriptive counts per analysis unit, and a walkthrough of one case |
 
+## Database ERD
+
+![Full database ERD](database_erd.svg)
+
 ## Study dataset
 
 The case-level data is on [Hugging Face](https://huggingface.co/datasets/Stralb/adversarial-swe-agents) (private access required). The default configuration, `paper_cases`, has one row per issue-to-PR case with repository names, source text, URLs and cohort flags. The full SQLite database, `adversarial-swe-agents.sqlite`, is released with it; it is too large for Git.
