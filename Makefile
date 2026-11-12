@@ -17,11 +17,11 @@ install:
 	$(PYTHON) -m pip install -r requirements.txt
 
 check:
-	$(PYTHON) -m compileall -q miner replay reproduce tests
-	$(PYTHON) -m reproduce.matched_results --check
-	$(PYTHON) -m reproduce.cohort_lineage audit-recorded
-	$(PYTHON) -m reproduce.pathway_tables replay-indexed
-	$(PYTHON) -m reproduce.bootstrap_checks
+	$(PYTHON) -m compileall -q miner replay checks tests
+	$(PYTHON) -m checks.matched_results --check
+	$(PYTHON) -m checks.cohort_lineage audit-recorded
+	$(PYTHON) -m checks.pathway_tables replay-indexed
+	$(PYTHON) -m checks.bootstrap_checks
 	$(PYTHON) -m unittest discover -s tests -p 'test_matched_results.py' -v
 	$(MAKE) test
 

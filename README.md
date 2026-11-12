@@ -24,7 +24,7 @@ make check
 | Path | Contents |
 | --- | --- |
 | `miner/` | The pipeline: collection, issue linking, filters, scanners, database, workers. Run with `python -m miner {init-db,collect,scan,export}` |
-| `reproduce/` | Recomputes the reported paired tests and cohort totals from `data/` |
+| `checks/` | Recomputes the paper's paired tests and bootstrap checks and verifies the cohort totals, from `data/` |
 | `replay/` | The O/W/P patch replay and CodeQL comparison (RQ3) ([README](replay/README.md)) |
 | `data/` | Aggregate results, database schema and dataset guide ([README](data/README.md)) |
 | `tests/` | Unit tests |
