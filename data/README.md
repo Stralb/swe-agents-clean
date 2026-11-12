@@ -10,12 +10,12 @@ Aggregate results used by the `checks/` modules, plus documentation for the stud
 | `cohort_lineage.json` | Recorded cohort and matching totals |
 | `pathway_aggregates.json`, `bootstrap_reference.json` | Indexed paired counts and bootstrap references |
 | `schema.sql` | Table and view layout of the study database (111 tables, 18 views) |
-| `database_erd.svg`, `database_overview.svg` | Full and overview entity-relationship diagrams |
+| `erd/` | Entity-relationship diagrams: full, overview, and the parts used by `miner/`, `replay/` and `checks/` |
 | `queries.sql` | Descriptive counts per analysis unit, and a walkthrough of one case |
 
 ## Database ERD
 
-![Full database ERD](database_erd.svg)
+![Full database ERD](erd/full.svg)
 
 ## Study dataset
 

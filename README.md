@@ -4,7 +4,7 @@ Code and analysis for an observational study of GitHub issues and pull requests 
 
 **Paper:** [paper/main.pdf](paper/main.pdf)
 **Dataset:** [Hugging Face](https://huggingface.co/datasets/Stralb/adversarial-swe-agents) *(private access required)* · [data guide](data/README.md)
-**Database:** [full ERD](data/database_erd.svg) · [schema](data/schema.sql)
+**Database:** [full ERD](data/erd/full.svg) · [schema](data/schema.sql)
 **Archive (DOI):** *to be added*
 
 ## Quick start
@@ -24,8 +24,8 @@ make check
 
 | Path | Contents |
 | --- | --- |
-| `miner/` | The pipeline: collection, issue linking, filters, scanners, database, workers. Run with `python -m miner {init-db,collect,scan,export}` |
-| `checks/` | Recomputes the paper's paired tests and bootstrap checks and verifies the cohort totals, from `data/` |
+| `miner/` | ([README](miner/README.md)) The pipeline: collection, issue linking, filters, scanners, database, workers. Run with `python -m miner {init-db,collect,scan,export}` |
+| `checks/` | ([README](checks/README.md)) Recomputes the paper's paired tests and bootstrap checks and verifies the cohort totals, from `data/` |
 | `replay/` | The O/W/P patch replay and CodeQL comparison (RQ3) ([README](replay/README.md)) |
 | `data/` | Aggregate results, database schema and dataset guide ([README](data/README.md)) |
 | `tests/` | Unit tests |
@@ -56,9 +56,9 @@ The comparisons are observational. A scanner finding is not proof of an exploita
 
 ## Database
 
-The study database (111 tables, 18 views) is documented in [`data/schema.sql`](data/schema.sql). The overview below shows how its main parts connect; the [full ERD](data/database_erd.svg) shows every table.
+The study database (111 tables, 18 views) is documented in [`data/schema.sql`](data/schema.sql). The overview below shows how its main parts connect; the [full ERD](data/erd/full.svg) shows every table.
 
-![Database overview](data/database_overview.svg)
+![Database overview](data/erd/overview.svg)
 
 ## Reproducing the results
 

@@ -16,6 +16,12 @@ The scripts do not generate patches. The patches were produced separately and up
 
 Run records, scans and patch bytes are in the study dataset (`study_rq3_owp14_*`, `study_experiment_runs`, `study_experiment_scans`).
 
+## Database tables
+
+The replay runs, patches and scans are stored in these tables:
+
+![Replay tables](../data/erd/replay.svg)
+
 ## SHA-256
 
 | Script | SHA-256 |
