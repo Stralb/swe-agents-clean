@@ -1,0 +1,554 @@
+from __future__ import annotations
+
+import argparse
+import fcntl
+import json
+import os
+import sqlite3
+import subprocess
+import time
+from contextlib import contextmanager
+from pathlib import Path
+from typing import Any, Iterator
+
+ROOT = Path(__file__).resolve().parents[2]
+POINTER = ROOT / ".current_agentic_js_eval_db"
+LOCK_FILE = ROOT / ".daemon-control.lock"
+WRAPPER = ROOT / "run_controlled_daemon.slurm"
+
+ACTIVE_STATES = {
+    "PENDING",
+    "CONFIGURING",
+    "RUNNING",
+    "COMPLETING",
+}
+
+CANCEL_NOW_STATES = {
+    "PENDING",
+    "CONFIGURING",
+}
+
+SPECS = {
+    "mining": {
+        "partition": "bigbatch",
+        "cpus": "2",
+        "memory": "8G",
+    },
+    "cheap_analysis": {
+        "partition": "biggpu",
+        "cpus": "4",
+        "memory": "32G",
+    },
+    "codeql_security": {
+        "partition": "biggpu",
+        "cpus": "4",
+        "memory": "64G",
+    },
+}
+
+
+def _db_path() -> Path:
+    configured = str(os.environ.get("DB_PATH") or "").strip()
+
+    if configured:
+        return Path(configured)
+
+    if not POINTER.exists():
+        raise RuntimeError(
+            f"Active DB pointer is missing: {POINTER}"
+        )
+
+    value = POINTER.read_text(encoding="utf-8").strip()
+
+    if not value:
+        raise RuntimeError("Active DB pointer is empty.")
+
+    return Path(value)
+
+
+def _connect() -> sqlite3.Connection:
+    connection = sqlite3.connect(
+        _db_path(),
+        timeout=120,
+    )
+    connection.row_factory = sqlite3.Row
+    return connection
+
+
+@contextmanager
+def _controller_lock() -> Iterator[None]:
+    LOCK_FILE.touch(exist_ok=True)
+
+    with LOCK_FILE.open("r+", encoding="utf-8") as handle:
+        fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+
+        try:
+            yield
+        finally:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+
+
+def _control(daemon_name: str) -> dict[str, Any]:
+    with _connect() as connection:
+        row = connection.execute(
+            """
+            SELECT *
+            FROM daemon_controls
+            WHERE daemon_name=?
+            """,
+            (daemon_name,),
+        ).fetchone()
+
+    if row is None:
+        raise RuntimeError(
+            f"Missing daemon control row: {daemon_name}"
+        )
+
+    return dict(row)
+
+
+def _execute(
+    sql: str,
+    parameters: tuple[Any, ...],
+) -> None:
+    with _connect() as connection:
+        connection.execute(sql, parameters)
+        connection.commit()
+
+
+def _slurm_state(job_id: Any) -> str | None:
+    value = str(job_id or "").strip()
+
+    if not value:
+        return None
+
+    result = subprocess.run(
+        [
+            "squeue",
+            "-h",
+            "-j",
+            value,
+            "-o",
+            "%T",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    if result.returncode != 0:
+        return None
+
+    states = [
+        line.strip().upper()
+        for line in result.stdout.splitlines()
+        if line.strip()
+    ]
+
+    return states[0] if states else None
+
+
+def _public_status(
+    daemon_name: str,
+) -> dict[str, Any]:
+    row = _control(daemon_name)
+    scheduler_state = _slurm_state(
+        row.get("slurm_job_id")
+    )
+
+    desired = int(
+        row.get("desired_enabled") or 0
+    )
+
+    active = scheduler_state in ACTIVE_STATES
+
+    if active:
+        display_state = (
+            "stopping"
+            if desired == 0
+            else scheduler_state.lower()
+        )
+
+        _execute(
+            """
+            UPDATE daemon_controls
+            SET
+                state=?,
+                scheduler_state=?,
+                updated_at=CURRENT_TIMESTAMP
+            WHERE daemon_name=?
+            """,
+            (
+                display_state,
+                scheduler_state,
+                daemon_name,
+            ),
+        )
+
+    elif desired == 0 and row.get("state") not in {
+        "stopped",
+        "error",
+    }:
+        _execute(
+            """
+            UPDATE daemon_controls
+            SET
+                state='stopped',
+                scheduler_state=COALESCE(
+                    scheduler_state,
+                    'NOT_IN_QUEUE'
+                ),
+                stopped_at=CURRENT_TIMESTAMP,
+                updated_at=CURRENT_TIMESTAMP
+            WHERE daemon_name=?
+            """,
+            (daemon_name,),
+        )
+
+    row = _control(daemon_name)
+
+    return {
+        **row,
+        "scheduler_state_live": scheduler_state,
+        "cluster_active": active,
+    }
+
+
+def _wait_for_active(
+    job_id: str,
+    attempts: int = 20,
+) -> str | None:
+    for _ in range(attempts):
+        state = _slurm_state(job_id)
+
+        if state in ACTIVE_STATES:
+            return state
+
+        time.sleep(0.5)
+
+    return None
+
+
+def _submit(
+    daemon_name: str,
+    generation: int,
+) -> tuple[str, str]:
+    spec = SPECS[daemon_name]
+    db_path = _db_path()
+
+    if not WRAPPER.exists():
+        raise RuntimeError(
+            f"SLURM wrapper is missing: {WRAPPER}"
+        )
+
+    (ROOT / "logs").mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    export_value = ",".join(
+        [
+            "ALL",
+            f"DAEMON_NAME={daemon_name}",
+            f"DAEMON_GENERATION={generation}",
+            "DAEMON_IDLE_SECONDS=10",
+            f"DB_PATH={db_path}",
+            f"CONFIG={ROOT / 'config.agentic_js.yml'}",
+        ]
+    )
+
+    result = subprocess.run(
+        [
+            "sbatch",
+            "--parsable",
+            f"--job-name=miner-{daemon_name}",
+            f"--partition={spec['partition']}",
+            "--time=2-23:50:00",
+            f"--cpus-per-task={spec['cpus']}",
+            f"--mem={spec['memory']}",
+            "--signal=B:TERM@600",
+            f"--output={ROOT}/logs/{daemon_name}-%j.out",
+            f"--error={ROOT}/logs/{daemon_name}-%j.err",
+            f"--export={export_value}",
+            str(WRAPPER),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    if result.returncode != 0:
+        message = (
+            result.stderr.strip()
+            or result.stdout.strip()
+            or "sbatch failed"
+        )
+        raise RuntimeError(message)
+
+    job_id = result.stdout.strip().split(";")[0]
+
+    if not job_id:
+        raise RuntimeError(
+            "sbatch returned no job id."
+        )
+
+    scheduler_state = _wait_for_active(job_id)
+
+    if scheduler_state is None:
+        subprocess.run(
+            ["scancel", job_id],
+            check=False,
+        )
+        raise RuntimeError(
+            "Submitted job was not visible in squeue."
+        )
+
+    return job_id, scheduler_state
+
+
+def ensure_active(
+    daemon_name: str,
+) -> dict[str, Any]:
+    with _controller_lock():
+        row = _control(daemon_name)
+
+        existing_state = _slurm_state(
+            row.get("slurm_job_id")
+        )
+
+        if existing_state in ACTIVE_STATES:
+            _execute(
+                """
+                UPDATE daemon_controls
+                SET
+                    desired_enabled=1,
+                    state=?,
+                    scheduler_state=?,
+                    last_error=NULL,
+                    updated_at=CURRENT_TIMESTAMP
+                WHERE daemon_name=?
+                """,
+                (
+                    existing_state.lower(),
+                    existing_state,
+                    daemon_name,
+                ),
+            )
+
+            return _public_status(daemon_name)
+
+        generation = int(
+            row.get("generation") or 0
+        ) + 1
+
+        _execute(
+            """
+            UPDATE daemon_controls
+            SET
+                desired_enabled=1,
+                generation=?,
+                state='submitting',
+                scheduler_state=NULL,
+                slurm_job_id=NULL,
+                worker_id=NULL,
+                current_unit=NULL,
+                detail='Submitting SLURM allocation',
+                last_error=NULL,
+                requested_at=CURRENT_TIMESTAMP,
+                submitted_at=NULL,
+                started_at=NULL,
+                stopped_at=NULL,
+                updated_at=CURRENT_TIMESTAMP
+            WHERE daemon_name=?
+            """,
+            (
+                generation,
+                daemon_name,
+            ),
+        )
+
+        try:
+            job_id, scheduler_state = _submit(
+                daemon_name,
+                generation,
+            )
+        except Exception as exc:
+            _execute(
+                """
+                UPDATE daemon_controls
+                SET
+                    desired_enabled=0,
+                    state='error',
+                    last_error=?,
+                    updated_at=CURRENT_TIMESTAMP
+                WHERE daemon_name=?
+                """,
+                (
+                    str(exc)[:2000],
+                    daemon_name,
+                ),
+            )
+            raise
+
+        _execute(
+            """
+            UPDATE daemon_controls
+            SET
+                slurm_job_id=?,
+                scheduler_state=?,
+                state=?,
+                detail='SLURM allocation confirmed',
+                submitted_at=CURRENT_TIMESTAMP,
+                updated_at=CURRENT_TIMESTAMP
+            WHERE daemon_name=?
+              AND generation=?
+            """,
+            (
+                job_id,
+                scheduler_state,
+                scheduler_state.lower(),
+                daemon_name,
+                generation,
+            ),
+        )
+
+    return _public_status(daemon_name)
+
+
+def request_stop(
+    daemon_name: str,
+) -> dict[str, Any]:
+    with _controller_lock():
+        row = _control(daemon_name)
+        job_id = str(
+            row.get("slurm_job_id") or ""
+        ).strip()
+        scheduler_state = _slurm_state(job_id)
+
+        _execute(
+            """
+            UPDATE daemon_controls
+            SET
+                desired_enabled=0,
+                state='stopping',
+                detail='Stopping after current unit',
+                requested_at=CURRENT_TIMESTAMP,
+                updated_at=CURRENT_TIMESTAMP
+            WHERE daemon_name=?
+            """,
+            (daemon_name,),
+        )
+
+        if (
+            job_id
+            and scheduler_state in CANCEL_NOW_STATES
+        ):
+            subprocess.run(
+                ["scancel", job_id],
+                check=False,
+            )
+
+            for _ in range(20):
+                if _slurm_state(job_id) is None:
+                    break
+                time.sleep(0.25)
+
+            _execute(
+                """
+                UPDATE daemon_controls
+                SET
+                    state='stopped',
+                    scheduler_state='CANCELLED',
+                    detail='Cancelled before worker started',
+                    stopped_at=CURRENT_TIMESTAMP,
+                    updated_at=CURRENT_TIMESTAMP
+                WHERE daemon_name=?
+                """,
+                (daemon_name,),
+            )
+
+        elif scheduler_state not in ACTIVE_STATES:
+            _execute(
+                """
+                UPDATE daemon_controls
+                SET
+                    state='stopped',
+                    scheduler_state=COALESCE(
+                        scheduler_state,
+                        'NOT_IN_QUEUE'
+                    ),
+                    detail='Stopped',
+                    stopped_at=CURRENT_TIMESTAMP,
+                    updated_at=CURRENT_TIMESTAMP
+                WHERE daemon_name=?
+                """,
+                (daemon_name,),
+            )
+
+    return _public_status(daemon_name)
+
+
+def reconcile(
+    daemon_name: str,
+) -> dict[str, Any]:
+    row = _control(daemon_name)
+    desired = int(
+        row.get("desired_enabled") or 0
+    )
+    scheduler_state = _slurm_state(
+        row.get("slurm_job_id")
+    )
+
+    if desired == 1:
+        if scheduler_state not in ACTIVE_STATES:
+            return ensure_active(daemon_name)
+        return _public_status(daemon_name)
+
+    if scheduler_state in ACTIVE_STATES:
+        return request_stop(daemon_name)
+
+    return _public_status(daemon_name)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Control persistent miner SLURM daemons"
+    )
+
+    parser.add_argument(
+        "action",
+        choices=[
+            "status",
+            "start",
+            "stop",
+            "reconcile",
+        ],
+    )
+
+    parser.add_argument(
+        "daemon",
+        choices=sorted(SPECS),
+    )
+
+    args = parser.parse_args()
+
+    if args.action == "start":
+        result = ensure_active(args.daemon)
+    elif args.action == "stop":
+        result = request_stop(args.daemon)
+    elif args.action == "reconcile":
+        result = reconcile(args.daemon)
+    else:
+        result = _public_status(args.daemon)
+
+    print(
+        json.dumps(
+            result,
+            indent=2,
+            default=str,
+        )
+    )
+
+
+if __name__ == "__main__":
+    main()

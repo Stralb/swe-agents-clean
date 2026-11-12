@@ -1,0 +1,5 @@
+{
+  "normal_interval": 3600,
+  "activation_interval": 300,
+  "target_batch": "mining-496001"
+}

@@ -1,0 +1,13 @@
+---
+sourceLocationPrefix: /tmp/screen5_17062_jtcmmkmr/REPO
+baselineLinesOfCode: 928261
+unicodeNewlines: true
+columnKind: utf16
+primaryLanguage: javascript
+creationMetadata:
+  cliVersion: 2.25.6
+  creationTime: 2026-10-17T19:39:06.733924331Z
+buildMode: none
+overlayBaseDatabase: false
+overlayDatabase: false
+finalised: true

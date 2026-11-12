@@ -1,0 +1,49 @@
+name: Local OSV Trivy replay without network
+
+on:
+  push:
+    branches:
+      - work/miner-core-consolidation-20261021
+
+permissions:
+  contents: read
+
+jobs:
+  original-osv-trivy-local-offline:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout private branch without persisted credentials
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Build synthetic-only Python Git replay container
+        shell: bash
+        run: |
+          docker build \
+            --file tests/support/Dockerfile.snapshot-stub-smoke \
+            --tag arno-original-snapshot-stubs:20261021 .
+          docker image inspect --format '{{.Id}}' arno-original-snapshot-stubs:20261021
+      - name: Run exact original OSV/Trivy paths without network access
+        shell: bash
+        run: |
+          docker run --rm \
+            --network none \
+            --read-only \
+            --tmpfs /tmp:rw,exec,nosuid,nodev,size=256m,mode=1777 \
+            --cap-drop ALL \
+            --security-opt no-new-privileges \
+            --pids-limit 128 \
+            --memory 1g \
+            --cpus 2 \
+            --user 65534:65534 \
+            --mount "type=bind,source=$GITHUB_WORKSPACE,target=/workspace,readonly" \
+            --workdir /workspace \
+            --env HOME=/tmp \
+            --env PYTHONDONTWRITEBYTECODE=1 \
+            arno-original-snapshot-stubs:20261021 \
+            python -m unittest \
+              tests.test_miner_archived_trivy_local_process \
+              tests.test_miner_archived_osv_local_process \
+              tests.test_miner_archived_codeql_local_process -v

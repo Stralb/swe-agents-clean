@@ -26,7 +26,7 @@ ROOT = Path(
 
 STOP_REQUESTED = False
 
-# Full database publication is expensive on shared NFS. Atomic replacement
+# Full database release is expensive on shared NFS. Atomic replacement
 # provides reader consistency without an unbounded forced NFS fsync.
 AUTHORITATIVE_PUBLISH_INTERVAL_SECONDS = max(
     60,
@@ -35,9 +35,9 @@ AUTHORITATIVE_PUBLISH_INTERVAL_SECONDS = max(
 
 # Shared NFS cannot reliably accept multi-gigabyte synchronous snapshots.
 # Keep imports and mining running, but disable snapshot-dependent work until
-# publication is moved into a separate SLURM job.
-SNAPSHOT_PUBLICATION_ENABLED = (
-    os.getenv("SNAPSHOT_PUBLICATION_ENABLED", "0").strip().lower()
+# release is moved into a separate SLURM job.
+SNAPSHOT_RELEASE_ENABLED = (
+    os.getenv("SNAPSHOT_RELEASE_ENABLED", "0").strip().lower()
     in {"1", "true", "yes", "on"}
 )
 
@@ -382,7 +382,7 @@ def run(
     cheap.ensure_import_table(db)
     cheap.active_db_path = lambda: local_database
     codeql.active_db_path = lambda: local_database
-    if SNAPSHOT_PUBLICATION_ENABLED:
+    if SNAPSHOT_RELEASE_ENABLED:
         cheap.create_snapshot = publish_snapshot
         codeql.create_snapshot = publish_snapshot
 
@@ -450,7 +450,7 @@ def run(
                     cheap_snapshot,
                 )
                 if (
-                    SNAPSHOT_PUBLICATION_ENABLED
+                    SNAPSHOT_RELEASE_ENABLED
                     and pool_enabled(policy, "cheap_analysis")
                 )
                 else 0
@@ -462,7 +462,7 @@ def run(
                     codeql_snapshot,
                 )
                 if (
-                    SNAPSHOT_PUBLICATION_ENABLED
+                    SNAPSHOT_RELEASE_ENABLED
                     and pool_enabled(policy, "codeql_security")
                 )
                 else 0
@@ -484,7 +484,7 @@ def run(
             publish_pending = publish_pending or changed
 
             if (
-                SNAPSHOT_PUBLICATION_ENABLED
+                SNAPSHOT_RELEASE_ENABLED
                 and publish_pending
                 and now - last_publish
                 >= AUTHORITATIVE_PUBLISH_INTERVAL_SECONDS

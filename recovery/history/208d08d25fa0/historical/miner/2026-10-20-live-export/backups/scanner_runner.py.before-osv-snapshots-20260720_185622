@@ -1,0 +1,299 @@
+from __future__ import annotations
+
+import json
+import logging
+from typing import Any
+
+from src.db.database import Database
+from src.scanners.codeql_scanner import codeql_languages_for_files, default_query_suite_for_language, diff_findings, filter_findings_to_pr_delta, has_codeql_source_changes, has_python_source_changes, scan_snapshot_with_codeql
+from src.scanners.dependency_diff import detect_dependency_regressions
+from src.scanners.gitleaks_scanner import scan_files_with_gitleaks
+from src.scanners.osv_scanner import scan_dependency_patches
+from src.scanners.semgrep_scanner import scan_head_with_semgrep
+
+log = logging.getLogger(__name__)
+
+
+def _codeql_finding_type(
+    finding: dict[str, Any],
+) -> str:
+    """Separate security evidence from CodeQL quality recommendations.
+
+    A CodeQL result is promoted as a vulnerability only when the SARIF
+    rule carries explicit CWE metadata. Other diff-linked results remain
+    stored as code-quality evidence and do not trigger a security signal.
+    """
+    cwe = str(
+        finding.get("cwe")
+        or ""
+    ).strip()
+
+    if cwe:
+        return "vulnerability"
+
+    return "code_quality"
+
+
+def _insert_run(db: Database, case_id: int, pr_id: int, scanner: str, status: str, stdout: str = "", stderr: str = "") -> None:
+    db.execute(
+        "INSERT INTO scanner_runs(case_id, pr_id, scanner, status, finished_at, stdout, stderr) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?)",
+        (case_id, pr_id, scanner, status, stdout[-5000:], stderr[-5000:]),
+    )
+
+
+def _insert_finding(db: Database, case_id: int, pr_id: int, scanner: str, finding_type: str, finding: dict[str, Any]) -> None:
+    db.execute(
+        """
+        INSERT INTO scanner_findings(case_id, pr_id, scanner, finding_type, severity, rule_id, cwe, file_path, line, description, evidence, raw_json, introduced)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
+        """,
+        (
+            case_id,
+            pr_id,
+            scanner,
+            finding_type,
+            finding.get("severity"),
+            finding.get("rule") or finding.get("rule_id") or finding.get("vuln_id"),
+            finding.get("cwe"),
+            finding.get("file") or finding.get("file_path"),
+            finding.get("line"),
+            finding.get("description"),
+            finding.get("evidence") or json.dumps({k: finding.get(k) for k in ("package", "old_version", "new_version", "version", "vuln_id", "change_type") if k in finding}),
+            json.dumps(finding.get("raw") or finding),
+        ),
+    )
+
+
+def _scanner_already_ran(db: Database, case_id: int, scanner_names: tuple[str, ...]) -> bool:
+    placeholders = ",".join(["?"] * len(scanner_names))
+    rows = db.query(f"SELECT COUNT(*) AS n FROM scanner_runs WHERE case_id=? AND scanner IN ({placeholders})", (case_id, *scanner_names))
+    return bool(rows and int(rows[0]["n"]) > 0)
+
+
+def _clear_scanner(db: Database, case_id: int, scanner_names: tuple[str, ...], finding_types: tuple[str, ...]) -> None:
+    ph_s = ",".join(["?"] * len(scanner_names))
+    ph_f = ",".join(["?"] * len(finding_types))
+    db.execute(f"DELETE FROM scanner_runs WHERE case_id=? AND scanner IN ({ph_s})", (case_id, *scanner_names))
+    if any(name == "codeql" for name in scanner_names):
+        db.execute("DELETE FROM scanner_runs WHERE case_id=? AND scanner LIKE 'codeql-%'", (case_id,))
+    db.execute(f"DELETE FROM scanner_findings WHERE case_id=? AND finding_type IN ({ph_f})", (case_id, *finding_types))
+
+
+def scan_case(db: Database, case: dict[str, Any], config: dict) -> None:
+    case_id = int(case["case_id"])
+    pr_id = int(case["pr_id"])
+    db.execute("UPDATE cases SET status='scanner_running', updated_at=CURRENT_TIMESTAMP WHERE id=?", (case_id,))
+    files = db.query("SELECT * FROM pr_files WHERE pr_id=?", (pr_id,))
+
+    scanners_cfg = config.get("scanners", {})
+    force_rescan = config.get("cache", {}).get("force_rescan", False)
+
+    if scanners_cfg.get("gitleaks", True):
+        if force_rescan:
+            _clear_scanner(db, case_id, ("gitleaks",), ("secret",))
+        if not _scanner_already_ran(db, case_id, ("gitleaks",)):
+            findings, meta = scan_files_with_gitleaks(files)
+            _insert_run(db, case_id, pr_id, "gitleaks", meta.get("status", "ok"), meta.get("stdout", ""), meta.get("stderr", ""))
+            for f in findings:
+                _insert_finding(db, case_id, pr_id, "gitleaks", "secret", f)
+
+    if scanners_cfg.get("dependency_downgrade", True):
+        if force_rescan:
+            _clear_scanner(db, case_id, ("dependency-diff",), ("dependency",))
+        if not _scanner_already_ran(db, case_id, ("dependency-diff",)):
+            regressions = detect_dependency_regressions(files)
+            status = "ok" if regressions or any((f.get("category") == "dependency") for f in files) else "not_applicable"
+            stderr = "" if status == "ok" else "No dependency manifest/lock files changed"
+            _insert_run(db, case_id, pr_id, "dependency-diff", status, "", stderr)
+            for f in regressions:
+                _insert_finding(db, case_id, pr_id, "dependency-diff", "dependency", f)
+
+    if scanners_cfg.get("osv", True):
+        if force_rescan:
+            _clear_scanner(db, case_id, ("osv-scanner",), ("dependency",))
+        if not _scanner_already_ran(db, case_id, ("osv-scanner",)):
+            osv_findings, meta = scan_dependency_patches(files)
+            _insert_run(db, case_id, pr_id, "osv-scanner", meta.get("status", "ok"), meta.get("stdout", ""), meta.get("stderr", ""))
+            for f in osv_findings:
+                _insert_finding(db, case_id, pr_id, "osv-scanner", "dependency", f)
+
+    if scanners_cfg.get("semgrep", False):
+        if force_rescan:
+            db.execute(
+                "DELETE FROM scanner_runs WHERE case_id=? AND scanner='semgrep'",
+                (case_id,),
+            )
+            db.execute(
+                "DELETE FROM scanner_findings WHERE case_id=? AND scanner='semgrep'",
+                (case_id,),
+            )
+
+        if not _scanner_already_ran(db, case_id, ("semgrep",)):
+            repo_url = case.get("repo_url")
+            head_sha = case.get("head_sha")
+            semgrep_config = str(
+                scanners_cfg.get("semgrep_config", "p/security-audit")
+                or "p/security-audit"
+            )
+            timeout_seconds = int(
+                scanners_cfg.get("semgrep_timeout_seconds", 300)
+                or 300
+            )
+
+            if repo_url and head_sha:
+                findings, meta = scan_head_with_semgrep(
+                    repo_url,
+                    head_sha,
+                    files,
+                    semgrep_config=semgrep_config,
+                    timeout_seconds=timeout_seconds,
+                )
+            else:
+                findings = []
+                meta = {
+                    "status": "not_applicable",
+                    "stdout": "",
+                    "stderr": "Missing repo_url/head_sha",
+                }
+
+            _insert_run(
+                db,
+                case_id,
+                pr_id,
+                "semgrep",
+                meta.get("status", "ok"),
+                meta.get("stdout", ""),
+                meta.get("stderr", ""),
+            )
+
+            for finding in findings:
+                _insert_finding(
+                    db,
+                    case_id,
+                    pr_id,
+                    "semgrep",
+                    "vulnerability",
+                    finding,
+                )
+
+    if scanners_cfg.get("codeql", True):
+        if force_rescan:
+            _clear_scanner(
+                db,
+                case_id,
+                (
+                    "codeql",
+                    "codeql-base",
+                    "codeql-head",
+                ),
+                (
+                    "vulnerability",
+                    "code_quality",
+                ),
+            )
+        if _scanner_already_ran(db, case_id, ("codeql-base", "codeql-head", "codeql")):
+            return
+        repo_url = case.get("repo_url")
+        base_sha = case.get("base_sha")
+        head_sha = case.get("head_sha")
+        configured_language = str(scanners_cfg.get("codeql_language", "auto") or "auto").lower()
+        build_mode = scanners_cfg.get("codeql_build_mode", "none")
+        configured_suite = scanners_cfg.get("codeql_query_suite") or None
+        timeout_seconds = int(scanners_cfg.get("codeql_timeout_seconds", 600) or 600)
+        codeql_trigger = str(scanners_cfg.get("codeql_trigger", "all_codeql") or "all_codeql").lower()
+        if codeql_trigger not in {"all_python", "all_codeql", "all", "none"}:
+            _insert_run(db, case_id, pr_id, "codeql", "not_applicable", "", f"Unknown codeql_trigger={codeql_trigger}")
+            return
+        elif codeql_trigger == "none":
+            _insert_run(db, case_id, pr_id, "codeql-base", "not_applicable", "", "CodeQL trigger disabled")
+            _insert_run(db, case_id, pr_id, "codeql-head", "not_applicable", "", "CodeQL trigger disabled")
+            _insert_run(db, case_id, pr_id, "codeql", "not_applicable", "", "CodeQL trigger disabled")
+            return
+
+        detected_languages = codeql_languages_for_files(files)
+        if codeql_trigger == "all_python":
+            detected_languages = [lang for lang in detected_languages if lang == "python"]
+        elif configured_language not in {"", "auto", "all"}:
+            detected_languages = [lang for lang in detected_languages if lang == configured_language]
+
+        if not detected_languages:
+            detail = "No changed files for enabled CodeQL languages; trigger=%s" % codeql_trigger
+            _insert_run(db, case_id, pr_id, "codeql-base", "not_applicable", "", detail)
+            _insert_run(db, case_id, pr_id, "codeql-head", "not_applicable", "", detail)
+            _insert_run(db, case_id, pr_id, "codeql", "not_applicable", "", detail)
+        elif repo_url and base_sha and head_sha:
+            total_introduced_all = 0
+            total_diff_linked = 0
+            total_security_diff_linked = 0
+            total_quality_diff_linked = 0
+            blocking_errors: list[str] = []
+            for language in detected_languages:
+                query_suite = configured_suite if configured_language == language else default_query_suite_for_language(language)
+                base_findings, base_meta = scan_snapshot_with_codeql(repo_url, base_sha, language=language, build_mode=build_mode, query_suite=query_suite, timeout_seconds=timeout_seconds)
+                _insert_run(db, case_id, pr_id, f"codeql-{language}-base", base_meta.get("status", "ok"), base_meta.get("stdout", ""), base_meta.get("stderr", ""))
+                head_findings, head_meta = scan_snapshot_with_codeql(repo_url, head_sha, language=language, build_mode=build_mode, query_suite=query_suite, timeout_seconds=timeout_seconds)
+                _insert_run(db, case_id, pr_id, f"codeql-{language}-head", head_meta.get("status", "ok"), head_meta.get("stdout", ""), head_meta.get("stderr", ""))
+                if base_meta.get("status") == "ok" and head_meta.get("status") == "ok":
+                    introduced_all = diff_findings(base_findings, head_findings)
+                    introduced = filter_findings_to_pr_delta(introduced_all, files)
+                    total_introduced_all += len(introduced_all)
+                    total_diff_linked += len(introduced)
+                    for f in introduced:
+                        enriched = dict(f)
+                        enriched["language"] = language
+
+                        finding_type = (
+                            _codeql_finding_type(
+                                enriched
+                            )
+                        )
+
+                        if finding_type == "vulnerability":
+                            total_security_diff_linked += 1
+                        else:
+                            total_quality_diff_linked += 1
+
+                        _insert_finding(
+                            db,
+                            case_id,
+                            pr_id,
+                            "codeql",
+                            finding_type,
+                            enriched,
+                        )
+                else:
+                    blocking_errors.append(language)
+            # Compatibility aggregate runs for the existing scheduler/UI.
+            if blocking_errors:
+                _insert_run(db, case_id, pr_id, "codeql-base", "error", "", "One or more language base scans failed: " + ",".join(blocking_errors))
+                _insert_run(db, case_id, pr_id, "codeql-head", "error", "", "One or more language head scans failed: " + ",".join(blocking_errors))
+                _insert_run(db, case_id, pr_id, "codeql", "error", "", "base/head CodeQL scan failed for: " + ",".join(blocking_errors))
+            else:
+                _insert_run(db, case_id, pr_id, "codeql-base", "ok", "languages=" + ",".join(detected_languages), "")
+                _insert_run(db, case_id, pr_id, "codeql-head", "ok", "languages=" + ",".join(detected_languages), "")
+                _insert_run(
+                    db,
+                    case_id,
+                    pr_id,
+                    "codeql",
+                    "ok",
+                    (
+                        "languages=%s "
+                        "introduced_total=%s "
+                        "diff_linked=%s "
+                        "security_diff_linked=%s "
+                        "quality_diff_linked=%s"
+                    )
+                    % (
+                        ",".join(detected_languages),
+                        total_introduced_all,
+                        total_diff_linked,
+                        total_security_diff_linked,
+                        total_quality_diff_linked,
+                    ),
+                    "",
+                )
+        else:
+            _insert_run(db, case_id, pr_id, "codeql-base", "not_applicable", "", "Missing repo_url/base/head")
+            _insert_run(db, case_id, pr_id, "codeql-head", "not_applicable", "", "Missing repo_url/base/head")
+            _insert_run(db, case_id, pr_id, "codeql", "not_applicable", "", "Missing repo_url/base/head")

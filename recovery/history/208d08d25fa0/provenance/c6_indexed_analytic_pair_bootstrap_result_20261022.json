@@ -1,0 +1,78 @@
+{
+  "analytic_quantiles_computed_without_random_draws": true,
+  "categories_checked": 3,
+  "causal_interpretation_supported": false,
+  "comparisons": [
+    {
+      "analytic_resampling_ci95_pp": [
+        -22.63157894736842,
+        -5.7894736842105265
+      ],
+      "both_or_neither_pairs": 117,
+      "category": "Explicit instruction",
+      "control_only_pairs": 50,
+      "endpoint_absolute_deviations_pp": [
+        3.552713678800501e-15,
+        4.440892098500626e-15
+      ],
+      "match_within_one_discrete_pair_increment": true,
+      "observed_paired_difference_pp": -14.210526315789474,
+      "pairs": 190,
+      "positive_only_pairs": 23,
+      "source_reported_pair_bootstrap_ci95_pp": [
+        -22.631578947368425,
+        -5.789473684210522
+      ],
+      "variable": "Instruction specificity"
+    },
+    {
+      "analytic_resampling_ci95_pp": [
+        6.315789473684211,
+        18.94736842105263
+      ],
+      "both_or_neither_pairs": 148,
+      "category": "Suggests solution",
+      "control_only_pairs": 9,
+      "endpoint_absolute_deviations_pp": [
+        0.0,
+        0.526315789473685
+      ],
+      "match_within_one_discrete_pair_increment": true,
+      "observed_paired_difference_pp": 12.631578947368421,
+      "pairs": 190,
+      "positive_only_pairs": 33,
+      "source_reported_pair_bootstrap_ci95_pp": [
+        6.315789473684211,
+        19.473684210526315
+      ],
+      "variable": "Instruction specificity"
+    },
+    {
+      "analytic_resampling_ci95_pp": [
+        -17.894736842105264,
+        -6.315789473684211
+      ],
+      "both_or_neither_pairs": 157,
+      "category": "Aligned",
+      "control_only_pairs": 28,
+      "endpoint_absolute_deviations_pp": [
+        0.0,
+        0.5263157894736832
+      ],
+      "match_within_one_discrete_pair_increment": true,
+      "observed_paired_difference_pp": -12.105263157894736,
+      "pairs": 190,
+      "positive_only_pairs": 5,
+      "source_reported_pair_bootstrap_ci95_pp": [
+        -17.894736842105264,
+        -6.842105263157894
+      ],
+      "variable": "Goal alignment"
+    }
+  ],
+  "original_C6_source_sha256_verified": false,
+  "original_case_level_paired_coding_authenticated": false,
+  "original_repository_blocked_CIs_reproduced": false,
+  "source_ci_method_exactly_reproduced": false,
+  "status": "PASS_INDEXED_C6_ANALYTIC_PAIR_BOOTSTRAP_DISTRIBUTION_CHECK_ONLY"
+}

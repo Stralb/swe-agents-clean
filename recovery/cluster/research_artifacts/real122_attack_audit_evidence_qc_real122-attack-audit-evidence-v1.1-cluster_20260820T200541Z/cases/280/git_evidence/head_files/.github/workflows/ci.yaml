@@ -1,0 +1,261 @@
+name: Build & quality
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to release (e.g., v1.13.2). Leave empty to use the latest tag.'
+        required: false
+        type: string
+
+jobs:
+  ci:
+    # CI runs on all pushes (branches and tags) and pull requests
+    # This ensures releases only happen if all tests pass
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        node-version: [lts/*, current]
+      fail-fast: false  # Continue running other matrix jobs even if one fails
+    env:
+      CI: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          # For tag pushes, checkout the tag; for branches/PRs, checkout the commit
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: https://registry.npmjs.org/
+
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint --if-present
+      - name: Validate feature file outlines
+        run: npm run lint:docs --if-present
+      - name: Build
+        run: npm run build --if-present
+      - name: Test
+        run: npm run test --if-present
+      - name: Start Xvfb
+        run: |
+          /usr/bin/Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+          sleep 1
+      - name: E2E tests
+        env:
+          DISPLAY: ':99'
+        run: npm run test:e2e
+
+  crlf-tests:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        node-version: [lts/*]
+    env:
+      CI: true
+    steps:
+      - name: Checkout ${{ github.sha }}
+        uses: actions/checkout@v6
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+      - name: Test CRLF
+        run: npm run test:crlf --if-present
+
+  # npm audit runs in .github/workflows/npm-audit.yml (dedicated workflow + README badge).
+
+  # The "cd-vsce" job runs only when a tag starting with "v" is pushed (i.e., a version tag), because of the conditional below:
+  cd-vsce:
+    # Only runs when the push references a tag that starts with "v" (for example: refs/tags/v1.2.3) or on workflow_dispatch
+    # Requires ci job to pass first to ensure code quality
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
+    needs: ci
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CI: true
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
+
+      - name: Use Node.js with the npmjs.org registry
+        uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+      - name: Clean
+        run: npm run clean
+      - name: Build
+        run: npm run build
+      - name: Verify build artifact
+        run: |
+          if [ ! -f dist/extension.vsix ]; then
+            echo "Error: dist/extension.vsix not found after build"
+            exit 1
+          fi
+          echo "Build artifact verified: $(ls -lh dist/extension.vsix)"
+      - name: Publish to Azure DevOps ${{ github.ref }}
+        run: npx vsce publish --packagePath dist/extension.vsix --pat ${{ secrets.AZURE_DEVOPS_TOKEN }}
+
+  # The "cd-ovsx" job runs only when a tag starting with "v" is pushed (i.e., a version tag), because of the conditional below:
+  cd-ovsx:
+    # Only runs when the push references a tag that starts with "v" (for example: refs/tags/v1.2.3) or on workflow_dispatch
+    # Requires ci job to pass first to ensure code quality
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
+    needs: ci
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CI: true
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
+
+      - name: Use Node.js with the npmjs.org registry
+        uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+      - name: Clean
+        run: npm run clean
+      - name: Build
+        run: npm run build
+      - name: Verify build artifact
+        run: |
+          if [ ! -f dist/extension.vsix ]; then
+            echo "Error: dist/extension.vsix not found after build"
+            exit 1
+          fi
+          echo "Build artifact verified: $(ls -lh dist/extension.vsix)"
+      - name: Publish to OpenVSX ${{ github.ref }}
+        run: npx ovsx publish dist/extension.vsix --pat ${{ secrets.OPENVSX_TOKEN }}
+
+  # The "cd-release" job creates a GitHub Release and uploads the extension as an asset
+  cd-release:
+    # Only runs when the push references a tag that starts with "v" (for example: refs/tags/v1.2.3) or on workflow_dispatch
+    # Requires ci job to pass first to ensure code quality
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
+    needs: ci
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CI: true
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
+          fetch-depth: 0
+
+      - name: Use Node.js with the npmjs.org registry
+        uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+      - name: Clean
+        run: npm run clean
+      - name: Build
+        run: npm run build
+      - name: Verify build artifact
+        run: |
+          if [ ! -f dist/extension.vsix ]; then
+            echo "Error: dist/extension.vsix not found after build"
+            exit 1
+          fi
+          echo "Build artifact verified: $(ls -lh dist/extension.vsix)"
+      - name: Extract version from tag
+        id: tag_version
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            TAG="${{ inputs.tag }}"
+            if [ -z "$TAG" ]; then
+              # If no tag provided, get the latest tag
+              TAG=$(git describe --tags --abbrev=0)
+            fi
+            VERSION=${TAG#v}
+          else
+            VERSION=${GITHUB_REF#refs/tags/v}
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "TAG=v$VERSION" >> $GITHUB_OUTPUT
+      - name: Extract changelog for release
+        id: changelog
+        run: |
+          VERSION="${{ steps.tag_version.outputs.VERSION }}"
+          if [ -f CHANGELOG.md ]; then
+            # Extract the changelog section for this version
+            # Find the line with ## [VERSION] and extract until the next ## [ line
+            # Escape special characters in version for regex matching
+            ESCAPED_VERSION=$(printf '%s\n' "$VERSION" | sed 's/[[\.*^$()+?{|]/\\&/g')
+            awk -v version="$ESCAPED_VERSION" '
+              BEGIN { found=0 }
+              /^## \[/ && found { exit }
+              /^## \[/ && $0 ~ "\\[" version "\\]" { found=1; next }
+              found { print }
+            ' CHANGELOG.md > release_notes.txt || true
+            if [ -s release_notes.txt ]; then
+              echo "notes<<EOF" >> $GITHUB_OUTPUT
+              cat release_notes.txt >> $GITHUB_OUTPUT
+              echo "EOF" >> $GITHUB_OUTPUT
+            else
+              echo "notes=No changelog entry found for version $VERSION" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "notes=Changelog file not found" >> $GITHUB_OUTPUT
+          fi
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/extension.vsix
+          tag_name: ${{ steps.tag_version.outputs.TAG }}
+          name: Release ${{ steps.tag_version.outputs.VERSION }}
+          body: |
+            ${{ steps.changelog.outputs.notes }}
+            
+            **View full changelog**: [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/${{ steps.tag_version.outputs.TAG }}/CHANGELOG.md)
+          draft: false
+          prerelease: false
+          fail_on_unmatched_files: true

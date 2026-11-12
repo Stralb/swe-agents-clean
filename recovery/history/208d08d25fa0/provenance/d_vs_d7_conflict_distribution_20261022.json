@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "date_utc": "2026-10-22",
+  "status": "SOURCE_DIFFERENCE_TABLE_CONSISTENT_CANONICAL_LABELS_UNRESOLVED",
+  "provenance": {
+    "source": "provenance/d_vs_d7_label_differences.csv",
+    "source_git_blob_sha1": "93761f8742be9e6171229d60f9498ced8ee3c555",
+    "rows": 43,
+    "original_D_and_D7_unredacted_source_files_replayed": false
+  },
+  "counts": {
+    "unique_changed_roots": 43,
+    "change_in_both_route_and_tier": 1,
+    "change_only_in_tier": 42,
+    "all_dispositions_unresolved": 43,
+    "source_incomplete_to_d7_numbered_tier": 5,
+    "source_numbered_tier_to_d7_incomplete": 12,
+    "route_change": [
+      "CROOT-00649-01: M/T1 -> H/NA"
+    ]
+  },
+  "route_transitions": {
+    "M->M": 42,
+    "M->H": 1
+  },
+  "tier_transition_counts": {
+    "T4->INCOMPLETE": 6,
+    "T1->T3": 6,
+    "T1->T2": 4,
+    "T3->T4": 5,
+    "T1->NA": 1,
+    "T4->T3": 2,
+    "INCOMPLETE->T4": 2,
+    "T1->T4": 5,
+    "T2->T1": 2,
+    "INCOMPLETE->T2": 1,
+    "T5->INCOMPLETE": 4,
+    "INCOMPLETE->T3": 2,
+    "T2->INCOMPLETE": 2,
+    "T4->T1": 1
+  },
+  "risks": [
+    "Mixed D/D7 tier labels change root-level subtype prevalence and any stratum-specific analysis",
+    "One M-to-H route transition changes the top-level category denominator",
+    "Neither D nor D7 can be selected from this comparison alone"
+  ],
+  "nonclaims": {
+    "adjudication_ledger_authenticated": false,
+    "which_tier_is_correct": false,
+    "corrected_final_label_population_frozen": false,
+    "causal_or_vulnerability_reproduction": false
+  },
+  "action": "Preserve P-001 as a blocking unresolved scientific provenance issue. Require original D adjudication decisions and the transformation code/ledger before choosing canonical labels."
+}

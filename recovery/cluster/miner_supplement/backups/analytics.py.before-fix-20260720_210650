@@ -1,0 +1,1596 @@
+from __future__ import annotations
+
+import json
+from datetime import datetime, timezone
+from typing import Any
+
+import altair as alt
+import pandas as pd
+import streamlit as st
+
+from src.db.database import Database
+
+
+FEATURE_QUERY = """
+WITH case_base AS (
+    SELECT
+        c.id AS case_id,
+        c.pr_id,
+        c.issue_id,
+        r.full_name AS repo,
+        i.url AS issue_url,
+        p.url AS pr_url
+    FROM cases c
+    JOIN repos r ON r.id = c.repo_id
+    JOIN issues i ON i.id = c.issue_id
+    JOIN pull_requests p ON p.id = c.pr_id
+),
+
+latest_runs AS (
+    SELECT sr.*
+    FROM scanner_runs sr
+    JOIN (
+        SELECT
+            case_id,
+            scanner,
+            MAX(id) AS max_id
+        FROM scanner_runs
+        WHERE case_id IS NOT NULL
+        GROUP BY case_id, scanner
+    ) chosen
+      ON chosen.max_id = sr.id
+),
+
+features AS (
+    SELECT
+        ar.case_id,
+        'Artifact region' AS family,
+        ar.region AS feature,
+        'artifact_regions' AS source_table,
+        ar.path AS path,
+        ar.evidence AS evidence,
+        ar.confidence AS confidence,
+        NULL AS scanner,
+        NULL AS status,
+        NULL AS finding_type,
+        NULL AS severity,
+        NULL AS rule_id,
+        ar.mapping_version AS mapping_version,
+        json_object(
+            'path', ar.path,
+            'region', ar.region,
+            'language', ar.language,
+            'generated', ar.generated,
+            'vendor', ar.vendor,
+            'scanner_routes', ar.scanner_routes,
+            'confidence', ar.confidence,
+            'evidence', ar.evidence,
+            'mapping_version', ar.mapping_version
+        ) AS support_json
+    FROM artifact_regions ar
+    WHERE COALESCE(ar.region, '') != ''
+
+    UNION ALL
+
+    SELECT
+        ar.case_id,
+        'Language',
+        ar.language,
+        'artifact_regions',
+        ar.path,
+        ar.evidence,
+        ar.confidence,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        ar.mapping_version,
+        json_object(
+           ', ar.mapping_version
+        ) AS support_json
+    FROM artifact_regions ar
+    WHERE COALESCE(ar.region, '') != ''
+
+    UNION ALL
+
+    SELECT
+        ar.case_id,
+        'Language',
+ 'path', ar.path,
+            'language', ar.language,
+            'region', ar.region,
+            'evidence', ar.evidence
+        )
+    FROM artifact_regions ar
+    WHERE COALESCE(ar.language, '') != ''
+
+    UNION ALL
+
+    SELECT
+        ar.case_id,
+        'Scanner route',
+        CAST(route.value AS TEXT),
+        'artifact_regions.scanner_routes',
+        ar.path,
+        ar.evidence,
+        ar.confidence,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        ar.mapping_version,
+        json_object(
+            'path', ar.path,
+            'route', route.value,
+            'region', ar.region,
+            'evidence', ar.evidence
+        )
+    FROM artifact_regions ar,
+         json_each(COALESCE(ar.scanner_routes, '[]')) route
+    WHERE COALESCE(CAST(route.value AS TEXT), '') != ''
+
+    UNION ALL
+
+    SELECT
+        c.id,
+        'AI cohort',
+        c.ai_cohort,
+        'cases.ai_cohort',
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        c.status,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        json_object(
+            'ai_cohort', c.ai_cohort,
+            'status', c.status,
+            'auto_tags', c.auto_tags
+        )
+    FROM cases c
+    WHERE COALESCE(c.ai_cohort, '') != ''
+
+    UNION ALL
+
+    SELECT
+        c.id,
+        'Automatic tag',
+        CAST(tag.value AS TEXT),
+        'cases.auto_tags',
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        c.status,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        json_object(
+            'tag', tag.value,
+            'status', c.status
+        )
+    FROM cases c,
+         json_each(COALESCE(c.auto_tags, '[]')) tag
+    WHERE COALESCE(CAST(tag.value AS TEXT), '') != ''
+
+    UNION ALL
+
+    SELECT DISTINCT
+        cb.case_id,
+        'Provenance',
+        am.matched_tool,
+        'ai_markers',
+        NULL,
+        am.evidence,
+        am.confidence,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        json_object(
+            'matched_tool', am.matched_tool,
+            'confidence', am.confidence,
+            'evidence', am.evidence
+        )
+    FROM case_base cb
+    JOIN ai_markers am
+      ON am.case_id = cb.case_id
+      OR am.issue_id = cb.issue_id
+      OR am.pr_id = cb.pr_id
+    WHERE COALESCE(am.matched_tool, '') != ''
+
+    UNION ALL
+
+    SELECT
+        cb.case_id,
+        'Issue-PR link',
+        ipl.method,
+        'issue_pr_links',
+        NULL,
+        ipl.evidence,
+        ipl.confidence,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        json_object(
+            'method', ipl.method,
+            'confidence', ipl.confidence,
+            'evidence', ipl.evidence
+        )
+    FROM case_base cb
+    JOIN issue_pr_links ipl
+      ON ipl.issue_id = cb.issue_id
+     AND ipl.pr_id = cb.pr_id
+    WHERE COALESCE(ipl.method, '') != ''
+
+    UNION ALL
+
+    SELECT
+        c.id,
+        'Issue feature',
+        feature.key,
+        'upstream_features.feature_json',
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        json_object(
+            'feature', feature.key,
+            'value', feature.value
+        )
+    FROM cases c
+    JOIN upstream_features uf
+      ON uf.issue_id = c.issue_id,
+         json_each(COALESCE(uf.feature_json, '{}')) feature
+    WHERE (
+        feature.type = 'true'
+        OR (
+            feature.type = 'integer'
+            AND feature.atom = 1
+            AND feature.key LIKE 'has_%'
+        )
+    )
+
+    UNION ALL
+
+    SELECT
+        lr.case_id,
+        'Scanner result',
+        lr.scanner || ' · ' || lr.status,
+        'scanner_runs',
+        NULL,
+        NULL,
+        NULL,
+        lr.scanner,
+        lr.status,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        json_object(
+            'scanner', lr.scanner,
+            'status', lr.status,
+            'started_at', lr.started_at,
+            'finished_at', lr.finished_at,
+            'stdout_chars', LENGTH(COALESCE(lr.stdout, '')),
+            'stderr_chars', LENGTH(COALESCE(lr.stderr, ''))
+        )
+    FROM latest_runs lr
+
+    UNION ALL
+
+    SELECT
+        sf.case_id,
+        'Finding type',
+        sf.finding_type,
+        'scanner_findings',
+        sf.file_path,
+        sf.description,
+        NULL,
+        sf.scanner,
+        NULL,
+        sf.finding_type,
+        sf.severity,
+        sf.rule_id,
+        NULL,
+        json_object(
+            'scanner', sf.scanner,
+            'finding_type', sf.finding_type,
+            'severity', sf.severity,
+            'rule_id', sf.rule_id,
+            'cwe', sf.cwe,
+            'file_path', sf.file_path,
+            'line', sf.line,
+            'description', sf.description,
+            'introduced', sf.introduced
+        )
+    FROM scanner_findings sf
+    WHERE COALESCE(sf.finding_type, '') != ''
+
+    UNION ALL
+
+    SELECT
+        sf.case_id,
+        'Finding rule',
+        sf.scanner || ' · ' || sf.rule_id,
+        'scanner_findings',
+        sf.file_path,
+        sf.description,
+        NULL,
+        sf.scanner,
+        NULL,
+        sf.finding_type,
+        sf.severity,
+        sf.rule_id,
+        NULL,
+        json_object(
+            'scanner', sf.scanner,
+            'rule_id', sf.rule_id,
+            'severity', sf.severity,
+            'file_path', sf.file_path,
+            'line', sf.line,
+            'description', sf.description,
+            'introduced', sf.introduced
+        )
+    FROM scanner_findings sf
+    WHERE COALESCE(sf.rule_id, '') != ''
+
+    UNION ALL
+
+    SELECT
+        c.id,
+        'Manual tag',
+        t.name,
+        'case_tags',
+        NULL,
+        t.description,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        json_object(
+            'tag', t.name,
+            'description', t.description
+        )
+    FROM cases c
+    JOIN case_tags ct ON ct.case_id = c.id
+    JOIN tags t ON t.id = ct.tag_id
+
+    UNION ALL
+
+    SELECT
+        cr.case_id,
+        'Retrieval term',
+        cr.term,
+        'case_retrievals',
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        json_object(
+            'term', cr.term
+        )
+    FROM case_retrievals cr
+    WHERE COALESCE(cr.term, '') != ''
+)
+
+SELECT
+    f.*,
+    cb.repo,
+    cb.issue_url,
+    cb.pr_url
+FROM features f
+JOIN case_base cb ON cb.case_id = f.case_id
+WHERE COALESCE(f.feature, '') != ''
+"""
+
+
+def _rows_to_frame(rows: list[dict[str, Any]]) -> pd.DataFrame:
+    if not rows:
+        return pd.DataFrame()
+
+    frame = pd.DataFrame(rows)
+    frame["case_id"] = pd.to_numeric(
+        frame["case_id"],
+        errors="coerce",
+    ).fillna(0).astype(int)
+
+    frame["feature_key"] = (
+        frame["family"].astype(str)
+        + " → "
+        + frame["feature"].astype(str)
+    )
+
+    return frame
+
+
+def _feature_data(
+    db: Database,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    records = _rows_to_frame(
+        db.query(FEATURE_QUERY)
+    )
+
+    if records.empty:
+        return records, pd.DataFrame()
+
+    introduced_rows = db.query(
+        """
+        SELECT DISTINCT case_id
+        FROM scanner_findings
+        WHERE COALESCE(introduced, 0) = 1
+          AND finding_type IN (
+              'vulnerability',
+              'dependency',
+              'secret'
+          )
+        """
+    )
+
+    introduced_cases = {
+        int(row["case_id"])
+        for row in introduced_rows
+    }
+
+    run_rows = db.query(
+        """
+        SELECT DISTINCT case_id
+        FROM scanner_runs
+        WHERE case_id IS NOT NULL
+        """
+    )
+
+    scanned_cases = {
+        int(row["case_id"])
+        for row in run_rows
+    }
+
+    summary_rows: list[dict[str, Any]] = []
+
+    for (family, feature), group in records.groupby(
+        ["family", "feature"],
+        dropna=False,
+    ):
+        case_ids = {
+            int(value)
+            for value in group["case_id"].tolist()
+        }
+
+        summary_rows.append(
+            {
+                "family": str(family),
+                "feature": str(feature),
+                "feature_key": (
+                    str(family)
+                    + " → "
+                    + str(feature)
+                ),
+                "cases": len(case_ids),
+                "repositories": int(
+                    group["repo"].nunique()
+                ),
+                "supporting_records": len(group),
+                "introduced_cases": len(
+                    case_ids.intersection(
+                        introduced_cases
+                    )
+                ),
+                "scanner_coverage_pct": round(
+                    (
+                        len(
+                            case_ids.intersection(
+                                scanned_cases
+                            )
+                        )
+                        / len(case_ids)
+                        * 100
+                    )
+                    if case_ids
+                    else 0.0,
+                    2,
+                ),
+            }
+        )
+
+    summary = pd.DataFrame(summary_rows)
+
+    return records, summary
+
+
+def _event_feature_key(
+    event: Any,
+) -> str | None:
+    if event is None:
+        return None
+
+    try:
+        selection = event.selection
+    except Exception:
+        try:
+            selection = event.get("selection", {})
+        except Exception:
+            return None
+
+    if hasattr(selection, "to_dict"):
+        try:
+            selection = selection.to_dict()
+        except Exception:
+            pass
+
+    if not isinstance(selection, dict):
+        try:
+            selection = dict(selection)
+        except Exception:
+            return None
+
+    picked = selection.get("feature_pick")
+
+    if isinstance(picked, list) and picked:
+        first = picked[0]
+
+        if isinstance(first, dict):
+            return first.get("feature_key")
+
+    if isinstance(picked, dict):
+        if picked.get("feature_key"):
+            return str(picked["feature_key"])
+
+        values = picked.get("values")
+
+        if isinstance(values, list) and values:
+            first = values[0]
+
+            if isinstance(first, dict):
+                return first.get("feature_key")
+
+    return None
+
+
+def _open_case(
+    case_id: int,
+) -> None:
+    st.session_state["selected_case_id"] = int(
+        case_id
+    )
+    st.session_state["nav"] = "Case Review"
+    st.rerun()
+
+
+def _render_feature_map(
+    db: Database,
+) -> None:
+    records, summary = _feature_data(db)
+
+    if records.empty or summary.empty:
+        st.info(
+            "No persisted feature data is available."
+        )
+        return
+
+    families = sorted(
+        summary["family"].dropna().unique().tolist()
+    )
+
+    family_support = (
+        records.groupby("family")["case_id"]
+        .nunique()
+        .sort_values(ascending=False)
+    )
+
+    default_families = (
+        family_support.head(7).index.tolist()
+    )
+
+    selected_families = st.multiselect(
+        "Feature families",
+        options=families,
+        default=default_families,
+        help=(
+            "Every value is derived from current "
+            "database rows."
+        ),
+    )
+
+    visible = summary[
+        summary["family"].isin(selected_families)
+    ].copy()
+
+    if visible.empty:
+        st.info(
+            "No features match the selected families."
+        )
+        return
+
+    y_options = {
+        "Repository spread": "repositories",
+        "Scanner coverage %": "scanner_coverage_pct",
+        "Introduced evidence cases": (
+            "introduced_cases"
+        ),
+    }
+
+    y_label = st.selectbox(
+        "Vertical axis",
+        options=list(y_options),
+        index=0,
+    )
+
+    y_column = y_options[y_label]
+
+    selection = alt.selection_point(
+        name="feature_pick",
+        fields=["feature_key"],
+        on="click",
+        clear="dblclick",
+    )
+
+    chart = (
+        alt.Chart(visible)
+        .mark_circle(opacity=0.78)
+        .encode(
+            x=alt.X(
+                "cases:Q",
+                title="Distinct cases",
+            ),
+            y=alt.Y(
+                f"{y_column}:Q",
+                title=y_label,
+            ),
+            size=alt.Size(
+                "supporting_records:Q",
+                title="Supporting rows",
+                scale=alt.Scale(
+                    range=[110, 2200]
+                ),
+            ),
+            color=alt.Color(
+                "family:N",
+                title="Feature family",
+            ),
+            opacity=alt.condition(
+                selection,
+                alt.value(1.0),
+                alt.value(0.68),
+            ),
+            tooltip=[
+                alt.Tooltip(
+                    "family:N",
+                    title="Family",
+                ),
+                alt.Tooltip(
+                    "feature:N",
+                    title="Feature",
+                ),
+                alt.Tooltip(
+                    "cases:Q",
+                    title="Cases",
+                ),
+                alt.Tooltip(
+                    "repositories:Q",
+                    title="Repositories",
+                ),
+                alt.Tooltip(
+                    "supporting_records:Q",
+                    title="Supporting rows",
+                ),
+                alt.Tooltip(
+                    "scanner_coverage_pct:Q",
+                    title="Scanner coverage %",
+                ),
+                alt.Tooltip(
+                    "introduced_cases:Q",
+                    title="Introduced cases",
+                ),
+            ],
+        )
+        .add_params(selection)
+        .properties(
+            height=440,
+            title=(
+                "Live feature map — click a bubble "
+                "to inspect its source rows"
+            ),
+        )
+        .interactive()
+    )
+
+    event = st.altair_chart(
+        chart,
+        use_container_width=True,
+        on_select="rerun",
+        selection_mode="feature_pick",
+        key="analytics_feature_bubbles",
+    )
+
+    event_key = _event_feature_key(event)
+
+    if event_key:
+        st.session_state[
+            "analytics_selected_feature"
+        ] = event_key
+
+    feature_options = sorted(
+        visible["feature_key"].tolist()
+    )
+
+    stored = st.session_state.get(
+        "analytics_selected_feature"
+    )
+
+    if stored not in feature_options:
+        stored = feature_options[0]
+
+    selected_key = st.selectbox(
+        "Inspect feature",
+        options=feature_options,
+        index=feature_options.index(stored),
+        key="analytics_feature_selector",
+    )
+
+    st.session_state[
+        "analytics_selected_feature"
+    ] = selected_key
+
+    selected_rows = records[
+        records["feature_key"] == selected_key
+    ].copy()
+
+    family, feature = selected_key.split(
+        " → ",
+        1,
+    )
+
+    st.markdown(
+        f"### `{family}` → `{feature}`"
+    )
+
+    m1, m2, m3 = st.columns(3)
+
+    m1.metric(
+        "Cases",
+        int(selected_rows["case_id"].nunique()),
+    )
+
+    m2.metric(
+        "Repositories",
+        int(selected_rows["repo"].nunique()),
+    )
+
+    m3.metric(
+        "Supporting database rows",
+        len(selected_rows),
+    )
+
+    display_columns = [
+        "case_id",
+        "repo",
+        "source_table",
+        "path",
+        "evidence",
+        "confidence",
+        "scanner",
+        "status",
+        "finding_type",
+        "severity",
+        "rule_id",
+        "mapping_version",
+        "issue_url",
+        "pr_url",
+        "support_json",
+    ]
+
+    display_columns = [
+        column
+        for column in display_columns
+        if column in selected_rows.columns
+    ]
+
+    st.dataframe(
+        selected_rows[display_columns]
+        .sort_values(
+            ["case_id", "source_table"]
+        ),
+        hide_index=True,
+        use_container_width=True,
+        column_config={
+            "issue_url": st.column_config.LinkColumn(
+                "Issue"
+            ),
+            "pr_url": st.column_config.LinkColumn(
+                "PR"
+            ),
+        },
+    )
+
+    case_options = sorted(
+        selected_rows["case_id"].unique().tolist()
+    )
+
+    if case_options:
+        chosen_case = st.selectbox(
+            "Open one supporting case",
+            options=case_options,
+            key="analytics_feature_case",
+        )
+
+        if st.button(
+            "Open in Case Review",
+            key="analytics_open_feature_case",
+        ):
+            _open_case(int(chosen_case))
+
+    with st.expander(
+        "Case × feature heatmap",
+        expanded=True,
+    ):
+        top_limit = st.slider(
+            "Maximum feature columns",
+            min_value=10,
+            max_value=80,
+            value=35,
+            step=5,
+        )
+
+        top_keys = (
+            visible.sort_values(
+                [
+                    "cases",
+                    "supporting_records",
+                ],
+                ascending=False,
+            )
+            .head(top_limit)["feature_key"]
+            .tolist()
+        )
+
+        matrix_rows = records[
+            records["feature_key"].isin(top_keys)
+        ].copy()
+
+        matrix_rows["case_label"] = (
+            "#"
+            + matrix_rows["case_id"].astype(str)
+            + " · "
+            + matrix_rows["repo"].astype(str)
+        )
+
+        matrix = (
+            matrix_rows.groupby(
+                [
+                    "case_label",
+                    "feature_key",
+                    "family",
+                ]
+            )
+            .size()
+            .reset_index(name="support")
+        )
+
+        heatmap = (
+            alt.Chart(matrix)
+            .mark_rect()
+            .encode(
+                x=alt.X(
+                    "feature_key:N",
+                    title="Observed feature",
+                    sort=top_keys,
+                    axis=alt.Axis(
+                        labelAngle=-55,
+                        labelLimit=180,
+                    ),
+                ),
+                y=alt.Y(
+                    "case_label:N",
+                    title="Case",
+                    sort=alt.SortField(
+                        field="case_label"
+                    ),
+                ),
+                color=alt.Color(
+                    "support:Q",
+                    title="Supporting rows",
+                ),
+                tooltip=[
+                    alt.Tooltip(
+                        "case_label:N",
+                        title="Case",
+                    ),
+                    alt.Tooltip(
+                        "family:N",
+                        title="Family",
+                    ),
+                    alt.Tooltip(
+                        "feature_key:N",
+                        title="Feature",
+                    ),
+                    alt.Tooltip(
+                        "support:Q",
+                        title="Supporting rows",
+                    ),
+                ],
+            )
+            .properties(
+                height=max(
+                    320,
+                    int(
+                        matrix[
+                            "case_label"
+                        ].nunique()
+                    )
+                    * 18,
+                )
+            )
+        )
+
+        st.altair_chart(
+            heatmap,
+            use_container_width=True,
+        )
+
+
+def _latest_run_frame(
+    db: Database,
+) -> pd.DataFrame:
+    rows = db.query(
+        """
+        SELECT
+            sr.case_id,
+            r.full_name AS repo,
+            sr.scanner,
+            sr.status,
+            sr.started_at,
+            sr.finished_at,
+            LENGTH(COALESCE(sr.stdout, ''))
+                AS stdout_chars,
+            LENGTH(COALESCE(sr.stderr, ''))
+                AS stderr_chars
+        FROM scanner_runs sr
+        JOIN (
+            SELECT
+                case_id,
+                scanner,
+                MAX(id) AS max_id
+            FROM scanner_runs
+            WHERE case_id IS NOT NULL
+            GROUP BY case_id, scanner
+        ) chosen
+          ON chosen.max_id = sr.id
+        JOIN cases c ON c.id = sr.case_id
+        JOIN repos r ON r.id = c.repo_id
+        ORDER BY sr.case_id, sr.scanner
+        """
+    )
+
+    return pd.DataFrame(rows)
+
+
+def _render_evidence(
+    db: Database,
+) -> None:
+    latest = _latest_run_frame(db)
+
+    if latest.empty:
+        st.info("No scanner runs are available.")
+        return
+
+    st.subheader("Scanner execution matrix")
+
+    latest["case_label"] = (
+        "#"
+        + latest["case_id"].astype(str)
+        + " · "
+        + latest["repo"].astype(str)
+    )
+
+    status_heatmap = (
+        alt.Chart(latest)
+        .mark_rect()
+        .encode(
+            x=alt.X(
+                "scanner:N",
+                title="Scanner",
+                axis=alt.Axis(labelAngle=-45),
+            ),
+            y=alt.Y(
+                "case_label:N",
+                title="Case",
+            ),
+            color=alt.Color(
+                "status:N",
+                title="Latest status",
+            ),
+            tooltip=[
+                "case_label:N",
+                "scanner:N",
+                "status:N",
+                "started_at:N",
+                "finished_at:N",
+                "stdout_chars:Q",
+                "stderr_chars:Q",
+            ],
+        )
+        .properties(
+            height=max(
+                360,
+                int(latest["case_id"].nunique())
+                * 18,
+            )
+        )
+    )
+
+    st.altair_chart(
+        status_heatmap,
+        use_container_width=True,
+    )
+
+    summary = (
+        latest.groupby(
+            ["scanner", "status"]
+        )["case_id"]
+        .nunique()
+        .reset_index(name="cases")
+        .pivot(
+            index="scanner",
+            columns="status",
+            values="cases",
+        )
+        .fillna(0)
+        .reset_index()
+    )
+
+    st.dataframe(
+        summary,
+        hide_index=True,
+        use_container_width=True,
+    )
+
+    findings = pd.DataFrame(
+        db.query(
+            """
+            SELECT
+                sf.case_id,
+                r.full_name AS repo,
+                sf.scanner,
+                sf.finding_type,
+                sf.severity,
+                sf.rule_id,
+                sf.cwe,
+                sf.file_path,
+                sf.line,
+                sf.description,
+                sf.introduced,
+                i.url AS issue_url,
+                p.url AS pr_url
+            FROM scanner_findings sf
+            JOIN cases c ON c.id = sf.case_id
+            JOIN repos r ON r.id = c.repo_id
+            JOIN issues i ON i.id = c.issue_id
+            JOIN pull_requests p ON p.id = c.pr_id
+            WHERE COALESCE(sf.introduced, 0) = 1
+              AND sf.finding_type IN (
+                  'vulnerability',
+                  'dependency',
+                  'secret'
+              )
+            ORDER BY sf.case_id, sf.scanner
+            """
+        )
+    )
+
+    st.subheader("Introduced study-target evidence")
+
+    if findings.empty:
+        st.warning(
+            "No introduced vulnerability, dependency, "
+            "or secret findings are currently stored."
+        )
+    else:
+        matrix = (
+            findings.groupby(
+                ["case_id", "repo", "scanner"]
+            )
+            .size()
+            .reset_index(name="findings")
+        )
+
+        matrix["case_label"] = (
+            "#"
+            + matrix["case_id"].astype(str)
+            + " · "
+            + matrix["repo"].astype(str)
+        )
+
+        finding_heatmap = (
+            alt.Chart(matrix)
+            .mark_rect()
+            .encode(
+                x=alt.X(
+                    "scanner:N",
+                    title="Scanner",
+                ),
+                y=alt.Y(
+                    "case_label:N",
+                    title="Case",
+                ),
+                color=alt.Color(
+                    "findings:Q",
+                    title="Introduced findings",
+                ),
+                tooltip=[
+                    "case_label:N",
+                    "scanner:N",
+                    "findings:Q",
+                ],
+            )
+        )
+
+        st.altair_chart(
+            finding_heatmap,
+            use_container_width=True,
+        )
+
+        st.dataframe(
+            findings,
+            hide_index=True,
+            use_container_width=True,
+            column_config={
+                "issue_url": (
+                    st.column_config.LinkColumn(
+                        "Issue"
+                    )
+                ),
+                "pr_url": (
+                    st.column_config.LinkColumn(
+                        "PR"
+                    )
+                ),
+            },
+        )
+
+    st.subheader("Raw evidence verification")
+
+    case_options = sorted(
+        latest["case_id"].unique().tolist()
+    )
+
+    selected_case = st.selectbox(
+        "Case",
+        options=case_options,
+        key="analytics_evidence_case",
+    )
+
+    scanner_options = sorted(
+        latest[
+            latest["case_id"] == selected_case
+        ]["scanner"].unique().tolist()
+    )
+
+    selected_scanner = st.selectbox(
+        "Scanner",
+        options=scanner_options,
+        key="analytics_evidence_scanner",
+    )
+
+    raw = db.one(
+        """
+        SELECT
+            scanner,
+            status,
+            started_at,
+            finished_at,
+            stdout,
+            stderr
+        FROM scanner_runs
+        WHERE case_id=?
+          AND scanner=?
+        ORDER BY id DESC
+        LIMIT 1
+        """,
+        (
+            int(selected_case),
+            selected_scanner,
+        ),
+    )
+
+    if raw:
+        c1, c2, c3 = st.columns(3)
+
+        c1.metric(
+            "Status",
+            raw.get("status") or "",
+        )
+
+        c2.metric(
+            "stdout characters",
+            len(raw.get("stdout") or ""),
+        )
+
+        c3.metric(
+            "stderr characters",
+            len(raw.get("stderr") or ""),
+        )
+
+        with st.expander(
+            "stdout / stored structured evidence",
+            expanded=False,
+        ):
+            stdout = raw.get("stdout") or ""
+
+            try:
+                st.json(json.loads(stdout))
+            except Exception:
+                st.code(stdout or "(empty)")
+
+        with st.expander(
+            "stderr",
+            expanded=False,
+        ):
+            st.code(
+                raw.get("stderr") or "(empty)"
+            )
+
+    if st.button(
+        "Open selected case in Case Review",
+        key="analytics_open_evidence_case",
+    ):
+        _open_case(int(selected_case))
+
+
+def _parse_time(
+    value: Any,
+) -> datetime | None:
+    if not value:
+        return None
+
+    text = str(value).replace("Z", "+00:00")
+
+    try:
+        parsed = datetime.fromisoformat(text)
+    except ValueError:
+        return None
+
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(
+            tzinfo=timezone.utc
+        )
+
+    return parsed.astimezone(timezone.utc)
+
+
+def _render_live_operations_content(
+    db: Database,
+) -> None:
+    st.caption(
+        "Live data refreshes every 10 seconds."
+    )
+
+    job_rows = pd.DataFrame(
+        db.query(
+            """
+            SELECT
+                job_type,
+                status,
+                COUNT(*) AS jobs
+            FROM scanner_jobs
+            GROUP BY job_type, status
+            ORDER BY job_type, status
+            """
+        )
+    )
+
+    if not job_rows.empty:
+        job_pivot = (
+            job_rows.pivot(
+                index="job_type",
+                columns="status",
+                values="jobs",
+            )
+            .fillna(0)
+            .reset_index()
+        )
+
+        st.subheader("Job state")
+
+        st.dataframe(
+            job_pivot,
+            hide_index=True,
+            use_container_width=True,
+        )
+
+    running = pd.DataFrame(
+        db.query(
+            """
+            SELECT
+                sj.id,
+                sj.case_id,
+                r.full_name AS repo,
+                sj.job_type,
+                sj.status,
+                sj.attempts,
+                sj.worker_id,
+                sj.route_reason,
+                sj.started_at
+            FROM scanner_jobs sj
+            JOIN cases c ON c.id = sj.case_id
+            JOIN repos r ON r.id = c.repo_id
+            WHERE sj.status IN (
+                'pending',
+                'retry',
+                'running'
+            )
+            ORDER BY
+                CASE sj.status
+                    WHEN 'running' THEN 0
+                    WHEN 'retry' THEN 1
+                    ELSE 2
+                END,
+                sj.priority DESC,
+                sj.created_at
+            """
+        )
+    )
+
+    st.subheader("Active work")
+
+    if running.empty:
+        st.info(
+            "No pending, retrying or running jobs."
+        )
+    else:
+        st.dataframe(
+            running,
+            hide_index=True,
+            use_container_width=True,
+        )
+
+    heartbeat_rows = db.query(
+        """
+        SELECT
+            worker_id,
+            worker_type,
+            mode,
+            status,
+            detail,
+            updated_at
+        FROM worker_heartbeats
+        ORDER BY updated_at DESC
+        """
+    )
+
+    now = datetime.now(timezone.utc)
+
+    for row in heartbeat_rows:
+        parsed = _parse_time(row.get("updated_at"))
+
+        row["age_seconds"] = (
+            round(
+                (now - parsed).total_seconds(),
+                1,
+            )
+            if parsed
+            else None
+        )
+
+    st.subheader("Workers")
+
+    if heartbeat_rows:
+        st.dataframe(
+            pd.DataFrame(heartbeat_rows),
+            hide_index=True,
+            use_container_width=True,
+        )
+    else:
+        st.info("No worker heartbeats recorded.")
+
+    errors = pd.DataFrame(
+        db.query(
+            """
+            SELECT
+                sj.case_id,
+                r.full_name AS repo,
+                sj.job_type,
+                sj.status,
+                sj.attempts,
+                sj.last_error,
+                sj.started_at,
+                sj.finished_at
+            FROM scanner_jobs sj
+            JOIN cases c ON c.id = sj.case_id
+            JOIN repos r ON r.id = c.repo_id
+            WHERE sj.status IN (
+                'error',
+                'timeout',
+                'retry'
+            )
+               OR COALESCE(
+                    sj.last_error,
+                    ''
+                  ) NOT IN (
+                    '',
+                    'ok'
+                  )
+            ORDER BY
+                COALESCE(
+                    sj.finished_at,
+                    sj.started_at,
+                    sj.created_at
+                ) DESC
+            LIMIT 100
+            """
+        )
+    )
+
+    st.subheader("Recent errors and retries")
+
+    if errors.empty:
+        st.success(
+            "No current job errors or retries."
+        )
+    else:
+        st.dataframe(
+            errors,
+            hide_index=True,
+            use_container_width=True,
+        )
+
+    recent_runs = pd.DataFrame(
+        db.query(
+            """
+            SELECT
+                sr.case_id,
+                r.full_name AS repo,
+                sr.scanner,
+                sr.status,
+                sr.started_at,
+                sr.finished_at,
+                LENGTH(COALESCE(sr.stdout, ''))
+                    AS stdout_chars,
+                LENGTH(COALESCE(sr.stderr, ''))
+                    AS stderr_chars
+            FROM scanner_runs sr
+            JOIN cases c ON c.id = sr.case_id
+            JOIN repos r ON r.id = c.repo_id
+            ORDER BY sr.id DESC
+            LIMIT 150
+            """
+        )
+    )
+
+    st.subheader("Latest scanner activity")
+
+    st.dataframe(
+        recent_runs,
+        hide_index=True,
+        use_container_width=True,
+    )
+
+    throughput = pd.DataFrame(
+        db.query(
+            """
+            SELECT
+                substr(finished_at, 1, 16)
+                    AS minute,
+                scanner,
+                COUNT(*) AS completed
+            FROM scanner_runs
+            WHERE finished_at IS NOT NULL
+            GROUP BY
+                substr(finished_at, 1, 16),
+                scanner
+            ORDER BY minute
+            """
+        )
+    )
+
+    if not throughput.empty:
+        activity_chart = (
+            alt.Chart(throughput)
+            .mark_line(point=True)
+            .encode(
+                x=alt.X(
+                    "minute:N",
+                    title="Finish minute",
+                    axis=alt.Axis(
+                        labelAngle=-45,
+                        labelLimit=100,
+                    ),
+                ),
+                y=alt.Y(
+                    "completed:Q",
+                    title="Completed runs",
+                ),
+                color=alt.Color(
+                    "scanner:N",
+                    title="Scanner",
+                ),
+                tooltip=[
+                    "minute:N",
+                    "scanner:N",
+                    "completed:Q",
+                ],
+            )
+            .properties(
+                height=320,
+                title="Scanner completion activity",
+            )
+        )
+
+        st.altair_chart(
+            activity_chart,
+            use_container_width=True,
+        )
+
+
+if hasattr(st, "fragment"):
+    @st.fragment(run_every="10s")
+    def _render_live_operations(
+        db_path: str,
+    ) -> None:
+        _render_live_operations_content(
+            Database(db_path)
+        )
+else:
+    def _render_live_operations(
+        db_path: str,
+    ) -> None:
+        _render_live_operations_content(
+            Database(db_path)
+        )
+
+
+def render_analytics(settings) -> None:
+    st.title("Live Mining Analytics")
+
+    st.caption(
+        "All feature values, classifications, scanner "
+        "states and evidence are loaded from the active "
+        "database. Select any feature to inspect the "
+        "records that created it."
+    )
+
+    tab_map, tab_evidence, tab_live = st.tabs(
+        [
+            "Data Map",
+            "Evidence",
+            "Live Operations",
+        ]
+    )
+
+    with tab_map:
+        _render_feature_map(
+            Database(settings.db_path)
+        )
+
+    with tab_evidence:
+        _render_evidence(
+            Database(settings.db_path)
+        )
+
+    with tab_live:
+        _render_live_operations(
+            str(settings.db_path)
+        )

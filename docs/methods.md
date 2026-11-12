@@ -38,4 +38,4 @@ The other seven primary comparisons do not reach p < 0.05 in the original paired
 
 The comparisons are observational. Task complexity, repository conventions, uneven scanner opportunity, and other unmeasured differences may affect the results. The tests do not establish that issue wording caused any finding or that an issue edit would prevent it.
 
-Scanner-positive refers to the study's recorded warning criterion. Neither exploitability nor malicious intent follows from this label. The input records and scanner baselines need separate verification before publication-level claims.
+Scanner-positive refers to the study's recorded warning criterion. Neither exploitability nor malicious intent follows from this label. The input records and scanner baselines need separate verification before release-level claims.

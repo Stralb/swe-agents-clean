@@ -1,0 +1,19 @@
+{
+  "generated_on": "2026-10-20",
+  "archive_count": 7,
+  "total_source_files": 1075,
+  "source_files_bytes": 11926471,
+  "source_groups": {
+    "MINER_AUG17": 210,
+    "MINER_AUG19": 216,
+    "MINER_LIVE": 518,
+    "DISCOVERY_V21": 14,
+    "DISCOVERY_V22": 10,
+    "DECISION_STEP7": 3,
+    "OCTOBER_JOBS": 104
+  },
+  "status": "SNAPSHOT_ONLY_UNREVIEWED_NOT_ACTIVE_CODE",
+  "no_cluster_operations": true,
+  "excluded_artifact_policy": "Archived bulk data/logs excluded from Git source staging; outer archive SHA preserved",
+  "note": "Only source files are staged, not original research databases, scanner observations, results, secrets or outputs."
+}

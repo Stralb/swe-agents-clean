@@ -1,0 +1,50 @@
+{
+  "state": "REVIEW_RELEASE_COMPLETE_REVIEWER_FILES_REMOTE_VERIFIED_DATABASE_UPLOAD_IN_PROGRESS",
+  "release_directory": "/home-mscluster/astrauss/research_artifacts/ARNO_REVIEW_RELEASE_20261111_v1",
+  "database": "ARNO_RESEARCH_MASTER_REVIEW.sqlite",
+  "original_master_unmodified": true,
+  "input_copy_sha256_verified": "a2c6d12a4f7dce0c9e897c59fcb81afe52feb3ec2d849fdde18e3a9750365e17",
+  "original_table_schemas_preserved": 127,
+  "review_views": 18,
+  "indexed_artifact_records": 670,
+  "validation": {
+    "cases": 3809,
+    "original122_annotations": 122,
+    "annotation_events": 494,
+    "final_new70_findings": 237,
+    "producing_changes": 455,
+    "final_roots": 342,
+    "matched_pairs": 190,
+    "runs": 68,
+    "archived_original_owp_runs": 40,
+    "later_supplementary_runs": 28,
+    "patches": 61,
+    "scans": 68,
+    "documented_current_claims": 20,
+    "status_history_records": 44
+  },
+  "policy": "Explicit corrections can supersede matched claims; dates alone confer no authority. Original archived experiments remain distinct from later tests. No original labels or experiments overwritten.",
+  "limits": "Original row counts recorded from the integrity-checked, SHA-verified snapshot certificate; research/view counts and original schemas checked in the review copy. This does not establish missing historical evidence, independent human review or full experiment reproduction.",
+  "jobs": {
+    "final_database_checksum": "84748",
+    "query_and_extraction_checks": "84751",
+    "small_csv_exports": "84755"
+  },
+  "huggingface_upload_started": true,
+  "database_sha256": "b9734456db5b6c1abb1ef72ec146eb4db2cacbb75115b64cfae34b95223d5011",
+  "database_bytes": 42187345920,
+  "completed_checks": {
+    "descriptive_queries_executed": 16,
+    "artifact_extraction_samples": 10,
+    "artifact_extraction_samples_passed": 10,
+    "csv_exports_created": 12
+  },
+  "huggingface": {
+    "private_dataset": "Stralb/malicious-issue-miner-data",
+    "remote_prefix": "research/arno-review-20261111-v1",
+    "reviewer_files_verified": 38,
+    "reviewer_files_revision": "f37aa902fd48c8b2b4e5ed489c7b5f9beae32b48",
+    "database_upload_status": "IN_PROGRESS",
+    "upload_job": "85161"
+  }
+}

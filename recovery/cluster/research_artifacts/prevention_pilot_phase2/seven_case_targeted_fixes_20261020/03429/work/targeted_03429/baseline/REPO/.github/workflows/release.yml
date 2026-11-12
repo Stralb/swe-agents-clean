@@ -1,0 +1,84 @@
+name: Release
+
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Existing release tag to publish, for release recovery runs'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.release.tag_name || inputs.release_tag || github.ref }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org/'
+      - name: Validate release target
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          REF_TYPE: ${{ github.ref_type }}
+          RELEASE_TAG_FROM_EVENT: ${{ github.event.release.tag_name }}
+          RELEASE_TAG_FROM_INPUT: ${{ inputs.release_tag }}
+        run: |
+          PACKAGE_NAME="$(node -p "require('./package.json').name")"
+          VERSION="$(node -p "require('./package.json').version")"
+          EXPECTED_TAG="v${VERSION}"
+
+          if [ "${EVENT_NAME}" = "release" ]; then
+            RELEASE_TAG="${RELEASE_TAG_FROM_EVENT}"
+          elif [ -n "${RELEASE_TAG_FROM_INPUT}" ]; then
+            RELEASE_TAG="${RELEASE_TAG_FROM_INPUT}"
+          elif [ "${REF_TYPE}" = "tag" ]; then
+            RELEASE_TAG="${GITHUB_REF_NAME}"
+          else
+            echo "::error::Manual release workflow runs must be started from tag ${EXPECTED_TAG} or provide release_tag=${EXPECTED_TAG}."
+            exit 1
+          fi
+
+          if [ "${RELEASE_TAG}" != "${EXPECTED_TAG}" ]; then
+            echo "::error::Release tag ${RELEASE_TAG} does not match package version ${VERSION}; expected ${EXPECTED_TAG}."
+            exit 1
+          fi
+
+          git fetch --force --tags origin
+          git fetch origin main
+          TAG_SHA="$(git rev-list -n 1 "${RELEASE_TAG}")"
+          HEAD_SHA="$(git rev-parse HEAD)"
+          if [ "${HEAD_SHA}" != "${TAG_SHA}" ]; then
+            echo "::error::Release workflow checked out ${HEAD_SHA}, but ${RELEASE_TAG} resolves to ${TAG_SHA}."
+            exit 1
+          fi
+
+          MAIN_SHA="$(git rev-parse origin/main)"
+          if [ "${TAG_SHA}" != "${MAIN_SHA}" ] && ! git diff --quiet "${TAG_SHA}" "${MAIN_SHA}" -- package.json package-lock.json tsconfig.json README.md LICENSE src; then
+            echo "::error::Release tag ${RELEASE_TAG} (${TAG_SHA}) must point at origin/main (${MAIN_SHA}) or have identical package contents."
+            exit 1
+          fi
+
+          if npm view "${PACKAGE_NAME}@${VERSION}" version >/dev/null 2>&1; then
+            echo "::error::${PACKAGE_NAME}@${VERSION} is already published to npm."
+            exit 1
+          fi
+      - run: npm ci
+      - run: npm run check:package-lock
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      - run: npm audit --omit=dev --audit-level=moderate
+      - run: npm pack --dry-run
+      - run: npm publish --access public --provenance

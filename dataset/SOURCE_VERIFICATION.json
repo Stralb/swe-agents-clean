@@ -1,0 +1,162 @@
+{
+  "state": "COMPLETE",
+  "github_revision_checked": "18546a49a1929bf6413f48a6afa79b05c265b256",
+  "source_files_checked": 4372,
+  "source_files_matched": 4372,
+  "live_miner_and_supplement_files_checked": 748,
+  "bytes_hashed": 92175363,
+  "changed": [],
+  "missing": [],
+  "additional_current_miner_candidates": [
+    {
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/.streamlit/config.toml",
+      "bytes": 155,
+      "sha256": "de1db2837f7b4801c6c3143f4be8d173fbb5b6ba40b5565c81daf433ca72276d"
+    },
+    {
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/backups/agentic-js-20260720_110221/config.yml",
+      "bytes": 6468,
+      "sha256": "5a3cf83cf12e666fbc7c03556544b0aa395137003f8819c77405b03edd317a90"
+    },
+    {
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/backups/architecture-audit-20260721_174347/config.agentic_js.yml",
+      "bytes": 4272,
+      "sha256": "661203514e65ae1cd317409c73aa94904a3f3ca98e16c534aac69798beedc1a4"
+    },
+    {
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/backups/architecture-audit-20260721_174347/config.yml",
+      "bytes": 6468,
+      "sha256": "5a3cf83cf12e666fbc7c03556544b0aa395137003f8819c77405b03edd317a90"
+    },
+    {
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/backups/codeql-timeout-empty-baseline-20260722_190149/config.agentic_js.yml",
+      "bytes": 4279,
+      "sha256": "258aefad8a8f5a043ea5a49d78ea79f8054b5e4bfb9eb265b905e925c7c477cd"
+    },
+    {
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/backups/codeql-timeout-empty-baseline-20260722_190149/config.yml",
+      "bytes": 6468,
+      "sha256": "5a3cf83cf12e666fbc7c03556544b0aa395137003f8819c77405b03edd317a90"
+    },
+    {
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/backups/mining-runtime-fix-v2-20260722_163643/config.agentic_js.yml",
+      "bytes": 4278,
+      "sha256": "4dd1da646e1e05f72b1d769ff0ba8003f30d8573c9a60144b71f72da940574f6"
+    },
+    {
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/backups/mining-runtime-seed-window-fix-20260722_163511/config.agentic_js.yml",
+      "bytes": 4278,
+      "sha256": "4dd1da646e1e05f72b1d769ff0ba8003f30d8573c9a60144b71f72da940574f6"
+    },
+    {
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/backups/sqlite-connection-lifecycle-20260723_052647/src/artifacts/profile_store.py",
+      "bytes": 6090,
+      "sha256": "874134de7bd4119f7d0cc9f43cff3ddc80263aa36210e17011e2c11595274e82"
+    },
+    {
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/backups/switch-to-repo-scoped-mining-20260722_152756/config.agentic_js.yml",
+      "bytes": 4272,
+      "sha256": "661203514e65ae1cd317409c73aa94904a3f3ca98e16c534aac69798beedc1a4"
+    },
+    {
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/ui/views/case_review.py",
+      "bytes": 15084,
+      "sha256": "1672912ddd32d917b300b8a3ce44b9945e97a14ccd0f9f9ef89ba2d9187f9a42"
+    }
+  ],
+  "huggingface": {
+    "exists": true,
+    "private": true,
+    "current_revision": "a2e62008dafed9727dea7d73389853e47e9b7cd4",
+    "default_config": "paper_cases",
+    "case_rows": 3809,
+    "positive_cases": 192,
+    "verified_release_revision": "e71e8b39ed56ffb1c2198b9df2384495b8404317",
+    "archived_files_verified": 154
+  },
+  "scope": "All paths in the preserved cluster and supplemental manifests, plus a fresh tracked, untracked and ignored source scan of the live miner, excluding dependency/cache/data directories. Other projects on the cluster are outside this scope.",
+  "additional_miner_candidates_crosswalk": [
+    {
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/.streamlit/config.toml",
+      "bytes": 155,
+      "sha256": "de1db2837f7b4801c6c3143f4be8d173fbb5b6ba40b5565c81daf433ca72276d",
+      "github_blob": "6acc44389e4c4ea640e8743ac858a6eae4cad94c",
+      "preserved_path": "recovery/history/208d08d25fa0/historical/miner/2026-08-17/.streamlit/config.toml"
+    },
+    {
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/backups/agentic-js-20260720_110221/config.yml",
+      "bytes": 6468,
+      "sha256": "5a3cf83cf12e666fbc7c03556544b0aa395137003f8819c77405b03edd317a90",
+      "github_blob": "0634383f8771b5cbabd83e9cb269792a8d42877b",
+      "preserved_path": "recovery/history/208d08d25fa0/historical/miner/2026-10-20-live-export/backups/agentic-js-20260720_110221/config.yml"
+    },
+    {
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/backups/architecture-audit-20260721_174347/config.agentic_js.yml",
+      "bytes": 4272,
+      "sha256": "661203514e65ae1cd317409c73aa94904a3f3ca98e16c534aac69798beedc1a4",
+      "github_blob": "59594f7a0238fac277ea5d83e8ced3f3f2df356e",
+      "preserved_path": "recovery/history/208d08d25fa0/historical/miner/2026-10-20-live-export/backups/architecture-audit-20260721_174347/config.agentic_js.yml"
+    },
+    {
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/backups/architecture-audit-20260721_174347/config.yml",
+      "bytes": 6468,
+      "sha256": "5a3cf83cf12e666fbc7c03556544b0aa395137003f8819c77405b03edd317a90",
+      "github_blob": "0634383f8771b5cbabd83e9cb269792a8d42877b",
+      "preserved_path": "recovery/history/208d08d25fa0/historical/miner/2026-10-20-live-export/backups/agentic-js-20260720_110221/config.yml"
+    },
+    {
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/backups/codeql-timeout-empty-baseline-20260722_190149/config.agentic_js.yml",
+      "bytes": 4279,
+      "sha256": "258aefad8a8f5a043ea5a49d78ea79f8054b5e4bfb9eb265b905e925c7c477cd",
+      "github_blob": "b12f25947319840455c55be5820d61ceadf13327",
+      "preserved_path": "recovery/history/208d08d25fa0/historical/miner/2026-10-20-live-export/backups/codeql-timeout-empty-baseline-20260722_190149/config.agentic_js.yml"
+    },
+    {
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/backups/codeql-timeout-empty-baseline-20260722_190149/config.yml",
+      "bytes": 6468,
+      "sha256": "5a3cf83cf12e666fbc7c03556544b0aa395137003f8819c77405b03edd317a90",
+      "github_blob": "0634383f8771b5cbabd83e9cb269792a8d42877b",
+      "preserved_path": "recovery/history/208d08d25fa0/historical/miner/2026-10-20-live-export/backups/agentic-js-20260720_110221/config.yml"
+    },
+    {
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/backups/mining-runtime-fix-v2-20260722_163643/config.agentic_js.yml",
+      "bytes": 4278,
+      "sha256": "4dd1da646e1e05f72b1d769ff0ba8003f30d8573c9a60144b71f72da940574f6",
+      "github_blob": "33d1fd981116ccfacd7815ad1747d6fc01be9a4d",
+      "preserved_path": "recovery/history/208d08d25fa0/historical/miner/2026-10-20-live-export/backups/mining-runtime-fix-v2-20260722_163643/config.agentic_js.yml"
+    },
+    {
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/backups/mining-runtime-seed-window-fix-20260722_163511/config.agentic_js.yml",
+      "bytes": 4278,
+      "sha256": "4dd1da646e1e05f72b1d769ff0ba8003f30d8573c9a60144b71f72da940574f6",
+      "github_blob": "33d1fd981116ccfacd7815ad1747d6fc01be9a4d",
+      "preserved_path": "recovery/history/208d08d25fa0/historical/miner/2026-10-20-live-export/backups/mining-runtime-fix-v2-20260722_163643/config.agentic_js.yml"
+    },
+    {
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/backups/sqlite-connection-lifecycle-20260723_052647/src/artifacts/profile_store.py",
+      "bytes": 6090,
+      "sha256": "874134de7bd4119f7d0cc9f43cff3ddc80263aa36210e17011e2c11595274e82",
+      "github_blob": "85b2a49606be5e8a8816bd3e5e36e3f23cf4bab8",
+      "preserved_path": "recovery/history/208d08d25fa0/historical/miner/2026-10-20-live-export/backups/sqlite-connection-lifecycle-20260723_052647/src/artifacts/profile_store.py"
+    },
+    {
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/backups/switch-to-repo-scoped-mining-20260722_152756/config.agentic_js.yml",
+      "bytes": 4272,
+      "sha256": "661203514e65ae1cd317409c73aa94904a3f3ca98e16c534aac69798beedc1a4",
+      "github_blob": "59594f7a0238fac277ea5d83e8ced3f3f2df356e",
+      "preserved_path": "recovery/history/208d08d25fa0/historical/miner/2026-10-20-live-export/backups/architecture-audit-20260721_174347/config.agentic_js.yml"
+    },
+    {
+      "source": "/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/ui/views/case_review.py",
+      "bytes": 15084,
+      "sha256": "1672912ddd32d917b300b8a3ce44b9945e97a14ccd0f9f9ef89ba2d9187f9a42",
+      "github_blob": "dfac8200159e7085e8f95316a6c8dabab73653b4",
+      "preserved_path": "ui/views/case_review.py"
+    }
+  ],
+  "additional_miner_paths_unaccounted_for": 0,
+  "total_live_source_paths_accounted_for": 4383,
+  "code_preservation_status": "ALL_AUDITED_SOURCE_PATHS_ACCOUNTED_FOR",
+  "github_recovery_subtree_sha": "b3eda409449f3606df4f9a7e9bb7ddea6ee36b0b",
+  "full_master_sqlite_upload_verified": false
+}

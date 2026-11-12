@@ -1,0 +1,80 @@
+{
+  "status": "ARCHIVE_INTEGRITY_AND_RECORDED_OUTCOME_CROSSCHECK_PASS",
+  "scientific_validity": "EXPLORATORY_ONLY_NOT_INDEPENDENT_ALERT_DELTA_OR_FUNCTIONAL_REPLICATION",
+  "scanner_archive": {
+    "filename": "03_CODEQL_SARIF_AND_SCANS.zip",
+    "sha256": "4896827bb45257527f7816731d2b541b9dd5c8d8d00cb8755868b6083491b2cb",
+    "manifest_rows": 255,
+    "validated_member_hashes": 255,
+    "index_member_present": true
+  },
+  "functional_archive": {
+    "filename": "04_FUNCTIONAL_TESTS_AND_TRIAGE.zip",
+    "sha256": "7f9b56cc69b100abf31966910b8f73d178f06ae959c420efbb3dee7dfd908392",
+    "manifest_rows": 226,
+    "validated_member_hashes": 226,
+    "index_member_present": true
+  },
+  "scanner": {
+    "cases": 14,
+    "arm_counts": {
+      "O_scans": 12,
+      "O_new_claimed": 21,
+      "O_target_claimed": 7,
+      "W_scans": 14,
+      "W_new_claimed": 10,
+      "W_target_claimed": 4,
+      "P_scans": 14,
+      "P_new_claimed": 15,
+      "P_target_claimed": 5
+    },
+    "source_mode_counts": {
+      "FULL_FROZEN_SNAPSHOT": 10,
+      "FILTERED_SOURCE_PROVISIONAL": 4
+    },
+    "historical_target_previously_reproduced": 8,
+    "paired_O_W_P_cases": 12,
+    "missing_O_cases": [
+      8461,
+      15151
+    ],
+    "same_archived_baseline_sha_for_each_case": true,
+    "different_source_archive_sha_across_arms_all_cases": true,
+    "baseline_SARIF_exported": false,
+    "source_reported_provenance_verified": false,
+    "source_reported_full_functional_acceptance": false,
+    "source_reported_generation_comparability": false
+  },
+  "functional": {
+    "intake_cases": 14,
+    "initial_syntax": {
+      "pass": 37,
+      "count": 40,
+      "failures": [
+        "08461_P",
+        "08461_W",
+        "16633_O"
+      ]
+    },
+    "JSX_aware_syntax": {
+      "pass": 39,
+      "count": 40,
+      "failures": [
+        "16633_O"
+      ]
+    },
+    "targeted_subcomponent_checks_pass": 4,
+    "full_issue_acceptance_established": false,
+    "archive_environment_reported_node_available": false,
+    "archive_environment_reported_bun_available": false
+  },
+  "limitations": [
+    "Baseline SARIF files are not present; cannot independently recompute new-alert set differences.",
+    "Per-arm frozen source TAR byte hashes differ despite a common claimed baseline SARIF; require content-level source equivalence review.",
+    "Historical issue-as-of-PR provenance and generation-cohort comparability are source-declared unverified.",
+    "Four FILTERED_SOURCE_PROVISIONAL cases are mixed into the reported paired aggregates.",
+    "Two cases have no O scan in this O/W/P cohort.",
+    "Syntax parsing and isolated behavioural checks do not verify issue acceptance.",
+    "Matching rule IDs, counts and locations does not verify introduced vulnerabilities or causal prevention."
+  ]
+}

@@ -1,0 +1,2505 @@
+from __future__ import annotations
+
+import json
+import math
+from collections import defaultdict
+from pathlib import Path
+from typing import Any, Iterable
+
+import altair as alt
+import pandas as pd
+import streamlit as st
+
+from src.db.database import Database
+from src.pipeline.case_exporter import (
+    selected_evidence_zip,
+)
+
+
+PAGE_SIZE = 25
+
+SCANNER_ORDER = (
+    "gitleaks",
+    "dependency-diff",
+    "osv-scanner",
+    "semgrep",
+    "trivy",
+    "codeql",
+)
+
+SCANNER_LABELS = {
+    "gitleaks": "Gitleaks",
+    "dependency-diff": "Dependency diff",
+    "osv-scanner": "OSV",
+    "semgrep": "Semgrep",
+    "trivy": "Trivy",
+    "codeql": "CodeQL",
+}
+
+SCANNER_JOB_TYPES = {
+    "gitleaks": (
+        "secret_ci",
+    ),
+    "dependency-diff": (
+        "dependency_downgrade",
+    ),
+    "osv-scanner": (
+        "osv_dependency",
+    ),
+    "semgrep": (
+        "semgrep_source",
+        "semgrep_script",
+    ),
+    "trivy": (
+        "trivy_dependency",
+        "trivy_vuln",
+        "trivy_secret",
+        "trivy_misconfig",
+    ),
+    "codeql": (
+        "codeql_security",
+        "codeql",
+    ),
+}
+
+ACTIVE_STATUSES = {
+    "",
+    "pending",
+    "queued",
+    "claimed",
+    "running",
+    "processing",
+    "active",
+    "retrying",
+    "created",
+}
+
+NOT_APPLICABLE = {
+    "not_applicable",
+    "not-applicable",
+    "skipped",
+    "disabled",
+}
+
+ERROR_WORDS = (
+    "error",
+    "fail",
+    "timeout",
+    "blocked",
+    "crash",
+)
+
+DEPENDENCY_FILES = {
+    "package.json",
+    "package-lock.json",
+    "npm-shrinkwrap.json",
+    "yarn.lock",
+    "pnpm-lock.yaml",
+    "pom.xml",
+    "build.gradle",
+    "build.gradle.kts",
+    "gradle.lockfile",
+    "requirements.txt",
+    "requirements-dev.txt",
+    "pipfile",
+    "pipfile.lock",
+    "poetry.lock",
+    "pyproject.toml",
+    "cargo.toml",
+    "cargo.lock",
+    "go.mod",
+    "go.sum",
+    "gemfile",
+    "gemfile.lock",
+    "composer.json",
+    "composer.lock",
+}
+
+
+def _integer(
+    value: Any,
+) -> int:
+    try:
+        return int(value or 0)
+    except (TypeError, ValueError):
+        return 0
+
+
+def _text(
+    value: Any,
+) -> str:
+    text = str(value or "").strip()
+
+    if text.lower() in {
+        "",
+        "unknown",
+        "unspecified",
+        "unclassified",
+        "none",
+        "null",
+        "n/a",
+    }:
+        return ""
+
+    return text
+
+
+def _json(
+    value: Any,
+) -> Any:
+    if isinstance(
+        value,
+        (
+            dict,
+            list,
+        ),
+    ):
+        return value
+
+    text = str(value or "").strip()
+
+    if not text:
+        return None
+
+    try:
+        return json.loads(text)
+    except Exception:
+        return None
+
+
+def _canonical_scanner(
+    value: Any,
+) -> str:
+    scanner = (
+        str(value or "")
+        .strip()
+        .lower()
+        .replace("_", "-")
+    )
+
+    if scanner.startswith("codeql"):
+        return "codeql"
+
+    aliases = {
+        "dependency-downgrade":
+            "dependency-diff",
+        "osv":
+            "osv-scanner",
+        "osv-dependency":
+            "osv-scanner",
+        "secret-ci":
+            "gitleaks",
+        "semgrep-source":
+            "semgrep",
+        "semgrep-script":
+            "semgrep",
+        "trivy-scanner":
+            "trivy",
+        "trivy-dependency":
+            "trivy",
+        "trivy-vuln":
+            "trivy",
+        "trivy-secret":
+            "trivy",
+        "trivy-misconfig":
+            "trivy",
+    }
+
+    return aliases.get(
+        scanner,
+        scanner,
+    )
+
+
+def _is_error(
+    value: Any,
+) -> bool:
+    status = str(value or "").lower()
+
+    return any(
+        word in status
+        for word in ERROR_WORDS
+    )
+
+
+def _normalise_path(
+    value: Any,
+) -> str:
+    return (
+        str(value or "")
+        .strip()
+        .replace("\\", "/")
+        .lstrip("./")
+    )
+
+
+def _file_area(
+    value: Any,
+) -> str:
+    path = _normalise_path(
+        value
+    ).lower()
+
+    name = path.rsplit(
+        "/",
+        1,
+    )[-1]
+
+    if name in DEPENDENCY_FILES:
+        if (
+            "lock" in name
+            or name in {
+                "go.sum",
+                "gradle.lockfile",
+            }
+        ):
+            return "Dependency lockfile"
+
+        return "Dependency manifest"
+
+    if (
+        path.startswith(
+            ".github/workflows/"
+        )
+        or "/.github/workflows/"
+        in path
+    ):
+        return "CI workflow"
+
+    if (
+        name.startswith(".env")
+        or "credential" in name
+        or "secret" in name
+        or "token" in name
+    ):
+        return "Secret/configuration"
+
+    if (
+        path.startswith("src/")
+        or path.startswith("lib/")
+        or path.startswith("app/")
+        or "/src/" in path
+        or "/lib/" in path
+    ):
+        return "Project source"
+
+    if (
+        path.startswith("test/")
+        or path.startswith("tests/")
+        or "/test/" in path
+        or "/tests/" in path
+        or ".test." in name
+        or ".spec." in name
+        or name.endswith("_test.py")
+    ):
+        return "Test code"
+
+    if (
+        path.startswith("docs/")
+        or "/docs/" in path
+        or name.endswith(
+            (
+                ".md",
+                ".rst",
+                ".adoc",
+            )
+        )
+    ):
+        return "Documentation"
+
+    if (
+        "config" in name
+        or path.startswith(".github/")
+        or name in {
+            "dockerfile",
+            "makefile",
+            "compose.yml",
+            "compose.yaml",
+        }
+    ):
+        return "Build/configuration"
+
+    return "Other changed file"
+
+
+def _finding_rows(
+    db: Database,
+    scanner: str,
+) -> list[dict[str, Any]]:
+    rows = db.query(
+        """
+        SELECT
+            sf.*,
+            r.full_name AS repository,
+            i.title AS issue_title
+
+        FROM scanner_findings sf
+
+        LEFT JOIN cases c
+          ON c.id=sf.case_id
+
+        LEFT JOIN repos r
+          ON r.id=c.repo_id
+
+        LEFT JOIN issues i
+          ON i.id=c.issue_id
+
+        ORDER BY sf.id DESC
+        """
+    )
+
+    parsed_rows: list[
+        dict[str, Any]
+    ] = []
+
+    for row in rows:
+        if (
+            _canonical_scanner(
+                row.get("scanner")
+            )
+            != scanner
+        ):
+            continue
+
+        evidence = _json(
+            row.get("evidence")
+        )
+
+        raw = _json(
+            row.get("raw_json")
+        )
+
+        if not isinstance(
+            evidence,
+            dict,
+        ):
+            evidence = {}
+
+        if not isinstance(
+            raw,
+            dict,
+        ):
+            raw = {}
+
+        database_specific = raw.get(
+            "database_specific"
+        )
+
+        if not isinstance(
+            database_specific,
+            dict,
+        ):
+            database_specific = {}
+
+        aliases = raw.get(
+            "aliases"
+        )
+
+        if not isinstance(
+            aliases,
+            list,
+        ):
+            aliases = []
+
+        cwe_values = (
+            database_specific.get(
+                "cwe_ids"
+            )
+        )
+
+        if not isinstance(
+            cwe_values,
+            list,
+        ):
+            cwe_values = []
+
+        affected = raw.get(
+            "affected"
+        )
+
+        if not isinstance(
+            affected,
+            list,
+        ):
+            affected = []
+
+        package = _text(
+            evidence.get("package")
+            or raw.get("PkgName")
+            or raw.get("pkgName")
+        )
+
+        ecosystem = ""
+        fixed_versions: set[str] = set()
+
+        for affected_item in affected:
+            if not isinstance(
+                affected_item,
+                dict,
+            ):
+                continue
+
+            package_data = (
+                affected_item.get(
+                    "package"
+                )
+            )
+
+            if isinstance(
+                package_data,
+                dict,
+            ):
+                if not package:
+                    package = _text(
+                        package_data.get(
+                            "name"
+                        )
+                    )
+
+                if not ecosystem:
+                    ecosystem = _text(
+                        package_data.get(
+                            "ecosystem"
+                        )
+                    )
+
+            ranges = affected_item.get(
+                "ranges"
+            )
+
+            if not isinstance(
+                ranges,
+                list,
+            ):
+                continue
+
+            for range_item in ranges:
+                if not isinstance(
+                    range_item,
+                    dict,
+                ):
+                    continue
+
+                events = range_item.get(
+                    "events"
+                )
+
+                if not isinstance(
+                    events,
+                    list,
+                ):
+                    continue
+
+                for event in events:
+                    if (
+                        isinstance(
+                            event,
+                            dict,
+                        )
+                        and event.get(
+                            "fixed"
+                        )
+                    ):
+                        fixed_versions.add(
+                            str(
+                                event[
+                                    "fixed"
+                                ]
+                            )
+                        )
+
+        severity = _text(
+            row.get("severity")
+            or database_specific.get(
+                "severity"
+            )
+            or raw.get("Severity")
+        )
+
+        if severity:
+            severity = (
+                severity
+                .replace("_", " ")
+                .strip()
+                .title()
+            )
+
+        vulnerability = _text(
+            evidence.get("vuln_id")
+            or raw.get("id")
+            or raw.get(
+                "VulnerabilityID"
+            )
+            or row.get("rule_id")
+        )
+
+        cwe = _text(
+            row.get("cwe")
+            or ", ".join(
+                str(value)
+                for value in cwe_values
+            )
+            or ", ".join(
+                str(value)
+                for value in (
+                    raw.get("CweIDs")
+                    or []
+                )
+            )
+        )
+
+        change_type = _text(
+            evidence.get(
+                "change_type"
+            )
+            or raw.get(
+                "change_type"
+            )
+        )
+
+        old_version = _text(
+            evidence.get(
+                "old_version"
+            )
+            or raw.get(
+                "old_version"
+            )
+        )
+
+        new_version = _text(
+            evidence.get(
+                "new_version"
+            )
+            or raw.get(
+                "new_version"
+            )
+        )
+
+        version = _text(
+            evidence.get("version")
+            or raw.get(
+                "InstalledVersion"
+            )
+            or raw.get("version")
+        )
+
+        fixed_version = _text(
+            raw.get("FixedVersion")
+            or ", ".join(
+                sorted(
+                    fixed_versions
+                )
+            )
+        )
+
+        rule = _text(
+            row.get("rule_id")
+            or vulnerability
+            or change_type
+            or row.get(
+                "finding_type"
+            )
+        )
+
+        description = _text(
+            row.get("description")
+            or raw.get("Title")
+            or raw.get("Description")
+        )
+
+        file_path = _normalise_path(
+            row.get("file_path")
+            or raw.get("Target")
+        )
+
+        line = _text(
+            row.get("line")
+        )
+
+        detail_parts = []
+
+        if description:
+            detail_parts.append(
+                description[:300]
+            )
+
+        if package:
+            package_detail = package
+
+            if version:
+                package_detail += (
+                    "@" + version
+                )
+
+            detail_parts.append(
+                "Package: "
+                + package_detail
+            )
+
+        if (
+            old_version
+            or new_version
+        ):
+            detail_parts.append(
+                "Version: "
+                + (
+                    old_version
+                    or "?"
+                )
+                + " → "
+                + (
+                    new_version
+                    or "?"
+                )
+            )
+
+        if fixed_version:
+            detail_parts.append(
+                "Fixed: "
+                + fixed_version
+            )
+
+        if aliases:
+            detail_parts.append(
+                "Aliases: "
+                + ", ".join(
+                    str(value)
+                    for value in aliases[
+                        :5
+                    ]
+                )
+            )
+
+        if file_path:
+            location = file_path
+
+            if line:
+                location += (
+                    ":" + line
+                )
+
+            detail_parts.append(
+                "Location: "
+                + location
+            )
+
+        parsed_rows.append({
+            **row,
+            "scanner_normalised":
+                scanner,
+            "rule":
+                rule,
+            "vulnerability":
+                vulnerability,
+            "severity_clean":
+                severity,
+            "cwe_clean":
+                cwe,
+            "package":
+                package,
+            "ecosystem":
+                ecosystem,
+            "change_type":
+                change_type,
+            "old_version":
+                old_version,
+            "new_version":
+                new_version,
+            "version":
+                version,
+            "fixed_version":
+                fixed_version,
+            "aliases":
+                ", ".join(
+                    str(value)
+                    for value
+                    in aliases[:5]
+                ),
+            "file_area":
+                _file_area(
+                    file_path
+                ),
+            "file_path_clean":
+                file_path,
+            "detail":
+                " | ".join(
+                    detail_parts
+                ),
+        })
+
+    return parsed_rows
+
+
+def _dimension_values(
+    value: Any,
+) -> list[str]:
+    text = _text(value)
+
+    if not text:
+        return []
+
+    if "," in text:
+        return [
+            item.strip()
+            for item in text.split(",")
+            if item.strip()
+        ]
+
+    return [text]
+
+
+
+def _finding_priority(
+    row: dict[str, Any],
+) -> tuple[str, int]:
+    severity = _text(
+        row.get("severity_clean")
+    ).strip().lower()
+
+    scanner = _text(
+        row.get("scanner_normalised")
+    ).strip().lower()
+
+    if severity in {
+        "critical",
+        "blocker",
+    }:
+        return "Critical", 5
+
+    if severity in {
+        "high",
+        "error",
+        "fatal",
+    }:
+        return "High", 4
+
+    if severity in {
+        "medium",
+        "moderate",
+        "warning",
+        "warn",
+    }:
+        return "Medium", 3
+
+    if severity in {
+        "low",
+        "info",
+        "informational",
+        "note",
+    }:
+        return "Low", 1
+
+    # A stored secret finding is important even when
+    # the scanner does not expose a severity field.
+    if scanner == "gitleaks":
+        return "High", 4
+
+    return "Review", 2
+
+
+def _group_priority(
+    rows: list[dict[str, Any]],
+) -> tuple[str, int, str, str]:
+    counts: dict[str, int] = {}
+
+    best_label = "Review"
+    best_rank = 2
+
+    for row in rows:
+        label, rank = _finding_priority(
+            row
+        )
+
+        counts[label] = (
+            counts.get(label, 0) + 1
+        )
+
+        if rank > best_rank:
+            best_label = label
+            best_rank = rank
+
+    order = (
+        "Critical",
+        "High",
+        "Medium",
+        "Review",
+        "Low",
+    )
+
+    severity_mix = ", ".join(
+        f"{label}: {counts[label]}"
+        for label in order
+        if counts.get(label)
+    )
+
+    explanations = {
+        "Critical": (
+            "Urgent review: at least one scanner finding "
+            "has critical or blocker severity."
+        ),
+        "High": (
+            "High-priority review: the scanner reported "
+            "a high, error or secret finding."
+        ),
+        "Medium": (
+            "Review recommended: the scanner reported "
+            "a medium or warning-level finding."
+        ),
+        "Review": (
+            "Manual review required: the scanner stored "
+            "a finding but did not provide a severity "
+            "that can be ranked confidently."
+        ),
+        "Low": (
+            "Likely lower priority: findings are low, "
+            "informational or note-level, but still need "
+            "context before being treated as trivial."
+        ),
+    }
+
+    return (
+        best_label,
+        best_rank,
+        severity_mix or "Severity unavailable",
+        explanations[best_label],
+    )
+
+def _aggregate(
+    findings: list[
+        dict[str, Any]
+    ],
+    field: str,
+) -> tuple[
+    list[dict[str, Any]],
+    dict[str, list[int]],
+]:
+    groups: dict[
+        str,
+        list[dict[str, Any]],
+    ] = defaultdict(list)
+
+    for finding in findings:
+        for value in _dimension_values(
+            finding.get(field)
+        ):
+            groups[value].append(
+                finding
+            )
+
+    chart_rows = []
+    case_map: dict[
+        str,
+        list[int],
+    ] = {}
+
+    for name, group in groups.items():
+        case_ids = sorted({
+            _integer(
+                row.get("case_id")
+            )
+            for row in group
+            if _integer(
+                row.get("case_id")
+            )
+        })
+
+        details = []
+        packages = []
+        files = []
+        versions = []
+        identifiers = []
+
+        for row in group:
+            detail = _text(
+                row.get("detail")
+            )
+
+            if (
+                detail
+                and detail not in details
+            ):
+                details.append(detail)
+
+            package = _text(
+                row.get("package")
+            )
+
+            if (
+                package
+                and package not in packages
+            ):
+                packages.append(package)
+
+            file_path = _text(
+                row.get(
+                    "file_path_clean"
+                )
+            )
+
+            if (
+                file_path
+                and file_path not in files
+            ):
+                files.append(file_path)
+
+            old_version = _text(
+                row.get("old_version")
+            )
+
+            new_version = _text(
+                row.get("new_version")
+            )
+
+            if (
+                old_version
+                or new_version
+            ):
+                version = (
+                    (old_version or "?")
+                    + " → "
+                    + (new_version or "?")
+                )
+
+                if version not in versions:
+                    versions.append(version)
+
+            identifier = _text(
+                row.get("vulnerability")
+                or row.get("cwe_clean")
+                or row.get("rule")
+            )
+
+            if (
+                identifier
+                and identifier
+                not in identifiers
+            ):
+                identifiers.append(
+                    identifier
+                )
+
+        (
+            importance,
+            importance_rank,
+            severity_mix,
+            triage_reason,
+        ) = _group_priority(group)
+
+        repositories = sorted({
+            _text(
+                row.get("repository")
+            )
+            for row in group
+            if _text(
+                row.get("repository")
+            )
+        })
+
+        chart_rows.append({
+            "name": name,
+            "findings": len(group),
+            "cases": len(case_ids),
+            "importance": importance,
+            "importance_rank": importance_rank,
+            "severity_mix": severity_mix,
+            "triage_reason": triage_reason,
+            "repositories": ", ".join(
+                repositories[:6]
+            ),
+            "details": (
+                " | ".join(
+                    details[:2]
+                )[:650]
+            ),
+            "packages": ", ".join(
+                packages[:5]
+            ),
+            "files": ", ".join(
+                files[:5]
+            ),
+            "versions": ", ".join(
+                versions[:5]
+            ),
+            "identifiers": ", ".join(
+                identifiers[:5]
+            ),
+        })
+
+        case_map[name] = case_ids
+
+    chart_rows.sort(
+        key=lambda row: (
+            -row["importance_rank"],
+            -row["findings"],
+            row["name"],
+        )
+    )
+
+    return chart_rows, case_map
+
+
+def _dimensions(
+    scanner: str,
+) -> tuple[
+    tuple[str, str],
+    ...,
+]:
+    definitions = {
+        "dependency-diff": (
+            (
+                "Package",
+                "package",
+            ),
+            (
+                "Change type",
+                "change_type",
+            ),
+            (
+                "File area",
+                "file_area",
+            ),
+            (
+                "Repository",
+                "repository",
+            ),
+        ),
+        "osv-scanner": (
+            (
+                "Vulnerability",
+                "vulnerability",
+            ),
+            (
+                "Package",
+                "package",
+            ),
+            (
+                "Finding severity",
+                "severity_clean",
+            ),
+            (
+                "CWE",
+                "cwe_clean",
+            ),
+            (
+                "File area",
+                "file_area",
+            ),
+            (
+                "Repository",
+                "repository",
+            ),
+        ),
+        "trivy": (
+            (
+                "Vulnerability",
+                "vulnerability",
+            ),
+            (
+                "Package",
+                "package",
+            ),
+            (
+                "Finding severity",
+                "severity_clean",
+            ),
+            (
+                "CWE",
+                "cwe_clean",
+            ),
+            (
+                "File area",
+                "file_area",
+            ),
+            (
+                "Repository",
+                "repository",
+            ),
+        ),
+        "codeql": (
+            (
+                "Rule",
+                "rule",
+            ),
+            (
+                "CWE",
+                "cwe_clean",
+            ),
+            (
+                "Finding severity",
+                "severity_clean",
+            ),
+            (
+                "File area",
+                "file_area",
+            ),
+            (
+                "Repository",
+                "repository",
+            ),
+        ),
+        "semgrep": (
+            (
+                "Rule",
+                "rule",
+            ),
+            (
+                "Finding severity",
+                "severity_clean",
+            ),
+            (
+                "File area",
+                "file_area",
+            ),
+            (
+                "Repository",
+                "repository",
+            ),
+        ),
+        "gitleaks": (
+            (
+                "Rule",
+                "rule",
+            ),
+            (
+                "File area",
+                "file_area",
+            ),
+            (
+                "Repository",
+                "repository",
+            ),
+        ),
+    }
+
+    return definitions.get(
+        scanner,
+        (),
+    )
+
+
+def _state_sets(
+    db: Database,
+    scanner: str,
+    finding_cases: set[int],
+) -> dict[str, set[int]]:
+    job_types = SCANNER_JOB_TYPES[
+        scanner
+    ]
+
+    placeholders = ",".join(
+        "?"
+        for _ in job_types
+    )
+
+    jobs = db.query(
+        f"""
+        SELECT
+            id,
+            case_id,
+            job_type,
+            status,
+            last_error
+
+        FROM scanner_jobs
+
+        WHERE job_type IN (
+            {placeholders}
+        )
+
+        ORDER BY
+            case_id,
+
+            CASE
+                WHEN job_type='codeql_security'
+                THEN 0
+                ELSE 1
+            END,
+
+            id DESC
+        """,
+        tuple(job_types),
+    )
+
+    latest_jobs: dict[
+        int,
+        dict[str, Any],
+    ] = {}
+
+    for row in jobs:
+        case_id = _integer(
+            row.get("case_id")
+        )
+
+        if case_id:
+            latest_jobs.setdefault(
+                case_id,
+                row,
+            )
+
+    runs = db.query(
+        """
+        SELECT
+            id,
+            case_id,
+            scanner,
+            status,
+            stderr
+
+        FROM scanner_runs
+
+        ORDER BY id DESC
+        """
+    )
+
+    latest_runs: dict[
+        int,
+        dict[str, Any],
+    ] = {}
+
+    for row in runs:
+        if (
+            _canonical_scanner(
+                row.get("scanner")
+            )
+            != scanner
+        ):
+            continue
+
+        case_id = _integer(
+            row.get("case_id")
+        )
+
+        if case_id:
+            latest_runs.setdefault(
+                case_id,
+                row,
+            )
+
+    applicable: set[int] = set()
+    active: set[int] = set()
+    errors: set[int] = set()
+
+    all_cases = (
+        set(latest_jobs)
+        | set(latest_runs)
+        | set(finding_cases)
+    )
+
+    for case_id in all_cases:
+        job = latest_jobs.get(
+            case_id,
+            {},
+        )
+
+        run = latest_runs.get(
+            case_id,
+            {},
+        )
+
+        job_status = str(
+            job.get("status")
+            or ""
+        ).strip().lower()
+
+        run_status = str(
+            run.get("status")
+            or ""
+        ).strip().lower()
+
+        if (
+            job_status
+            in NOT_APPLICABLE
+            and case_id
+            not in latest_runs
+            and case_id
+            not in finding_cases
+        ):
+            continue
+
+        applicable.add(case_id)
+
+        effective_status = (
+            job_status
+            or run_status
+        )
+
+        if effective_status in ACTIVE_STATUSES:
+            active.add(case_id)
+
+        if (
+            _is_error(job_status)
+            or _is_error(run_status)
+            or _is_error(
+                job.get("last_error")
+            )
+            or _is_error(
+                run.get("stderr")
+            )
+        ):
+            errors.add(case_id)
+
+    return {
+        "applicable": applicable,
+        "active": active,
+        "errors": errors,
+        "findings": finding_cases,
+        "findings_errors": (
+            finding_cases
+            | errors
+        ),
+    }
+
+
+def _event_value(
+    event: Any,
+    selection_name: str,
+) -> str | None:
+    if event is None:
+        return None
+
+    selection = None
+
+    try:
+        selection = event.get(
+            "selection",
+            {}
+        ).get(selection_name)
+    except Exception:
+        pass
+
+    if selection is None:
+        try:
+            selection = getattr(
+                event.selection,
+                selection_name,
+            )
+        except Exception:
+            pass
+
+    if isinstance(
+        selection,
+        list,
+    ) and selection:
+        item = selection[0]
+
+        if isinstance(
+            item,
+            dict,
+        ):
+            value = item.get("name")
+
+            return (
+                str(value)
+                if value
+                else None
+            )
+
+    if isinstance(
+        selection,
+        dict,
+    ):
+        value = selection.get("name")
+
+        if isinstance(value, list):
+            return (
+                str(value[0])
+                if value
+                else None
+            )
+
+        return (
+            str(value)
+            if value
+            else None
+        )
+
+    return None
+
+
+def _safe_key(
+    value: str,
+) -> str:
+    return "".join(
+        character
+        if character.isalnum()
+        else "_"
+        for character in value
+    )
+
+
+def _interactive_chart(
+    *,
+    rows: list[dict[str, Any]],
+    case_map: dict[str, list[int]],
+    scanner: str,
+    dimension: str,
+) -> None:
+    if not rows:
+        st.info(
+            "No stored values for this view."
+        )
+        return
+
+    frame = pd.DataFrame(
+        rows[:25]
+    )
+
+    selection_name = (
+        "scanner_pick_"
+        + _safe_key(
+            scanner
+            + "_"
+            + dimension
+        )
+    )
+
+    selection = alt.selection_point(
+        name=selection_name,
+        fields=["name"],
+        on="click",
+        clear="dblclick",
+        empty=False,
+    )
+
+    chart = (
+        alt.Chart(frame)
+        .mark_bar(
+            cornerRadiusEnd=6,
+        )
+        .encode(
+            y=alt.Y(
+                "name:N",
+                sort="-x",
+                title=None,
+            ),
+            x=alt.X(
+                "findings:Q",
+                title="Findings",
+            ),
+            color=alt.Color(
+                "importance:N",
+                title="Triage priority",
+                scale=alt.Scale(
+                    domain=[
+                        "Critical",
+                        "High",
+                        "Medium",
+                        "Review",
+                        "Low",
+                    ],
+                    range=[
+                        "#991b1b",
+                        "#dc2626",
+                        "#f97316",
+                        "#f59e0b",
+                        "#16a34a",
+                    ],
+                ),
+            ),
+            opacity=alt.condition(
+                selection,
+                alt.value(1.0),
+                alt.value(0.88),
+            ),
+            tooltip=[
+                alt.Tooltip(
+                    "name:N",
+                    title=dimension,
+                ),
+                alt.Tooltip(
+                    "importance:N",
+                    title="Triage priority",
+                ),
+                alt.Tooltip(
+                    "triage_reason:N",
+                    title="Why this priority",
+                ),
+                alt.Tooltip(
+                    "findings:Q",
+                    title="Findings",
+                    format=",",
+                ),
+                alt.Tooltip(
+                    "cases:Q",
+                    title="Affected cases",
+                    format=",",
+                ),
+                alt.Tooltip(
+                    "severity_mix:N",
+                    title="Scanner severity mix",
+                ),
+                alt.Tooltip(
+                    "repositories:N",
+                    title="Repositories",
+                ),
+                alt.Tooltip(
+                    "identifiers:N",
+                    title="Rules / CWE / vulnerability IDs",
+                ),
+                alt.Tooltip(
+                    "packages:N",
+                    title="Affected packages",
+                ),
+                alt.Tooltip(
+                    "versions:N",
+                    title="Versions",
+                ),
+                alt.Tooltip(
+                    "files:N",
+                    title="Example files",
+                ),
+                alt.Tooltip(
+                    "details:N",
+                    title="Evidence summary",
+                ),
+            ],
+        )
+        .add_params(selection)
+        .properties(
+            height=min(
+                500,
+                max(
+                    220,
+                    len(frame) * 30,
+                ),
+            )
+        )
+    )
+
+    nonce = _integer(
+        st.session_state.get(
+            "scanner_chart_nonce"
+        )
+    )
+
+    event = None
+
+    try:
+        event = st.altair_chart(
+            chart,
+            width="stretch",
+            key=(
+                "scanner-chart-"
+                + scanner
+                + "-"
+                + _safe_key(dimension)
+                + "-"
+                + str(nonce)
+            ),
+            on_select="rerun",
+            selection_mode=(
+                selection_name
+            ),
+        )
+    except TypeError:
+        st.altair_chart(
+            chart,
+            width="stretch",
+            key=(
+                "scanner-chart-fallback-"
+                + scanner
+                + "-"
+                + _safe_key(dimension)
+            ),
+        )
+
+    value = _event_value(
+        event,
+        selection_name,
+    )
+
+    if value:
+        st.session_state[
+            "scanner_chart_filter"
+        ] = {
+            "scanner": scanner,
+            "dimension": dimension,
+            "value": value,
+            "case_ids": case_map.get(
+                value,
+                [],
+            ),
+        }
+
+        st.session_state[
+            "scanner_page"
+        ] = 1
+
+        st.session_state[
+            "scanner_chart_nonce"
+        ] = nonce + 1
+
+        st.rerun()
+
+
+def _case_page(
+    db: Database,
+    case_ids: Iterable[int],
+    search: str,
+    page: int,
+) -> tuple[
+    int,
+    list[dict[str, Any]],
+]:
+    ids = sorted({
+        _integer(value)
+        for value in case_ids
+        if _integer(value)
+    })
+
+    if not ids:
+        return 0, []
+
+    placeholders = ",".join(
+        "?"
+        for _ in ids
+    )
+
+    conditions = [
+        f"c.id IN ({placeholders})"
+    ]
+
+    parameters: list[Any] = [
+        *ids,
+    ]
+
+    search = search.strip()
+
+    if search:
+        value = (
+            "%"
+            + search.lower()
+            + "%"
+        )
+
+        conditions.append(
+            """
+            (
+                LOWER(
+                    CAST(c.id AS TEXT)
+                ) LIKE ?
+
+                OR LOWER(
+                    COALESCE(
+                        r.full_name,
+                        ''
+                    )
+                ) LIKE ?
+
+                OR LOWER(
+                    COALESCE(
+                        i.title,
+                        ''
+                    )
+                ) LIKE ?
+            )
+            """
+        )
+
+        parameters.extend(
+            [
+                value,
+                value,
+                value,
+            ]
+        )
+
+    where_sql = (
+        "WHERE "
+        + " AND ".join(
+            conditions
+        )
+    )
+
+    total = _integer(
+        (
+            db.one(
+                f"""
+                SELECT
+                    COUNT(*) AS n
+
+                FROM cases c
+
+                JOIN repos r
+                  ON r.id=c.repo_id
+
+                JOIN issues i
+                  ON i.id=c.issue_id
+
+                {where_sql}
+                """,
+                tuple(parameters),
+            )
+            or {}
+        ).get("n")
+    )
+
+    page = max(
+        1,
+        int(page),
+    )
+
+    offset = (
+        page - 1
+    ) * PAGE_SIZE
+
+    rows = db.query(
+        f"""
+        SELECT
+            c.id AS case_id,
+            r.full_name AS repository,
+
+            SUBSTR(
+                COALESCE(
+                    i.title,
+                    ''
+                ),
+                1,
+                120
+            ) AS issue_title,
+
+            c.status,
+            c.final_label,
+
+            COALESCE(
+                findings.finding_count,
+                0
+            ) AS finding_count
+
+        FROM cases c
+
+        JOIN repos r
+          ON r.id=c.repo_id
+
+        JOIN issues i
+          ON i.id=c.issue_id
+
+        LEFT JOIN (
+            SELECT
+                case_id,
+                COUNT(*) AS finding_count
+
+            FROM scanner_findings
+
+            GROUP BY case_id
+        ) findings
+          ON findings.case_id=c.id
+
+        {where_sql}
+
+        ORDER BY
+            finding_count DESC,
+            c.updated_at DESC,
+            c.id DESC
+
+        LIMIT ?
+        OFFSET ?
+        """,
+        tuple([
+            *parameters,
+            PAGE_SIZE,
+            offset,
+        ]),
+    )
+
+    return total, rows
+
+
+def _selected_ids() -> set[int]:
+    return {
+        int(value)
+        for value in st.session_state.get(
+            "scanner_selected_case_ids",
+            [],
+        )
+    }
+
+
+def _store_selected(
+    values: set[int],
+) -> None:
+    st.session_state[
+        "scanner_selected_case_ids"
+    ] = sorted(values)
+
+
+
+def render_scanner_insights(
+    settings: Any,
+) -> None:
+    header, back = st.columns(
+        [
+            5,
+            1,
+        ]
+    )
+
+    header.title(
+        "Scanner Insights"
+    )
+
+    if back.button(
+        "Back",
+        width="stretch",
+        key="scanner-back",
+    ):
+        st.session_state["nav"] = (
+            "Overview"
+        )
+
+        st.rerun()
+
+    previous_scanner = str(
+        st.session_state.get(
+            "selected_scanner"
+        )
+        or "codeql"
+    )
+
+    scanner = st.selectbox(
+        "Scanner",
+        list(SCANNER_ORDER),
+        index=(
+            list(
+                SCANNER_ORDER
+            ).index(
+                previous_scanner
+            )
+            if previous_scanner
+            in SCANNER_ORDER
+            else 0
+        ),
+        format_func=lambda value: (
+            SCANNER_LABELS[value]
+        ),
+        key="scanner-insight-choice",
+    )
+
+    if scanner != previous_scanner:
+        st.session_state[
+            "scanner_page"
+        ] = 1
+
+        st.session_state.pop(
+            "scanner_chart_filter",
+            None,
+        )
+
+        st.session_state[
+            "scanner_selected_case_ids"
+        ] = []
+
+        st.session_state.pop(
+            "scanner_prepared_zip",
+            None,
+        )
+
+    st.session_state[
+        "selected_scanner"
+    ] = scanner
+
+    db = Database(
+        Path(settings.db_path)
+    )
+
+    findings = _finding_rows(
+        db,
+        scanner,
+    )
+
+    finding_cases = {
+        _integer(
+            row.get("case_id")
+        )
+        for row in findings
+        if _integer(
+            row.get("case_id")
+        )
+    }
+
+    state_sets = _state_sets(
+        db,
+        scanner,
+        finding_cases,
+    )
+
+    applicable = state_sets[
+        "applicable"
+    ]
+
+    active = state_sets[
+        "active"
+    ]
+
+    errors = state_sets[
+        "errors"
+    ]
+
+    metrics = st.columns(5)
+
+    completed = max(
+        0,
+        len(applicable) - len(active),
+    )
+
+    metrics[0].metric(
+        "Applicable",
+        f"{len(applicable):,}",
+        help=(
+            "Cases whose changed artifacts make "
+            "this scanner applicable."
+        ),
+    )
+
+    metrics[1].metric(
+        "Completed",
+        (
+            f"{completed:,}/"
+            f"{len(applicable):,}"
+        ),
+        help=(
+            "Applicable cases with a terminal "
+            "scanner result."
+        ),
+    )
+
+    metrics[2].metric(
+        "In progress",
+        f"{len(active):,}",
+        help=(
+            "Cases currently queued or being "
+            "processed by this scanner."
+        ),
+    )
+
+    metrics[3].metric(
+        "Findings",
+        f"{len(findings):,}",
+        help=(
+            "Finding severity is reported by the scanner. "
+            "For example, an Error-severity Semgrep or "
+            "CodeQL finding does not mean that the scanner "
+            "execution failed."
+        ),
+    )
+
+    metrics[4].metric(
+        "Run errors",
+        f"{len(errors):,}",
+        help=(
+            "Scanner executions that ended in an error "
+            "or timeout. This is separate from finding "
+            "severity."
+        ),
+    )
+
+    charts = []
+    case_maps: dict[
+        str,
+        dict[str, list[int]],
+    ] = {}
+
+    for label, field in _dimensions(
+        scanner
+    ):
+        rows, mapping = _aggregate(
+            findings,
+            field,
+        )
+
+        if rows:
+            charts.append(
+                (
+                    label,
+                    rows,
+                )
+            )
+
+            case_maps[label] = mapping
+
+    if charts:
+        tabs = st.tabs(
+            [
+                label
+                for label, _rows
+                in charts
+            ]
+        )
+
+        for tab, (
+            label,
+            chart_rows,
+        ) in zip(
+            tabs,
+            charts,
+        ):
+            with tab:
+                _interactive_chart(
+                    rows=chart_rows,
+                    case_map=(
+                        case_maps[label]
+                    ),
+                    scanner=scanner,
+                    dimension=label,
+                )
+
+    elif applicable:
+        st.success(
+            (
+                f"{len(applicable) - len(active)} "
+                "applicable cases completed "
+                "without persisted findings."
+            )
+        )
+    else:
+        st.info(
+            "No applicable cases are "
+            "available for this scanner."
+        )
+
+    active_filter = (
+        st.session_state.get(
+            "scanner_chart_filter"
+        )
+    )
+
+    chart_case_ids: set[int] | None = None
+
+    if (
+        isinstance(
+            active_filter,
+            dict,
+        )
+        and active_filter.get(
+            "scanner"
+        ) == scanner
+    ):
+        chart_case_ids = {
+            _integer(value)
+            for value in active_filter.get(
+                "case_ids",
+                [],
+            )
+            if _integer(value)
+        }
+
+        filter_columns = st.columns(
+            [
+                5,
+                1,
+            ]
+        )
+
+        filter_columns[0].info(
+            (
+                "Chart filter: "
+                + str(
+                    active_filter.get(
+                        "dimension"
+                    )
+                    )
+                + " = "
+                + str(
+                    active_filter.get(
+                        "value"
+                    )
+                )
+            )
+        )
+
+        if filter_columns[1].button(
+            "Clear filter",
+            width="stretch",
+            key="scanner-clear-chart-filter",
+        ):
+            st.session_state.pop(
+                "scanner_chart_filter",
+                None,
+            )
+
+            st.session_state[
+                "scanner_page"
+            ] = 1
+
+            st.rerun()
+
+    st.markdown(
+        "### Matching cases"
+    )
+
+    case_sets = {
+        "Findings & errors":
+            state_sets[
+                "findings_errors"
+            ],
+        "Findings":
+            state_sets["findings"],
+        "Errors":
+            state_sets["errors"],
+        "In progress":
+            state_sets["active"],
+        "All applicable":
+            state_sets[
+                "applicable"
+            ],
+    }
+
+    view = st.selectbox(
+        "Case set",
+        list(case_sets),
+        index=0,
+        key=(
+            "scanner-case-set-"
+            + scanner
+        ),
+        help=(
+            "The default loads only cases "
+            "with findings or errors."
+        ),
+    )
+
+    selected_case_set = set(
+        case_sets[view]
+    )
+
+    if chart_case_ids is not None:
+        selected_case_set &= (
+            chart_case_ids
+        )
+
+    search = st.text_input(
+        "Search cases",
+        placeholder=(
+            "Case ID, repository or issue title"
+        ),
+        key=(
+            "scanner-case-search-"
+            + scanner
+        ),
+    )
+
+    signature = repr(
+        (
+            scanner,
+            view,
+            search,
+            sorted(
+                chart_case_ids
+                or []
+            ),
+        )
+    )
+
+    if (
+        st.session_state.get(
+            "scanner-case-signature"
+        )
+        != signature
+    ):
+        st.session_state[
+            "scanner-case-signature"
+        ] = signature
+
+        st.session_state[
+            "scanner_page"
+        ] = 1
+
+    page = max(
+        1,
+        _integer(
+            st.session_state.get(
+                "scanner_page",
+                1,
+            )
+        ),
+    )
+
+    total, rows = _case_page(
+        db,
+        selected_case_set,
+        search,
+        page,
+    )
+
+    total_pages = max(
+        1,
+        math.ceil(
+            total / PAGE_SIZE
+        ),
+    )
+
+    page = min(
+        page,
+        total_pages,
+    )
+
+    st.session_state[
+        "scanner_page"
+    ] = page
+
+    page_ids = [
+        _integer(
+            row.get("case_id")
+        )
+        for row in rows
+    ]
+
+    start_row = (
+        (page - 1)
+        * PAGE_SIZE
+        + 1
+        if total
+        else 0
+    )
+
+    end_row = min(
+        total,
+        page * PAGE_SIZE,
+    )
+
+    st.caption(
+        (
+            f"{start_row}–{end_row} "
+            f"of {total} matching cases · "
+            f"{PAGE_SIZE} per page"
+        )
+    )
+
+    selected = _selected_ids()
+
+    toolbar = st.columns(
+        [
+            1,
+            1,
+            1.2,
+            1.2,
+            3,
+        ]
+    )
+
+    if toolbar[0].button(
+        "Select page",
+        key="scanner-select-page",
+    ):
+        selected.update(
+            page_ids
+        )
+
+        _store_selected(
+            selected
+        )
+
+        st.rerun()
+
+    if toolbar[1].button(
+        "Clear",
+        key="scanner-clear-selection",
+    ):
+        selected.clear()
+
+        _store_selected(
+            selected
+        )
+
+        st.session_state.pop(
+            "scanner_prepared_zip",
+            None,
+        )
+
+        st.rerun()
+
+    if toolbar[2].button(
+        "Review selected",
+        disabled=not selected,
+        key="scanner-review-selected",
+    ):
+        queue = sorted(selected)
+
+        st.session_state[
+            "review_queue_ids"
+        ] = queue
+
+        st.session_state[
+            "selected_case_id"
+        ] = queue[0]
+
+        st.session_state["nav"] = (
+            "Case Review"
+        )
+
+        st.rerun()
+
+    if toolbar[3].button(
+        "Prepare ZIP",
+        disabled=not selected,
+        key="scanner-prepare-zip",
+    ):
+        st.session_state[
+            "scanner_prepared_zip"
+        ] = selected_evidence_zip(
+            db,
+            sorted(selected),
+        )
+
+    prepared = st.session_state.get(
+        "scanner_prepared_zip"
+    )
+
+    if prepared is not None:
+        toolbar[4].download_button(
+            "Download selected evidence",
+            data=prepared,
+            file_name=(
+                f"{scanner}_selected_cases.zip"
+            ),
+            mime="application/zip",
+            width="stretch",
+            key="scanner-download-zip",
+        )
+    else:
+        toolbar[4].markdown(
+            f"**{len(selected)} selected**"
+        )
+
+    if not rows:
+        st.info(
+            "No cases match the current "
+            "scanner, graph and search filters."
+        )
+
+    for row in rows:
+        case_id = _integer(
+            row.get("case_id")
+        )
+
+        columns = st.columns(
+            [
+                0.42,
+                0.62,
+                1.8,
+                4.4,
+                0.8,
+                0.85,
+            ]
+        )
+
+        checked = columns[0].checkbox(
+            "Select",
+            value=(
+                case_id in selected
+            ),
+            key=(
+                "scanner-case-"
+                f"{scanner}-"
+                f"{case_id}"
+            ),
+            label_visibility="collapsed",
+        )
+
+        if checked:
+            selected.add(case_id)
+        else:
+            selected.discard(
+                case_id
+            )
+
+        columns[1].markdown(
+            f"**#{case_id}**"
+        )
+
+        columns[2].write(
+            str(
+                row.get("repository")
+                or ""
+            )
+        )
+
+        columns[3].write(
+            str(
+                row.get("issue_title")
+                or ""
+            )
+        )
+
+        columns[4].metric(
+            "Findings",
+            _integer(
+                row.get(
+                    "finding_count"
+                )
+            ),
+        )
+
+        if columns[5].button(
+            "Inspect",
+            key=(
+                "scanner-inspect-"
+                f"{scanner}-"
+                f"{case_id}"
+            ),
+            width="stretch",
+        ):
+            st.session_state[
+                "selected_case_id"
+            ] = case_id
+
+            st.session_state[
+                "review_queue_ids"
+            ] = sorted(
+                selected_case_set
+            )
+
+            st.session_state["nav"] = (
+                "Case Review"
+            )
+
+            st.rerun()
+
+    _store_selected(selected)
+
+    previous, centre, next_page = (
+        st.columns(
+            [
+                1,
+                3,
+                1,
+            ]
+        )
+    )
+
+    if previous.button(
+        "Previous",
+        disabled=page <= 1,
+        key="scanner-previous",
+        width="stretch",
+    ):
+        st.session_state[
+            "scanner_page"
+        ] = page - 1
+
+        st.rerun()
+
+    centre.markdown(
+        (
+            "<div style='text-align:center;"
+            "padding-top:.42rem'>"
+            f"<strong>Page {page} "
+            f"of {total_pages}</strong>"
+            "</div>"
+        ),
+        unsafe_allow_html=True,
+    )
+
+    if next_page.button(
+        "Next",
+        disabled=(
+            page >= total_pages
+        ),
+        key="scanner-next",
+        width="stretch",
+    ):
+        st.session_state[
+            "scanner_page"
+        ] = page + 1
+
+        st.rerun()

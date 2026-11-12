@@ -1,0 +1,74 @@
+{
+  "created_at": 1784749812.609244,
+  "imports_seen_at_pause": [
+    {
+      "case_id": 718,
+      "file": "scanner-job-166793.json",
+      "finished_at": 1784749416.710713,
+      "job_id": 166793,
+      "slurm_job_id": "4341",
+      "status": "error",
+      "task_id": "scanner-job-166793",
+      "worker_id": "codeql-4341-0-mscluster107.ms.wits.ac.za-348904"
+    },
+    {
+      "case_id": 720,
+      "file": "scanner-job-166795.json",
+      "finished_at": 1784749417.8915193,
+      "job_id": 166795,
+      "slurm_job_id": "4344",
+      "status": "error",
+      "task_id": "scanner-job-166795",
+      "worker_id": "codeql-4344-0-mscluster75.ms.wits.ac.za-555257"
+    },
+    {
+      "case_id": 3393,
+      "file": "scanner-job-534540.json",
+      "finished_at": 1784749633.013129,
+      "job_id": 534540,
+      "slurm_job_id": "4347",
+      "status": "ok",
+      "task_id": "scanner-job-534540",
+      "worker_id": "codeql-4347-0-mscluster89.ms.wits.ac.za-289630"
+    },
+    {
+      "case_id": 3394,
+      "file": "scanner-job-534541.json",
+      "finished_at": 1784749641.4791145,
+      "job_id": 534541,
+      "slurm_job_id": "4345",
+      "status": "ok",
+      "task_id": "scanner-job-534541",
+      "worker_id": "codeql-4345-0-mscluster80.ms.wits.ac.za-275808"
+    },
+    {
+      "case_id": 3395,
+      "file": "scanner-job-534542.json",
+      "finished_at": 1784749655.6847887,
+      "job_id": 534542,
+      "slurm_job_id": "4341",
+      "status": "ok",
+      "task_id": "scanner-job-534542",
+      "worker_id": "codeql-4341-0-mscluster107.ms.wits.ac.za-348904"
+    },
+    {
+      "case_id": 3396,
+      "file": "scanner-job-534543.json",
+      "finished_at": 1784749632.5430505,
+      "job_id": 534543,
+      "slurm_job_id": "4344",
+      "status": "ok",
+      "task_id": "scanner-job-534543",
+      "worker_id": "codeql-4344-0-mscluster75.ms.wits.ac.za-555257"
+    }
+  ],
+  "schema_version": 1,
+  "worker_job_ids": [
+    "4341",
+    "4343",
+    "4344",
+    "4345",
+    "4346",
+    "4347"
+  ]
+}

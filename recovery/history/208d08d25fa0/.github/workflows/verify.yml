@@ -1,0 +1,31 @@
+name: Reproducibility tooling checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install SHA-256 pinned dependency version comparator
+        run: |
+          python -m pip install --disable-pip-version-check --require-hashes --only-binary=:all: --no-deps -r requirements/repro_dependency_diff.txt
+      - name: Install pinned workbook-reading dependencies for evidence tests
+        run: python -m pip install --disable-pip-version-check --only-binary=:all: 'openpyxl==3.1.5' 'et-xmlfile==2.0.0'
+      - name: Compile checker
+        run: python -m compileall -q tools analysis src tests
+      - name: Test using synthetic fixtures (no private datasets)
+        run: python -m unittest discover -s tests -v
+      - name: Audit recorded OWP14 and D/D7 provenance arithmetic only
+        run: python -m analysis.frozen_evidence_gate audit-recorded
+      - name: Verify 1,075 imported original-source hashes, plus 2 CodeQL evaluator sources
+        run: python -m tools.verify_imported_sources
+      - name: Verify embedded discovery SQLite SHA and 3,809-case SQL from original source
+        run: python -m analysis.discovery_database_source_lineage audit-source
+      - name: Audit recorded C1/C2 opportunity, matched controls and 455-to-342 root arithmetic
+        run: python -m analysis.cluster_stage_lineage audit-recorded

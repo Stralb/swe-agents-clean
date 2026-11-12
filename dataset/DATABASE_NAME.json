@@ -1,0 +1,17 @@
+{
+  "database_filename": "adversarial-swe-agents.sqlite",
+  "database_bytes": 42187345920,
+  "database_sha256": "b9734456db5b6c1abb1ef72ec146eb4db2cacbb75115b64cfae34b95223d5011",
+  "content_changed": false,
+  "compatibility_alias_retained": true,
+  "dataset_identity_changed": true,
+  "dataset_id": "Stralb/adversarial-swe-agents",
+  "github_repository_renamed": false,
+  "parquet_data_changed": false,
+  "full_sqlite_upload_verified": false,
+  "state": "VERIFIED",
+  "huggingface_commit": "636f3e3dd43e2dcbf33a272a8b3cc337920ff086",
+  "parquet_files_unchanged": 121,
+  "case_rows": 3809,
+  "positive_cases": 192
+}

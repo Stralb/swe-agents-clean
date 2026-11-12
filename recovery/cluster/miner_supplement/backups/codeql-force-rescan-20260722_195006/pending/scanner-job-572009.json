@@ -1,0 +1,1 @@
+{"created_at":1784749398.172044,"payload":{"case_id":3541,"job_id":572009,"job_type":"codeql_security","snapshot_path":"/home-mscluster/astrauss/new/malicious-issue-miner-rate-smart/data/distributed_spool/snapshots/codeql-security.db"},"pool":"codeql_security","schema_version":1,"task_id":"scanner-job-572009"}

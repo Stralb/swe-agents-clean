@@ -1,0 +1,45 @@
+# Credentials, personal files and deployment secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.sqlite
+*.sqlite3
+*.db
+*.db-*
+*.log
+*.out
+id_rsa*
+id_ed25519*
+
+# Never push recovered bulk data or historical source archives indiscriminately
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+*.7z
+*.parquet
+*.sarif
+*.jsonl
+*.patch
+*.diff
+*.ipynb_checkpoints
+
+# Local Python/build artifacts
+__pycache__/
+.pytest_cache/
+.venv/
+venv/
+*.py[cod]
+.coverage
+build/
+dist/
+
+# Local scratch locations
+scratch/
+recovery-local/
+raw-data/
+local-archives/

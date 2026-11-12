@@ -1,0 +1,88 @@
+# Python environments and caches
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+credentials/
+.streamlit/secrets.toml
+
+# Runtime databases and SQLite sidecars
+*.db
+*.db-shm
+*.db-wal
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# Project runtime and generated state
+/data/
+/logs/
+/backups/
+/exports/
+/spool/
+/snapshots/
+/tmp/
+/repos/
+/clones/
+/codeql-db*/
+/scan-results/
+/scanner-output/
+/reports/
+
+# Cluster and worker state
+slurm-*.out
+*.pid
+*.log
+/.agentic_js_*
+/=2024-01-01
+/=50
+/0
+
+# Streamlit runtime cache
+.streamlit/cache/
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*~
+*.swp
+
+# Live control-plane pointers, locks and job IDs
+/.control_plane_job
+/.current_*
+/.daemon-control.lock
+/.distributed_*
+/.final_cheap_job_id
+/.final_codeql_job_id
+/.final_snapshot_db
+/.snapshot_*_db
+/.streamlit_agentic_pid
+/.streamlit_job
+
+# Local code backup copies
+*.before_*
+*.before-*
+*.bak
+*.orig

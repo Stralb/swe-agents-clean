@@ -1,0 +1,441 @@
+\documentclass[acmsmall,screen,nonacm]{acmart}
+\usepackage[T1]{fontenc}
+\usepackage{microtype,float,graphicx,booktabs,tabularx,array,ragged2e,tikz,needspace,colortbl,placeins,longtable}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\settopmatter{printacmref=false,printfolios=true,printccs=true}
+\setcopyright{none}
+\hypersetup{colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black,urlcolor=blue!50!black}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\topfraction}{.9}\renewcommand{\bottomfraction}{.9}\renewcommand{\textfraction}{.1}
+\definecolor{unitshade}{HTML}{ECEFF3}
+\providecommand{\doi}[1]{\href{https://doi.org/#1}{doi:#1}}
+\newcolumntype{Y}{>{\RaggedRight\arraybackslash}X}
+\newcolumntype{L}[1]{>{\RaggedRight\arraybackslash}p{#1}}
+\title[Between the Issue and the Warning]{Between the Issue and the Warning\texorpdfstring{\\[0.25em]}{ }Issue Requirements and Security Warnings in Agent-Associated Pull Requests}
+\hypersetup{pdftitle={Between the Issue and the Warning - Issue Requirements and Security Warnings in Agent-Associated Pull Requests}}
+\author{Arno Strauss}
+\affiliation{\institution{School of Computer Science and Applied Mathematics, University of the Witwatersrand}\city{Johannesburg}\country{South Africa}}
+\email{2613224@students.wits.ac.za}
+\renewcommand{\shortauthors}{Arno Strauss}
+\begin{abstract}
+Coding agents increasingly turn GitHub issues into pull requests (PRs), and security analysis tools report warnings on the resulting changes. A warning by itself, however, identifies neither the changed operation that produced it nor how that operation relates to what the issue requested. I examine this relationship in naturally occurring work by tracing recorded security findings through the responsible code or dependency changes to the requirements of the linked issues. The corpus comprises 3,809 merged, issue-linked JavaScript/\allowbreak TypeScript instances associated with coding agents through public repository indicators, of which 192 have newly recorded findings. In the first 122 annotated instances, 605 findings map to 322 responsible changes, and seven instances hold more than half of the findings but only five of 166 source-code changes. Detailed cases show requested functionality implemented through security-relevant techniques that the issues did not specify, including biased random-character selection, regular-expression text repair and separate file checks and reads. Other findings concern tests, documentation or generated dependency changes. Two secondary analyses examine guidance. In 190 matched pairs, explicit implementation instructions were less common in finding-positive issues than in controls, although separate annotation passes limit this observational comparison. Across 12 complete retrospective replay sets, warning-informed inputs accompanied fewer recorded CodeQL alerts, but one retained output per condition and unverified functionality prevent causal conclusions. Tracing findings to changed operations and issue requirements thus helps interpret warnings without treating them as confirmed vulnerabilities or as evidence of the instructions an agent received.
+\end{abstract}
+\ccsdesc[500]{Software and its engineering~Software creation and management}
+\ccsdesc[300]{Security and privacy~Software and application security}
+\keywords{Empirical software engineering, coding agents, GitHub issues, security analysis, pull requests, implementation provenance}
+\newlength{\crowW}
+\newenvironment{casefile}[2]{\par\Needspace{9\baselineskip}\begingroup\fontsize{8}{9}\selectfont\renewcommand{\arraystretch}{1.18}\setlength{\crowW}{\dimexpr\linewidth-2.15cm-2\tabcolsep\relax}\noindent\begin{tabular}{@{}>{\bfseries\raggedright\arraybackslash}p{2.15cm}>{\raggedright\arraybackslash}p{\crowW}@{}}\toprule\rowcolor{unitshade}\multicolumn{2}{@{}>{\RaggedRight\arraybackslash}p{\linewidth}@{}}{\normalsize #1\par\smallskip\scriptsize #2}\\\midrule}{\bottomrule\end{tabular}\endgroup\par\medskip}
+\newcommand{\crow}[2]{#1 & #2\\}
+\begin{document}
+\maketitle
+\raggedbottom
+\noindent\textit{2026 BSc Honours research paper. Supervised by Prof. Michael Pradel (CISPA) and Prof. Hima Vadapalli (Wits).}
+
+\section{Introduction}
+
+Coding agents can now turn a plain-text request into a code change. On GitHub, an issue has traditionally been a message to a maintainer, in which a user describes a defect or a wanted feature and a person decides how to implement it. Repository-capable coding agents read the same text as a task, search the repository, edit code and open pull requests (PRs) \cite{b9,b20,b22,b25}, and such PRs now appear in large numbers in open-source projects \cite{b11,b21}. Security analysis runs on this work as well. In a dataset of PRs that public signals attribute to coding agents, GitHub's rule-based security bot is among the ten most frequent bot reviewers \cite{b11}. Public issues can therefore supply instructions for automated code changes, and security analysis tools then report on the result.
+
+That channel has a known weakness. Controlled studies show that crafted issue text can steer repair agents toward insecure or vulnerable patches that still pass tests, and that static analysis can miss them \cite{b3,b16}; prompt-injection benchmarks show that tool output and retrieved content can hijack agents, including coding editors \cite{b6,b12,b24}. These studies construct the attack, so they know which operation is responsible and what the issue was meant to cause. In naturally occurring work, the intended effect of an issue is harder to establish. A public issue--PR link is a starting point, not a record of every instruction or source the implementer saw, and links take several forms, including issues opened after the PR they are linked to \cite{b5}.
+
+The public record does, however, expose two things: the merged code change and the findings that security analysis tools report on it. What it does not show directly is how a reported finding relates to the work requested in the linked issue. A finding might concern code that directly implements the request, a test written to accompany it, or a dependency version resolved by tooling along the way, and these situations call for different interpretations. Existing work approaches the question from either side. Issue-resolution benchmarks primarily measure task success \cite{b9}, and studies of coding-agent PRs describe their adoption and development patterns \cite{b11,b21}. Security studies show that a patch can pass functional checks while introducing a weakness \cite{b3,b35}, and the closest work relates security findings to patch source and issue-level information \cite{b48} or to weakness categories and review outcomes in security-related PRs \cite{b49}. This study takes a complementary unit of analysis. For each recorded finding, it identifies the particular changed operation responsible and asks what the linked issue required of that operation.
+
+A concrete case shows why this relationship matters. An \href{https://github.com/ZHANGTIANYAO1/teamspeak-music-bot/issues/112}{issue} in the teamspeak-music-bot project asks for Spotify as an audio source. The linked \href{https://github.com/ZHANGTIANYAO1/teamspeak-music-bot/pull/118}{pull request} delivers it, and in doing so builds a login verifier by turning each random byte into a character with a remainder operation over a 66-character alphabet. Because 256 byte values do not divide evenly into 66, some characters come up slightly more often than others, and CodeQL reports a biased-random warning. CodeQL identifies the flagged location, but the report alone does not establish which PR change introduced the condition or how that change relates to the request. The issue asked for Spotify support, not for this way of choosing characters.
+
+I examine this relationship in 3,809 merged, issue-linked, agent-associated JavaScript/\allowbreak TypeScript instances, of which 192 have newly introduced scanner findings, using public issue discussions, PR changes and tool output. For each retained finding, I identify the code or dependency operation responsible for it and then compare that operation with what the linked issue asked for.
+
+The central distinction is between what an issue requests and how a change implements it. A change can directly implement functionality described in an issue and still trigger a security warning when the warning concerns a technique that the issue left open. Interpreting the warning therefore requires information that the warning itself does not carry: the changed operation, its role in the requested task, and whether it lies in production code, tests, documentation or dependency files. Tracing these relationships makes a warning more informative than its presence or count alone. Figure~\ref{fig:original-workflow} places the study in the issue-driven development workflow, and Figure~\ref{fig:overview} shows the chain from issue to finding that the research questions examine.
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\linewidth]{figures/Fig1_Conceptual.pdf}
+\caption{Workflow overview showing issue-driven implementation, possible context sources, base/head checks and warning-informed reimplementation. The RQ2 marker denotes the new-finding comparison used to define the matched groups, rather than the wording analysis itself. This is a conceptual workflow, not a verified execution trace.}
+\Description{The workflow depicts an issue author, a coding agent, possible human, tool and repository context, implementation changes, a pull request, before-and-after security checks and warning-informed reimplementation.}
+\label{fig:original-workflow}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  font=\small,>={Latex[length=2mm]},
+  box/.style={draw=black!65,fill=black!3,rounded corners=2pt,align=center,text width=2.55cm,minimum height=1.05cm,inner sep=4pt},
+  forward/.style={->,line width=.8pt},
+  trace/.style={->,dashed,line width=.8pt,draw=blue!55!black}]
+\node[box] (issue) at (0,0) {\textbf{GitHub issue}\\Requested behaviour};
+\node[box] (change) at (3.45,0) {\textbf{PR change}\\Changed operation};
+\node[box] (analysis) at (6.9,0) {\textbf{Security analysis}\\Code, packages\\and secrets};
+\node[box] (finding) at (10.35,0) {\textbf{Recorded finding}\\Reported rule or match};
+\draw[forward] (issue) -- (change);
+\draw[forward] (change) -- (analysis);
+\draw[forward] (analysis) -- (finding);
+\draw[trace] (finding.north) -- (10.35,1.15) -- (0,1.15) -- (issue.north);
+\draw[trace] (3.45,1.15) -- (change.north);
+\node[font=\small,align=center,text=blue!55!black] at (5.175,1.55) {\textbf{RQ1} traces the finding to the operation and public request};
+\node[font=\footnotesize,align=center,text width=3cm] at (0,-1.35) {\textbf{RQ2}\\Compare issue wording};
+\node[font=\footnotesize,align=center,text width=3.6cm] at (3.45,-1.35) {\textbf{RQ3}\\Historical reimplementations\\with different information};
+\end{tikzpicture}
+\caption{The relationship examined in the study. Solid arrows show conceptual links, not verified instruction flow in an agent session. RQ1 relates a reported finding to the changed operation and the public issue. RQ2 compares issue wording, while RQ3 examines new implementations of selected historical tasks.}
+\Description{A public issue, a changed PR operation, security analysis and a finding form the conceptual chain. Dashed arrows trace the finding back to the operation and issue. RQ2 examines issue wording and RQ3 historical reimplementations.}
+\label{fig:overview}
+\end{figure}
+
+
+\Needspace{20\baselineskip}
+\subsection{Research Questions}\label{sec:rqs}
+
+The study asks three questions of unequal weight. RQ1 provides the main evidence: it relates recorded security findings to the changed operations behind them and to the work requested in the linked issues. RQ2 and RQ3 examine related questions about guidance, namely whether issue instruction specificity differs between issues with and without new findings, and how implementations and CodeQL results differ when historical tasks are replayed with additional security information.
+\begin{itemize}
+\item \textbf{RQ1.} How do recorded security findings in agent-associated pull requests relate to what their linked issues request?
+\item \textbf{RQ2.} Does issue instruction specificity differ between issues linked to PRs with newly introduced findings and issues linked to matched PRs without new findings under comparable completed checks?
+\item \textbf{RQ3.} In exploratory replays of historical tasks, how do the implementation and CodeQL findings differ between the original issue alone, the issue with its historical warning, and the issue with a security property derived from that warning?
+\end{itemize}
+
+\subsection{Contributions}
+
+The main contribution is an empirical account, at the level of individual changed operations, of how recorded security findings relate to issue requirements in naturally occurring merged PRs. The initial 122-instance analysis links 605 findings to 322 responsible changes and distinguishes changes that directly implement the requested work from changes that support it (Sections~\ref{sec:attrib} and~\ref{sec:roles}). Source-linked cases then show requested functionality implemented through flagged techniques that the issues did not prescribe, and an extended analysis groups 455 changes into 342 implementation choices and examines earlier public evidence for those choices. Two secondary analyses, a matched comparison of issue wording and a set of retrospective replays, explore how guidance relates to recorded findings.
+
+\section{Background}
+
+\subsection{Tasks, Patches and Coding Agents}
+
+GitHub issues record requested functionality, defects and discussion; PRs record proposed changes. Their links permit analysing a request alongside a patch, but do not prove that the public issue initiated, fully specified or dictated the implementation \cite{b5}. Coding agents may also use repository instructions, files and tool output absent from the public issue \cite{b20,b22}. \emph{Agent-associated} means that public PR metadata, branch patterns or issue/PR text indicate coding-agent involvement; a tool mention does not prove agent authorship, so the sample is not a census of autonomously written patches.
+
+\subsection{Warnings, Advisories and Retained Findings}
+
+CodeQL and Semgrep flag patterns in source code; OSV and Trivy report vulnerable dependencies, while Gitleaks identifies possible secrets. CodeQL's query-based approach builds on QL, a language designed for querying program representations \cite{b44}. Throughout the paper, a \emph{finding} is one retained report from any of these tools, not a confirmed vulnerability. For RQ3, the recorded count is specifically the number of new CodeQL alerts in a generated patch.
+
+A PR is \emph{finding-positive} when the recorded before/after comparison detects at least one new finding. A \emph{control} has no new findings under the applicable checks that completed successfully. Controls may still have older findings or lack results from other tools; neither label establishes exploitability or functional correctness.
+
+\subsection{Task Relevance and Mechanism Choice}
+
+\emph{Task role} describes how a change relates to the requested behaviour; whether the issue specified the technique used is a separate question. Suppose an issue asks for an @-mentioned file to be included in a prompt. Reading that file directly addresses the request. Checking its metadata and then reading it by pathname is one particular way of doing so, which the issue need not prescribe. The first observation concerns the task role and the second the implementation choice, and the study records them separately.
+
+\section{Related Work}
+
+\subsection{Coding Agents and How They Are Judged}
+
+SWE-bench evaluates software-repair patches against tests for 2,294 GitHub issues drawn from 12 Python repositories \cite{b9}. SWE-agent, AutoCodeRover and OpenHands provide repository-level interfaces for agents to inspect files, edit code and run tests \cite{b22,b25,b20}. Trae Agent studies test-time scaling for repository-level issue resolution by generating and selecting candidate solutions \cite{b47}. These systems and benchmarks primarily evaluate task completion; the present study instead examines the relationship between recorded security findings, the changes that produced them and the issue requirements.
+
+\subsection{Agent Pull Requests and Issue Mining}
+
+Public signals such as account identities, branch names and co-authorship metadata have been used to study coding-agent PRs at scale. Li et al. analyse agent participation in open-source development, while Watanabe et al. examine how agent-associated PRs are used and integrated on GitHub \cite{b11,b21}. The links between issues and PRs have their own structure and do not necessarily establish which public text initiated a change \cite{b5}. Prior issue research examines the requests made in open-source AI projects and the characteristics of beginner-friendly issues \cite{b23,b26}. This study uses issue links and coding-agent indicators to select its cohort, then inspects the code behind recorded findings rather than treating a link as proof of the instructions received by an agent.
+
+\subsection{Crafted Issues and Untrusted Context}
+
+Przymus et al. show that adversarial bug reports can lead automated repair agents to introduce attacker-aligned changes \cite{b16}. SWExploit constructs misleading issue reports intended to induce functionally correct but vulnerable patches \cite{b3}. AgentDojo and InjecAgent benchmark prompt injection through untrusted tool outputs and other external content; Liu et al. examine attacks against coding editors \cite{b6,b24,b12}. Related defences study detecting and removing injected instructions (PromptArmor) and applying program analysis to agent runtime traces (AgentArmor) \cite{b45,b46}. These experiments investigate adversarial instructions or runtime defences. This paper instead examines naturally occurring merged PRs without assuming that their linked issues are attacks.
+
+\subsection{Static-Analysis Warnings and Generated Code}
+
+Static-analysis findings need interpretation. Johnson et al. report that developers' use of static-analysis tools is affected by false positives and how the warnings fit their workflow \cite{b33}. Pearce et al. assess the security of GitHub Copilot suggestions, showing why plausible code needs security assessment \cite{b35}.
+
+Closer work examines complete patches. Sajadi et al. compare developer, LLM and agent patches on SWE-bench using CodeQL, Semgrep and Bandit. They also examine issue-level information, including code snippets, expected behaviour and reproduction steps \cite{b48}. Their analysis therefore already connects issue context with security outcomes. Rabbi et al. apply before/after Semgrep scans to 675 agent-associated PRs selected as security-related and examine weakness categories, review outcomes and rejection reasons \cite{b49}. The present study differs in selection and in unit of analysis. It selects merged, issue-linked JavaScript/\allowbreak TypeScript work without requiring a security-related description, and it examines how the specific operation associated with each finding relates to the public request.
+
+\subsection{Research Gap}
+
+Existing studies evaluate task completion \cite{b9,b22}, characterise agent-associated PRs \cite{b11,b21}, investigate crafted attacks \cite{b3,b16}, and analyse security findings in generated patches or security-related PRs \cite{b48,b49}. Together they establish that agent-associated changes can carry security findings and, in the case of Sajadi et al., that issue context can be connected with security outcomes \cite{b48}. This study's focus is the step in between. A finding is reported against a location, the location belongs to a changed operation, and that operation either implements or merely accompanies something the issue asked for. Without this chain, a finding in code that fulfils the request cannot be distinguished from one in an accompanying test or a regenerated lockfile, and a technique that the issue prescribed cannot be distinguished from one that it left open. The case analysis examines the chain in naturally occurring merged work, where, unlike in constructed attacks, neither the responsible operation nor the intended effect of the issue is known in advance. The matched comparison and retrospective replays provide supporting, exploratory evidence about issue specificity and additional security information.
+
+\section{Study Design and Methods}
+
+I conducted an observational study of merged, agent-associated PRs linked to public GitHub issues in JavaScript and TypeScript repositories. The study selected issue--PR instances, compared scanner results across each PR, linked new findings to responsible changes (RQ1), compared issue wording with matched controls (RQ2), and examined retrospective warning-informed replays (RQ3). Figure~\ref{fig:overview} shows the conceptual relationship between the public request, implementation and finding; Table~\ref{tab:population-guide} identifies the populations used in each analysis.
+
+\Needspace{6\baselineskip}
+Four units recur throughout. One \emph{instance} is a linked issue--PR pair. A \emph{finding} is a retained scanner report, and a \emph{responsible change} is the code or dependency operation linked to one or more findings. Related responsible changes within an instance are grouped into an \emph{implementation choice}, which describes an observable implementation technique and is neither a separate finding nor a verified private decision by an agent. RQ2 analyses matched instance pairs, and RQ3 analyses generated patches for selected historical tasks. Table~\ref{tab:population-guide} keeps these overlapping populations separate.
+
+\begin{table}[H]
+\caption{Study populations and units. The subsets overlap and must not be added together.}
+\label{tab:population-guide}
+\footnotesize\renewcommand{\arraystretch}{1.10}
+\begin{tabularx}{\linewidth}{@{}L{2.65cm}L{2.2cm}Y@{}}
+\toprule
+\textbf{Population} & \textbf{Size} & \textbf{Use in the paper}\\
+\midrule
+Full corpus & 3,809 instances & Merged, issue-linked PRs; scanner comparisons.\\
+Finding-positive & 192 instances & At least one newly recorded finding.\\
+Initial annotations & 122 instances & 605 findings linked to 322 responsible changes.\\
+Extended mapped set & 191 instances & 455 responsible changes grouped into 342 implementation choices; one positive has no mapped change.\\
+Matched comparison & 190 pairs & One positive and one control per RQ2 pair.\\
+O/W/P replays & 14 tasks & 12 complete sets of three generated patches.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+
+\subsection{Population and Selection}
+
+I searched GitHub for merged PRs linked to issues (qualifiers \texttt{is:pr}, \texttt{is:merged}, \texttt{linked:issue}) in non-archived JavaScript/\allowbreak TypeScript repositories with at least 100 stars, merged between 1 November 2025 and 11 August 2026. JavaScript and TypeScript match the CodeQL and Semgrep rule sets applied, the start date keeps the sample recent, and the star cutoff limits the sample by repository popularity. The snapshot contains 3,809 distinct issue--PR instances in 723 repositories (609 JavaScript, 3,200 TypeScript; selection criteria and cohort characteristics in Table~\ref{tab:cohort}). Agent indicators include PR authorship or metadata, branch and description markers, and weaker issue-side references to Codex, Copilot, Cursor, Claude or Devin; for 236 instances the only association is an issue-side marker, not PR-side evidence. The 100-star threshold is a sampling filter rather than a quality measure. Stars and language are snapshot metadata, not values reconstructed at each merge date. The cohort is neither a random GitHub sample nor an estimate of finding prevalence among all coding-agent work.
+
+\subsection{Detecting and Retaining Introduced Findings}
+
+The pipeline records whether each scanner applies, whether it ran successfully and what it reported (Table~\ref{tab:scanners}). CodeQL and Semgrep findings are counted as introduced when the archived comparison reports them after, but not before, a PR. For the original cohort, retained source-code findings also have a primary or data-flow location on a PR-added line. These are \emph{introduced reports}, not independently established new vulnerabilities. A changed data-flow path may affect an existing flagged statement (Table~\ref{tab:scanners}).
+
+Dependency results received an additional merge-base verification in the first annotation cohort. Package/version records were compared at the PR's true merge base and head; this verification excluded 12 initially positive instances after four earlier exclusions. Section~\ref{sec:s2} reports the checks and their results. Equivalent verification is not established for all 70 subsequently annotated positives, so I do not generalise the stronger verification claim to them.
+
+Of the 3,809 instances, 192 had newly recorded findings. The remaining 3,617 had none under their completed applicable checks; this does not imply that every scanner ran. Detailed annotation covered 122 positives first and 70 later. One positive had no exactly mapped change, leaving the 191-instance mapped set in Table~\ref{tab:population-guide}. The original 122-instance batch was not a random sample. Its 605 findings and 322 responsible changes should not be confused with the 455 changes in the extended mapped set.
+
+\subsection{Removing Duplicates and Linking Findings to Changes}\label{sec:attrib}
+
+A finding and its responsible change are different. In T3Code, for example, two distinct CodeQL rules concern changes made as part of one regular-expression strategy for recognising scoped packages (Section~\ref{sec:s3}). Repeated records of the same finding within an instance were merged, while distinct rules and advisories were kept separate. This yielded 605 findings from 832 raw tool references in the 122-instance cohort. For source-code warnings the comparison used reported rules and locations, changed hunks and available pre-change code; for dependency findings it used declared or resolved versions before and after the PR. A reported file location alone did not establish the responsible operation; Table~\ref{tab:mapping} gives the mapping basis of every finding.
+
+I used model-assisted annotation to propose the code, configuration or dependency change responsible for each retained finding. The model received the scanner finding, tool output and PR diff, but not the issue text or PR description. A candidate link was retained only when the record identified a changed file, a line or diff hunk, and an explanation of how that change accounts for the finding. This records supporting evidence for each link, but does not constitute independent human verification of every link.
+
+For 142 dependency findings in the original cohort, recorded merge-base verification supports the package/version attribution; 36 of these links were resolved during that verification. After exclusions, the 122-case workbook records 605 retained findings mapped to 322 changes (Table~\ref{tab:mapping}). The underlying dependency verification records and counts are given in Section~\ref{sec:s2}.
+
+The recorded annotation model was GPT-5.6 Sol with medium reasoning effort. Because one responsible change can account for multiple findings, the two counts are reported separately. Independent validation limits are discussed in Section~\ref{sec:threats}. Subsequent task-role coding compares the mapped change with the issue's requested goals; it does not independently revalidate the finding-to-change link (Section~\ref{sec:roles}). Case evidence is presented in Sections~\ref{sec:s3} and~\ref{sec:s6}.
+
+Figure~\ref{fig:rq1-method} shows how retained findings are linked to responsible changes, assigned task roles and grouped into implementation choices. Model-assisted grouping of the 455 changes yields 342 choices within instances. Each choice is classified as publicly prescribed, mechanically generated, selected among alternatives or unresolved, using only evidence available before the change (Table~\ref{tab:m1}). Choices made among alternatives are further described using the evidence tiers in Table~\ref{tab:rules-full}.
+
+\begin{figure}[!tbp]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/RQ1_Methodology.pdf}
+\caption{Mapping findings to responsible changes and then to implementation choices. A blue bar at the left of a box marks a model-assisted step. Teal dashed callouts show the permitted evidence (the diff, issue or pre-introduction context); red marks an unsupported mapping or later evidence excluded from origin coding. Heavy dark outlines mark retained counts; the dashed final box denotes explanation tiers considered only for M choices. The yes/no arrows indicate whether a proposed link has supporting code evidence. Retained links require a changed file, line or hunk and supporting explanation (Section~\ref{sec:attrib}).}
+\Description{Scanner findings are deduplicated and linked to changed operations using code evidence. Operations receive task roles and are grouped into implementation choices, which are classified using earlier public evidence.}
+\label{fig:rq1-method}
+\end{figure}
+
+In Case~3 (Section~\ref{sec:rq1-open}), CodeQL's file-system-race report is the finding, and the PR's added check-then-read sequence is the responsible change. The read directly addresses the requested task, although the issue does not prescribe that sequence. These two observations receive separate annotations.
+
+\subsection{Task Role, Affected Files and Earlier Public Evidence}\label{sec:roles}
+
+I used model-assisted coding to assign task roles by comparing a factual operation summary with the issue's requested goals (Table~\ref{tab:m1}). The labels (Direct, Supporting, Unclear) describe the operation's role, not whether its mechanism was publicly prescribed or who chose it. The annotations also record the finding family and the affected file type, distinguishing production source, tests or fixtures, documentation or examples, dependency manifests and generated lockfiles. File type refers to the finding's reported location, which need not be the file containing the mapped change. A pattern in a test or README does not imply the exposure of the same pattern in deployed code.
+
+For the original 322 changes, an initial model-assisted pass assigned task roles using the previously fixed issue request and the change evidence, without PR-description text or complete finding records. A subsequent source-assisted quality-control pass revised 11 roles (seven Direct to Supporting and four Supporting to Direct); the workbook retains the earlier and final labels and case-specific reasons. These corrections do not constitute a second-annotator agreement study or independent revalidation of all links. The 133 later changes also have model-assisted roles.
+
+The extended mapped set contains 455 responsible changes grouped into 342 implementation choices. Model-assisted coding then distinguishes techniques prescribed in earlier public evidence, changes produced mechanically by tools or dependency resolution, and techniques selected among plausible alternatives. Unresolved is allowed where evidence is insufficient (Table~\ref{tab:m1}). For choices made among alternatives, a separate classification describes the strength of any earlier public precedent. The primary counts use one retained classification version; the comparison with an earlier version is confined to Table~\ref{tab:routes}. Independent blind human agreement was not measured.
+
+I assessed earlier public evidence against the recorded time of the change. A pre-existing helper or discussion is a possible source, not evidence that the contributor viewed it. Some linked issues were created after their PRs. In the original 122 instances, 4 PRs were opened before their linked issue and 15 more within 10 minutes after it. These are PR creation times, not the time the implementing code first appeared, and the public issue may omit private user or agent messages. A Direct label therefore records that a change addresses the public issue's goals; it does not establish that the issue preceded or prompted the implementation. A technique's first appearance in the patch, or the absence of an earlier public example, does not establish that the agent invented it.
+
+\begin{table}[!tbp]
+\caption{RQ1 classification rules and their limits. Task role is decided per responsible change; how it arose per grouped choice.}
+\label{tab:m1}
+\fontsize{8}{10}\selectfont\renewcommand{\arraystretch}{1.1}
+\begin{tabularx}{\linewidth}{@{}L{2.5cm}YY@{}}
+\toprule
+\textbf{Category} & \textbf{Decision rule} & \textbf{Interpretation}\\
+\midrule
+\multicolumn{3}{@{}l}{\textit{Task role (per responsible change)}}\\
+\textbf{Direct} & Implements a substantive goal of the public issue. & The issue need not prescribe the mechanism.\\
+\textbf{Supporting} & Enables or accompanies the requested work rather than fulfilling it, including incidental implementation choices the issue did not request. & Role is not inferred from file type alone.\\
+\textbf{Unclear} & Evidence cannot establish the task relation. & Uncertainty is retained, not forced into a binary.\\[2pt]
+\multicolumn{3}{@{}l}{\textit{How the implementation choice arose (per grouped choice)}}\\
+\textbf{H --- prescribed} & Pre-introduction public evidence specifically fixes the mechanism. & A broad goal or later evidence is insufficient.\\
+\textbf{T --- mechanical} & Dependency resolution, generated artifacts or tooling produce the choice. & Not evidence of discretionary choice.\\
+\textbf{M --- selected among alternatives} & One implementable technique was used although public evidence did not require it and plausible alternatives exist. & A known precedent may explain the choice; its source is not established.\\
+\textbf{U --- unresolved} & Evidence cannot separate H, T and M. & Missing evidence is not proof of choice.\\
+\midrule
+\textbf{Earlier public evidence} & For M choices, note any reused code, repository precedent, stated contract or contextual support. & Its availability does not show that the contributor saw it.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Matched Controls and Issue Coding}\label{sec:rq2-design}
+
+RQ2 compares how issues are worded in finding-positive instances and in matched controls with no newly introduced finding under the checks that applied and completed. Controls may carry older findings, and not every tool ran on each instance. The recorded matching procedure paired each PR with new findings with at most one control PR without recorded new findings. Issue-wording annotations were joined after matching. Eligible controls had to cover the positive instance's completed applicable checks, fall within 90 days of its PR creation date and have changed-line and changed-file counts within a factor of about four. Cross-repository controls required exactly the same set of completed checks. The matcher preferred controls from the same repository. Issue wording, review variables and agent identity were not additional matching criteria (Figure~\ref{fig:rq2-method}; protocol in Section~\ref{sec:s5}). Of the 192 positives, 190 were matched (115 same-repository, 75 cross-repository; Table~\ref{tab:rq2-diag}). The analysis used the existing matching records without rerunning the procedure. Matching does not equate the tasks or randomise the wording.
+
+Each issue received one of three wording labels, Problem only, Suggests solution or Explicit instruction. They describe the specificity of wording, not whether a security requirement was stated or the exact mechanism prescribed. An Explicit instruction label therefore does not imply an H classification for the implementation choice. Positive issues and controls were coded in separate passes; the control pass withheld scanner outcomes and pair identities. Because cross-pass agreement was not measured, some of the wording difference could reflect coding differences (Section~\ref{sec:threats}). The 121 original-cohort pairs and the 115 same-repository pairs are nested sensitivity subsets, not independent replications. The matched pair is the unit of analysis. I used a paired Stuart--Maxwell test to compare the three issue-wording categories. The primary test was recomputed from the reported contingency table (Table~\ref{tab:rq2}); the Holm adjustment within a family of nine comparisons and the secondary comparisons are taken from the archived analysis (Section~\ref{sec:s5}). The comparison is observational; its other limitations are discussed in Section~\ref{sec:threats}.
+
+\subsection{Retrospective and Information-Guided Replays}\label{sec:rq3-design}
+
+The RQ3 replays are a retrospective diagnostic, separate from the RQ2 pairs (definitions and protocols in Section~\ref{sec:s6}). Fourteen historical tasks were assigned three input conditions. O supplies the original issue, W adds its historical CodeQL warning, and P adds a security property derived from that warning without naming the rule. W and P were constructed using historical warnings. The experiment therefore does not establish whether equivalent guidance could be identified before implementing a new task. Of 42 intended outputs, 40 are retained (12 O, 14 W and 14 P), giving 12 complete O/W/P triples; the two missing O outputs are not imputed. One output was retained per available task and input condition. The records link these outputs to scan results and baseline identifiers, but do not establish comparable, independent model sessions or functional equivalence across conditions. The tasks were selected for prior CodeQL warnings rather than sampled randomly.
+
+Section~\ref{sec:s6} explains why a separate, incompletely documented pilot is excluded from the replay comparisons.
+
+New CodeQL alerts, including those sharing the historical rule, are reported for the 12 complete triples against their recorded baselines (Table~\ref{tab:replays}). 
+
+\section{Results}
+
+The results first follow findings back to the changes that produced them and to the requests those changes served (RQ1), and then turn to issue wording (RQ2) and replay outcomes (RQ3). The main observation is that warnings were not confined to changes unrelated to the requested task. In several examined cases they concerned code that directly addressed the request, where the issue had left the flagged implementation detail unspecified. Other findings lay in tests or documentation and did not by themselves establish exposure in deployed software.
+
+\subsection{RQ1 --- Findings and the Changes Behind Them}\label{sec:rq1-roles}
+
+In the first 122 finding-positive instances annotated, 605 scanner findings were linked to 322 responsible changes. The two totals differ because a single change can generate several reports. The \href{https://github.com/Pimzino/spec-workflow-mcp/pull/173}{spec-workflow-mcp PR} is the clearest example. It refreshed a lockfile while addressing a path-translation problem, and its 131 dependency-related findings map to 36 changes, each a package version absent at the merge base and present at the head. Figure~\ref{fig:concentration} shows how far a handful of such instances dominate the finding totals; detailed counts are in Table~\ref{tab:concentration}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\linewidth]{figures/Fig5_Concentration.pdf}
+\caption{A few instances hold many findings but almost none of the source-code changes. Each bar splits one total between the seven instances with the most findings and the other 115 in the original cohort. The seven hold 52\% of all findings but only 3\% of source-code responsible changes. Counts for the seven are the totals minus the excluded-seven counts in Table~\ref{tab:concentration}.}
+\Description{The seven instances with the most findings account for more than half of findings but only five of 166 source-code responsible changes. Dependency and data-flow reports account for much of the concentration.}
+\label{fig:concentration}
+\end{figure}
+
+Seven instances account for more than half of the scanner reports but only five of the 166 mapped source-code changes. Much of this concentration reflects dependency findings and repeated data-flow reports. Ranking PRs by warning count would therefore foreground a few dependency updates and test operations, and would give a different picture from examining the underlying source-code changes.
+
+The relationship to the requested task also varies by finding family (Table~\ref{tab:role}). Task role is assigned to each responsible change and is not inferred from the number of warnings it produced. Dependency-related changes were almost all Supporting (132 of 137 for advisories and downgrades), as expected when package versions are resolved alongside the requested work. Source-code changes, by contrast, were as often Direct as Supporting, so about half of the source-code changes behind warnings implemented requested functionality.
+
+\begin{table}[!tbp]
+\caption{Findings and responsible changes by finding family and task role.}
+\label{tab:role}
+\small
+\begin{tabular}{@{}l>{\columncolor{unitshade}}r@{\hspace{10pt}}rrrr@{}}
+\toprule
+& \multicolumn{1}{>{\columncolor{unitshade}}c}{\textbf{Findings}} & \multicolumn{4}{c}{\textbf{Responsible changes (task role)}}\\
+\cmidrule(l{2pt}r{2pt}){2-2}\cmidrule(l){3-6}
+\textbf{Finding family} & \multicolumn{1}{>{\columncolor{unitshade}}r}{Reported} & \textbf{Total} & Direct & Supporting & Unclear\\
+\midrule
+Source-code warnings & 294 & \textbf{166} & 82 & 82 & 2\\
+Dependency advisories and downgrades & 290 & \textbf{137} & 4 & 132 & 1\\
+Secret-like findings & 18 & \textbf{16} & 3 & 13 & 0\\
+Other dependency-version changes & 3 & \textbf{3} & 2 & 1 & 0\\
+\midrule
+Total & 605 & \textbf{322} & 91 & 228 & 3\\
+\bottomrule
+\end{tabular}
+\par\smallskip\raggedright\footnotesize Original 122 finding-positive instances. A finding is one deduplicated tool report; a responsible change is the changed operation to which one or more findings were mapped, and task role is coded per responsible change. Not the extended 455-change population (Section~\ref{sec:s4}).
+\end{table}
+
+The even split between Direct and Supporting source-code changes describes the initial cohort, not a stable population-level balance. Excluding instances with only issue-side agent markers leaves 66 Direct, 79 Supporting and two Unclear changes (Section~\ref{sec:s4}).
+
+A scanner's reported location need not identify the responsible PR change. In the original cohort, data-flow reports often pointed outside the modified test code, sometimes producing many reports from a few changed operations. The detailed location-mapping and sensitivity counts are retained in Section~\ref{sec:s4}.
+
+The affected file also matters. In Paperclip, file-system warnings arose in added regression tests; in dot-ai, a Gitleaks finding concerned a token placeholder in documentation. Neither finding alone establishes exposure in deployed code (source-linked records in Section~\ref{sec:s3}). Figure~\ref{fig:scanner} shows task-role classifications by reporting tool in the extended mapped set.
+
+\subsection{RQ1 --- Requested Behaviour and Implementation Choices}\label{sec:rq1-open}
+
+A Direct role says that an operation implements what the issue asked for; it does not say that the issue chose how. Three cases make this difference concrete. In each, the requested functionality was delivered through a security-relevant technique that the issue did not specify, and a plausible alternative can be identified. The cases are explanatory examples, not a prevalence sample. Each card gives the request, the implemented operation, the resulting warning and an alternative approach; additional source-linked case evidence is provided in Section~\ref{sec:s3}.
+
+\begin{casefile}{\textbf{Case 1 --- Spotify login verifier}\ \ {\scriptsize\texttt{ZHANGTIANYAO1/\allowbreak teamspeak-music-bot}}}{\href{https://github.com/ZHANGTIANYAO1/teamspeak-music-bot/issues/112}{Issue \#112}\ \ \href{https://github.com/ZHANGTIANYAO1/teamspeak-music-bot/pull/118}{PR \#118}}
+\crow{Request}{Add Spotify as an audio source next to existing music services. The issue suggests a solution but says nothing about how the login verifier is built.}
+\crow{What the PR did}{Builds the verifier by turning each random byte into a character with a remainder operation over a 66-character alphabet. 256 is not a multiple of 66, so some characters are slightly more likely.}
+\crow{Warning}{CodeQL reports biased random values in a cryptographic setting.}
+\crow{Reading}{The change implements the requested Spotify service and is classified as Direct, but the issue did not prescribe how to generate the verifier. The character distribution is non-uniform; exploitability was not assessed.}
+\crow{Alternative}{The pre-PR repository already used \texttt{randomBytes(32).toString("base64url")} for session tokens in \href{https://github.com/ZHANGTIANYAO1/teamspeak-music-bot/blob/f8743a904f50a065c9fcf5139e46005b5fff2e46/src/data/sessions.ts\#L56}{\texttt{src/data/sessions.ts:56}}. This is a local example of random-token encoding without modulo reduction, but it was not evaluated as a drop-in replacement for the Spotify verifier. RFC 7636 describes this encoding method for generating a PKCE verifier \cite{b39}.}
+\end{casefile}
+
+\begin{casefile}{\textbf{Case 2 --- GSD tool-call repair}\ \ {\scriptsize\texttt{gsd-build/\allowbreak gsd-2}}}{\href{https://github.com/gsd-build/gsd-2/issues/2660}{Issue \#2660}\ \ \href{https://github.com/gsd-build/gsd-2/pull/3090}{PR \#3090}}
+\crow{Request}{Milestone completion fails when the model writes YAML-style bullet lists into JSON tool arguments. The issue suggests making the JSON format clearer in prompts, templates or schema hints.}
+\crow{What the PR did}{For the final tool-call arguments, the PR attempts strict parsing, uses a regular expression to repair bullet lists if that fails, and can fall back to a streaming parser. Other streaming paths are not assumed to follow this exact sequence.}
+\crow{Warning}{CodeQL reports a regular expression that can take polynomial time on crafted input.}
+\crow{Reading}{The runtime repair addresses the reported parsing failure (Direct). A regular-expression repair was not among the remedies the issue suggested.}
+\crow{Alternative}{The remedies the issue itself named, or a repair that scans the text once without a backtracking pattern. The first is observed in the issue, the second is general practice.}
+\end{casefile}
+
+\begin{casefile}{\textbf{Case 3 --- Grok CLI file mentions}\ \ {\scriptsize\texttt{superagent-ai/\allowbreak grok-cli}}}{\href{https://github.com/superagent-ai/grok-cli/issues/235}{Issue \#235}\ \ \href{https://github.com/superagent-ai/grok-cli/pull/236}{PR \#236}}
+\crow{Request}{Load files referenced with @-mentions into the prompt (Explicit instruction).}
+\crow{What the PR did}{Looks up the path\textquotesingle s metadata and checks it is not a directory, then reads the file in a separate step. The file can change in between.}
+\crow{Warning}{CodeQL reports a potential file-system race between checking and reading a path.}
+\crow{Reading}{Direct. The issue did not prescribe a check-then-read sequence.}
+\crow{Alternative}{Open the file once and read through that handle. A replay on a different file-access task generated a similar pattern (Section~\ref{sec:rq3-res}); this does not establish what the Grok CLI implementer considered.}
+\end{casefile}
+
+
+
+Across these cases, the change is the kind of work the task called for, and the warning concerns something narrower: the particular technique by which the work was done, which the issue left open. The three techniques are unrelated (character selection, text repair and file access), and so are the grounds for regarding each as open, namely a local precedent in the Spotify repository, remedies named in the GSD issue itself, and a single-handle access pattern for Grok CLI. Four further cases (Neo.mjs, T3Code, KIRI, Paperclip; Section~\ref{sec:s3}) show related distinctions. The Chaibuilder case shows why task role and mechanism need separate labels. The issue requested Tailwind CSS v3, so changing the dependency constraint addresses the request. The six dependency entries associated with advisory reports were classified as Supporting; this does not establish that the downgrade necessarily produced each entry.
+
+The extended analysis asks the same question of all 342 implementation choices. In the primary classification, 6 choices were publicly prescribed, 103 were mechanically generated and 233 were selected among alternatives (Table~\ref{tab:routes}). Public prescription of the flagged technique was therefore rare, which is consistent with the cases above. Because these labels are model-assisted, and 43 choices changed label between classification versions (Section~\ref{sec:s4}), I treat the counts as supporting evidence. The cases illustrate the implementation mechanisms rather than the frequency of any one explanation.
+
+\subsection{RQ2 --- Issue Specificity in Matched Instances}\label{sec:rq2-res}
+
+Explicit implementation instructions appeared in 63.7\% of finding-positive issues and 77.9\% of matched controls, a difference of 14.2 percentage points (approximate 95\% confidence interval 5.6--22.8). The paired comparison across all three wording categories gave a Holm-adjusted $p=0.00468$ (Table~\ref{tab:rq2}). Finding-positive issues more often suggested a solution without giving explicit instructions (33 versus 9), while Problem only issues were similarly frequent in both groups (36 versus 33). Two qualifications bound this result. The wording labels measure general implementation specificity, not security guidance, and because the two groups were coded in separate passes, coding differences may contribute to the contrast. Additional comparisons and sensitivity subsets are in Section~\ref{sec:s5}.
+
+\begin{table}[H]
+\caption{Issue wording in 190 matched pairs. Rows give finding-positive issues and columns their matched controls with no newly introduced findings under completed applicable checks.}
+\label{tab:rq2}
+\small
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+& \multicolumn{3}{c}{\textbf{Control issue wording}} & \\
+\cmidrule(lr){2-4}
+\textbf{Positive issue} & Explicit instruction & Problem only & Suggests solution & Total\\
+\midrule
+Explicit instruction & 98 & 15 & 8 & 121\\
+Problem only & 25 & 10 & 1 & 36\\
+Suggests solution & 25 & 8 & 0 & 33\\
+\midrule
+Total & 148 & 33 & 9 & 190\\
+\bottomrule
+\end{tabular}
+\par\smallskip\raggedright\footnotesize Positive labels were frozen in earlier annotation stages; control labels were produced later from blinded packets. Stuart--Maxwell $\chi^2(2)=15.12$, $p=0.00052$ ($p_{\mathrm{Holm}}=0.00468$). Matching diagnostics and subset results are in Section~\ref{sec:s5}.
+\end{table}
+
+The GSD tool-call case (Case~2) illustrates the distinction. Its finding-positive \href{https://github.com/gsd-build/gsd-2/issues/2660}{issue} suggested prompt, template or schema remedies and was classified as suggesting a solution. Its same-repository control, \href{https://github.com/gsd-build/gsd-2/issues/2545}{issue \#2545}, specified expected operations and files for a queue command and was classified as an explicit instruction. The tasks differ, so this pair illustrates the coding categories rather than an effect of issue wording.
+
+\subsection{RQ3 --- Alerts and Implementations in Replays}\label{sec:rq3-res}
+
+\input{tables/owp_replays.tex}
+
+Across the 12 tasks with all three conditions, recorded new CodeQL alerts totalled 21 for the issue alone, 10 with the historical warning and 15 with a warning-derived property (Table~\ref{tab:replays}). These totals compare separately generated patches, one per condition, so they cannot separate the supplied information from ordinary variation between generations. Warning-informed patches were also often smaller, and functional equivalence was not established, so a lower count may reflect less implemented functionality rather than a safer implementation. The results therefore describe differences in scanner outcomes rather than demonstrated security improvement.
+
+\begin{casefile}{\textbf{Case 4 --- cc-wf-studio replay}\ \ {\scriptsize\texttt{breaking-brake/\allowbreak cc-wf-studio}}}{\href{https://github.com/breaking-brake/cc-wf-studio/issues/683}{Issue \#683}\ \ \href{https://github.com/breaking-brake/cc-wf-studio/pull/695}{PR \#695}}
+\crow{Request}{An independent commentary session that narrates workflow execution in a chat panel (Explicit instruction).}
+\crow{Historical PR}{A watcher checks a log file\textquotesingle s size by pathname, then separately opens that path and reads through the resulting file descriptor. CodeQL reported a file-system race.}
+\crow{Replay}{O uses the same two separate steps. W and P instead inspect the size and read through a single open file handle.}
+\crow{Reading}{The warning-informed outputs used a single-handle access pattern instead of separate size-check/read operations.}
+\crow{Limit}{New alerts were 3, 1 and 1, with the historical rule only under O. A reconstructed rerun did not reproduce two archived rule hits, and functional equivalence was not checked.}
+\end{casefile}
+
+The cc-wf-studio case shows what the totals cannot. Its outputs differ in an identifiable file-access pattern, a check-then-use sequence similar to the one flagged in Case~3, and not only in the number of alerts. Such a code-level difference is the more informative observation, although with one output per condition it remains a single instance.
+
+\section{Discussion}
+
+\subsection{What Tracing Adds to a Warning}
+
+A warning arrives as a rule and a location. The analysis in this paper attaches two further facts to it: the changed operation that accounts for the warning, and what the linked issue asked of that operation. Each fact changes how the warning should be read. The first corrects the impression given by counts. In the original cohort, 605 findings reduce to 322 responsible changes, and the seven instances with the most findings contribute only five of 166 source-code changes. Most of their volume comes from dependency updates and two test operations that were reported many times, so alert totals partly reflect how tools enumerate a single change rather than the number of distinct operations that merit review. The second fact separates situations that a list of warnings presents identically. Some flagged operations accompany the requested work, as with regenerated dependency entries or the Paperclip regression tests, and their findings need to be assessed in that context rather than as properties of deployed code. Others are the requested work. In the Spotify, GSD and Grok CLI cases, the flagged operation implements what the issue asked for, yet the issue is silent on the flagged detail: how a verifier's characters are drawn, how malformed arguments are repaired, or whether a file is checked and read in one step or two. Task relevance and security are therefore separate questions. A change can answer the request closely and still warrant security review, because the review concerns a decision that the request never addressed.
+
+This reading differs from the one suggested by controlled attack studies, in which crafted issue text induces a vulnerable patch that still passes tests \cite{b3,b16}. There the issue causes the weakness by construction. In the naturally occurring cases examined here, the issues do not point toward the flagged technique; the issue states a goal and the technique enters at implementation. This does not show that public issues are benign in general, since the study did not look for attacks and static analysis can miss induced vulnerabilities \cite{b3,b16}. It does indicate that, for interpreting an ordinary warning, the more informative question is which implementation details the request left open rather than what the request instructed.
+
+\subsection{What Could Explain a Mechanism Choice}\label{sec:explain}
+
+For each of these open details, the public record offers context but not a decision history. Repository helpers, generated dependency files and remedies suggested in an issue are observable before the change. The pre-PR Spotify repository already encoded session tokens without modulo reduction, and the GSD issue itself proposed prompt and schema changes rather than a runtime repair. Such evidence supports a distinction between a technique that public evidence required, a technique for which a precedent or alternative was available, and a technique produced mechanically by tooling. In the extended model-assisted classification, public prescription was rare (6 of 342 choices), while most choices were selected among alternatives (233) or produced mechanically (103). The evidence does not show that a contributor saw a precedent, considered an alternative or chose deliberately (Section~\ref{sec:roles}), and the alternatives named in the cases were not all tested as equivalent replacements. The study therefore characterises what was left open and what was publicly available, not why a particular technique was used.
+
+\subsection{Implications and Follow-up}
+
+Three implications follow, in decreasing order of evidential support. First, security findings on agent-associated PRs are better reported and triaged per responsible change than per alert. Reducing reports to the changed operation, and noting whether it lies in deployed source, a test, documentation or a lockfile, removes much of the apparent volume and directs attention to the operations that carry the requested behaviour. Second, studies that compare security outcomes across patch sources or prompts should treat the finding count with caution as an outcome measure, since in this cohort it was dominated by a few instances and by repeated reports of single changes. The same caution applies to RQ3, where alert totals were lower under warning-informed inputs while the more informative difference in cc-wf-studio was a specific file-access pattern. Third, and more tentatively, the open details in the cases suggest where guidance might matter. The RQ2 association between less explicit issues and new findings is compatible with this view, but it concerns general implementation specificity rather than the flagged technique, the tasks within a pair differ, and the two groups were coded in separate passes. An Explicit instruction label did not prevent the Grok CLI issue from leaving its file-access sequence open. Whether stating a security-relevant detail in advance changes the implementation is a question that the present data raise but cannot answer.
+
+Follow-up work can address the limits of the secondary analyses directly. For RQ2, blinded, mixed-order coding of positive and control issues with independent agreement assessment would address the possible coding-pass confounder. For RQ3, a test of guidance should record complete model inputs, repeat each input condition independently and validate that the resulting patches complete the task, so that differences in alerts can be separated from generation variability and from omitted functionality. Warning-derived guidance should remain explicitly retrospective; guidance inferred only from the task and the pre-change repository would test a different, prospective claim. A human-authored comparison could then examine whether the observed patterns are specific to agent-associated work.
+
+\section{Threats to Validity}\label{sec:threats}
+
+\paragraph{Attribution and annotation.} Finding-to-change links and many task-role and mechanism-origin labels were proposed by a language model and retained under the stated evidence rules (Section~\ref{sec:attrib}). The original workbook documents 11 task-role corrections but does not establish complete, independent human review of the 605 links or a second-annotator agreement rate. These model-assisted annotations should not be treated as independent human ground truth. Errors in judging whether an operation directly fulfils an issue requirement could move changes between Direct and Supporting. No direction of systematic error is assumed. The role distribution also changes when weaker issue-side-only agent markers are excluded (Section~\ref{sec:rq1-roles}). Results about task roles, concentration and implementation choices therefore depend on these annotations. Four of the 122 original PRs predate their linked issue, and 15 more were opened within ten minutes afterward. Together with uncertain agent association, this limits any claim about what instructions produced the code.
+
+\paragraph{Sampling and measurement.} The corpus is selected using public agent markers, merge status, issue links, language and repository popularity, not verified line-by-line agent authorship. The original 122 positives form an initial annotation batch, not a random sample; no human-authored comparison is available. One dependency change can generate many advisory reports, which drives the concentration result. For 159 findings supported by changed data-flow locations, the archived before/after comparison cannot by itself exclude a previously existing flagged statement whose flow changed. A scanner warning is not a confirmed exploitable vulnerability, and a scan without new findings is not proof of secure code. Test fixtures, documentation and lockfiles also require a different assessment from deployed source.
+
+\paragraph{Matching and replay.} The paired wording statistic is reproducible from Table~\ref{tab:rq2}, but matching does not control task content or all confounders. Positive and control wording labels were produced in different annotation passes without a cross-pass agreement estimate. Stronger merge-base dependency verification is evidenced for the original annotation cohort only; the comparison therefore retains possible measurement differences. The observed wording difference is an association, not an effect. RQ3 used retrospectively selected tasks and hindsight-derived inputs. With one retained output per task and input condition, the replay analysis cannot distinguish differences associated with the supplied information from variation between model generations. The alert counts are consequently descriptive, not estimates of an intervention effect. The historical alert totals were not independently regenerated, and generated patches were not functionally validated; fewer alerts therefore do not establish prevention or repair.
+
+\section{Conclusion}
+
+This study traced recorded security findings in merged, agent-associated pull requests back to the changed operations responsible for them and to the requirements of the linked public issues. The tracing shows three things that warning counts do not. Findings and changes are different quantities: in the first 122 annotated instances, 605 findings corresponded to 322 responsible changes, and seven instances, dominated by dependency updates and repeated data-flow reports, held more than half of the findings. The role and location of a flagged change vary: 228 of the 322 changes supported the requested work rather than implementing it, and findings in tests, documentation or dependency files require a different interpretation from findings in deployed source. And where a flagged change did implement the requested behaviour, as in the Spotify, GSD and Grok CLI cases, the warning concerned a security-relevant technique that the issue had not prescribed.
+
+The two secondary analyses concern guidance and support only limited statements. Issues linked to PRs with new findings less often contained explicit implementation instructions than their matched controls, an observational association whose two groups were coded in separate passes. Retrospective replays recorded fewer CodeQL alerts and, in one examined case, a different file-access pattern under warning-informed inputs, without independent repetitions or verified functionality. Neither result establishes a preventive effect. What the study establishes is the value of the intermediate step. A security warning on an agent-associated change becomes interpretable once it is attached to the operation that produced it and to what the issue asked of that operation, because only then can a reader distinguish requested behaviour from accompanying work, and a prescribed technique from one that the request left open. These distinctions determine what a warning means for review, and warning totals alone do not provide them.
+
+\section*{Data and Code Availability}
+
+The study data and code can be found in the \href{https://github.com/Stralb/adversarial-swe-agents}{project repository}.
+
+\clearpage
+\raggedbottom
+\begingroup
+\begin{thebibliography}{99}
+\fontsize{8}{8.5}\selectfont
+\enlargethispage{\baselineskip}
+\setlength{\itemsep}{0pt}
+\setlength{\parsep}{0pt}
+\setlength{\parskip}{0pt}
+\bibitem{b44} Pavel Avgustinov, Oege de Moor, Michael Peyton Jones, and Max Sch\"afer. 2016. QL: Object-oriented Queries on Relational Data. In \emph{30th European Conference on Object-Oriented Programming (ECOOP 2016)}, Leibniz International Proceedings in Informatics, Vol. 56. Schloss Dagstuhl--Leibniz-Zentrum f\"ur Informatik, Dagstuhl, Germany, Article 2, 2:1--2:26. \doi{10.4230/LIPIcs.ECOOP.2016.2}
+\bibitem{b3} Simin Chen, Yixin He, Suman Jana, and Baishakhi Ray. 2025. Red Teaming Program Repair Agents: When Correct Patches can Hide Vulnerabilities. arXiv:2509.25894v1. \url{https://arxiv.org/abs/2509.25894v1}
+\bibitem{b6} Edoardo Debenedetti, Jie Zhang, Mislav Balunovi\'c, Luca Beurer-Kellner, Marc Fischer, and Florian Tram\`er. 2024. AgentDojo: A Dynamic Environment to Evaluate Prompt Injection Attacks and Defenses for LLM Agents. In \emph{Advances in Neural Information Processing Systems}, Vol. 37. Curran Associates, Inc., 82895--82920. \doi{10.52202/079017-2636}
+\bibitem{b5} Cleidson R. B. de Souza, Emilie Ma, Jesse Wong, Dongwook Yoon, and Ivan Beschastnikh. 2024. Revealing Software Development Work Patterns with PR-Issue Graph Topologies. \emph{Proceedings of the ACM on Software Engineering} 1, FSE, Article 106 (July 2024), 22 pages. \doi{10.1145/3660813}
+\bibitem{b47} Pengfei Gao, Zhao Tian, Xiangxin Meng, Xinchen Wang, Ruida Hu, Yuanan Xiao, Yizhou Liu, Zhao Zhang, Junjie Chen, Cuiyun Gao, Yun Lin, Yingfei Xiong, Chao Peng, and Xia Liu. 2025. Trae Agent: An LLM-based Agent for Software Engineering with Test-time Scaling. arXiv:2507.23370. \doi{10.48550/arXiv.2507.23370}
+\bibitem{b9} Carlos E. Jimenez, John Yang, Alexander Wettig, Shunyu Yao, Kexin Pei, Ofir Press, and Karthik Narasimhan. 2024. SWE-bench: Can Language Models Resolve Real-World GitHub Issues? In \emph{The Twelfth International Conference on Learning Representations (ICLR 2024)}. \url{https://arxiv.org/abs/2310.06770}
+\bibitem{b33} Brittany Johnson, Yoonki Song, Emerson Murphy-Hill, and Robert Bowdidge. 2013. Why Don't Software Developers Use Static Analysis Tools to Find Bugs? In \emph{Proceedings of the 2013 International Conference on Software Engineering (ICSE '13)}. IEEE Press, Piscataway, NJ, USA, 672--681. \doi{10.1109/ICSE.2013.6606613}
+\bibitem{b11} Hao Li, Haoxiang Zhang, and Ahmed E. Hassan. 2025. The Rise of AI Teammates in Software Engineering (SE) 3.0: How Autonomous Coding Agents Are Reshaping Software Engineering. arXiv:2507.15003. \doi{10.48550/arXiv.2507.15003}
+\bibitem{b12} Yue Liu, Yanjie Zhao, Yunbo Lyu, Ting Zhang, Haoyu Wang, and David Lo. 2025. ``Your AI, My Shell'': Demystifying Prompt Injection Attacks on Agentic AI Coding Editors. arXiv:2509.22040. \doi{10.48550/arXiv.2509.22040}
+\bibitem{b35} Hammond Pearce, Baleegh Ahmad, Benjamin Tan, Brendan Dolan-Gavitt, and Ramesh Karri. 2022. Asleep at the Keyboard? Assessing the Security of GitHub Copilot's Code Contributions. In \emph{2022 IEEE Symposium on Security and Privacy (SP)}. IEEE, 754--768. \doi{10.1109/SP46214.2022.9833571}
+\bibitem{b16} Piotr Przymus, Andreas Happe, and J\"urgen Cito. 2026. Adversarial Bug Reports as a Security Risk in Language Model-Based Automated Program Repair. In \emph{Proceedings of the 23rd International Conference on Mining Software Repositories (MSR '26)}. Association for Computing Machinery, New York, NY, USA, 212--223. \doi{10.1145/3793302.3793352}
+\bibitem{b49} Md Fazle Rabbi, Asif K. Turzo, Arifa I. Champa, and Minhaz F. Zibran. 2026. Insights into Security-Related AI-Generated Pull Requests. arXiv:2604.19965v1. \url{https://arxiv.org/abs/2604.19965v1}
+\bibitem{b48} Amirali Sajadi, Kostadin Damevski, and Preetha Chatterjee. 2025. Are AI-Generated Fixes Secure? Analyzing LLM and Agent Patches on SWE-bench. arXiv:2507.02976v1. \url{https://arxiv.org/abs/2507.02976v1}
+\bibitem{b39} Nat Sakimura, John Bradley, and Naveen Agarwal. 2015. Proof Key for Code Exchange by OAuth Public Clients. RFC 7636. Internet Engineering Task Force. \url{https://www.rfc-editor.org/rfc/rfc7636}
+\bibitem{b45} Tianneng Shi, Kaijie Zhu, Zhun Wang, Yuqi Jia, Will Cai, Weida Liang, Haonan Wang, Hend Alzahrani, Joshua Lu, Kenji Kawaguchi, Basel Alomair, Xuandong Zhao, William Yang Wang, Neil Gong, Wenbo Guo, and Dawn Song. 2025. PromptArmor: Simple yet Effective Prompt Injection Defenses. arXiv:2507.15219. \doi{10.48550/arXiv.2507.15219}
+\bibitem{b26} Xin Tan, Minghui Zhou, and Zeyu Sun. 2020. A First Look at Good First Issues on GitHub. In \emph{Proceedings of the 28th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering (ESEC/FSE '20)}. Association for Computing Machinery, New York, NY, USA, 398--409. \doi{10.1145/3368089.3409746}
+\bibitem{b46} Peiran Wang, Yang Liu, Yunfei Lu, Yifeng Cai, Hongbo Chen, Qingyou Yang, Jie Zhang, Jue Hong, and Ye Wu. 2025. AgentArmor: Enforcing Program Analysis on Agent Runtime Trace to Defend Against Prompt Injection. arXiv:2508.01249v1. \url{https://arxiv.org/abs/2508.01249v1}
+\bibitem{b20} Xingyao Wang, Boxuan Li, Yufan Song, Frank F. Xu, Xiangru Tang, Mingchen Zhuge, Jiayi Pan, Yueqi Song, Bowen Li, Jaskirat Singh, Hoang H. Tran, Fuqiang Li, Ren Ma, Mingzhang Zheng, Bill Qian, Yanjun Shao, Niklas Muennighoff, Yizhe Zhang, Binyuan Hui, Junyang Lin, Robert Brennan, Hao Peng, Heng Ji, and Graham Neubig. 2025. OpenHands: An Open Platform for AI Software Developers as Generalist Agents. In \emph{The Thirteenth International Conference on Learning Representations (ICLR 2025)}. \url{https://arxiv.org/abs/2407.16741}
+\bibitem{b21} Miku Watanabe, Hao Li, Yutaro Kashiwa, Brittany Reid, Hajimu Iida, and Ahmed E. Hassan. 2026. On the Use of Agentic Coding: An Empirical Study of Pull Requests on GitHub. \emph{ACM Transactions on Software Engineering and Methodology} 35, 10 (2026), 1--24. \doi{10.1145/3798166}
+\bibitem{b22} John Yang, Carlos E. Jimenez, Alexander Wettig, Kilian Lieret, Shunyu Yao, Karthik Narasimhan, and Ofir Press. 2024. SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering. In \emph{Advances in Neural Information Processing Systems}, Vol. 37. Curran Associates, Inc., 50528--50652. \doi{10.52202/079017-1601}
+\bibitem{b23} Zhou Yang, Chenyu Wang, Jieke Shi, Thong Hoang, Pavneet Kochhar, Qinghua Lu, Zhenchang Xing, and David Lo. 2023. What Do Users Ask in Open-Source AI Repositories? An Empirical Study of GitHub Issues. In \emph{2023 IEEE/ACM 20th International Conference on Mining Software Repositories (MSR)}. IEEE, 79--91. \doi{10.1109/MSR59073.2023.00024}
+\bibitem{b24} Qiusi Zhan, Zhixiang Liang, Zifan Ying, and Daniel Kang. 2024. InjecAgent: Benchmarking Indirect Prompt Injections in Tool-Integrated Large Language Model Agents. In \emph{Findings of the Association for Computational Linguistics: ACL 2024}. Association for Computational Linguistics, Bangkok, Thailand, 10471--10506. \doi{10.18653/v1/2024.findings-acl.624}
+\bibitem{b25} Yuntong Zhang, Haifeng Ruan, Zhiyu Fan, and Abhik Roychoudhury. 2024. AutoCodeRover: Autonomous Program Improvement. In \emph{Proceedings of the 33rd ACM SIGSOFT International Symposium on Software Testing and Analysis (ISSTA '24)}. Association for Computing Machinery, New York, NY, USA, 1592--1604. \doi{10.1145/3650212.3680384}
+\end{thebibliography}
+\endgroup
+
+\input{supplement.tex}
+
+\end{document}

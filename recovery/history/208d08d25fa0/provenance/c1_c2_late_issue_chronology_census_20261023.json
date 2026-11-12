@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "status": "CANDIDATE_SQLITE_CHRONOLOGY_WITH_FROZEN_C1_C2_MEMBERSHIP_VERIFIED_SOURCE_HASH_EXPECTATIONS",
+  "audited_on": "2026-10-23",
+  "chronology_source": {
+    "database": "miner.agentic-js.eval.20260720_224159.full3809-continuation.db",
+    "relation": "cases join issues on case.issue_id and pull_requests on case.pr_id",
+    "issue_time_column": "issues.created_at",
+    "pr_open_column": "pull_requests.created_at",
+    "pr_merge_column": "pull_requests.merged_at",
+    "timestamp_zone": "UTC",
+    "is_authenticated_final_august_database": false,
+    "all_3809_rows_recounted_by_disjoint_id_ranges": true,
+    "late_id_list_independently_queried": true
+  },
+  "C1_source": {
+    "path": "matched_control_c1_v1_1/C1_CASE_SCANNER_OPPORTUNITY_3809.csv",
+    "expected_sha256_attested_in_earlier_recovery": "6028cb41a3ab80921395f16ffd7c398763631d901363a4a326cb5f04bdca5d7b",
+    "file_bytes": 841710,
+    "records": 3809,
+    "scanner_positive": 192,
+    "scanner_negative": 3617,
+    "read_this_audit": "all 3809 records in two disjoint byte-start segments",
+    "sha256_recomputed_in_this_step": false
+  },
+  "C2_source": {
+    "path": "matched_control_c2_v1_0/C2_MATCHED_PAIRS_FROZEN.csv",
+    "expected_sha256_attested_in_earlier_recovery": "4568dcadd50e827004b13c9a435c7034babce8ebf96d6a9bee49b66c9b11be2b",
+    "file_bytes": 56175,
+    "records": 190,
+    "tier_A": 115,
+    "tier_B": 75,
+    "read_this_audit": "all 190 records from original C2 source",
+    "sha256_recomputed_in_this_step": false
+  },
+  "chronology": {
+    "late_created_case_ids": [
+      101,
+      119,
+      222,
+      308,
+      427,
+      476,
+      482,
+      705,
+      706,
+      3324,
+      3331,
+      3342,
+      3415,
+      3677,
+      4021,
+      4022,
+      4096,
+      4098,
+      4409,
+      4410,
+      4481,
+      5264,
+      5267,
+      6141,
+      7682,
+      7782,
+      7788,
+      8144,
+      8476,
+      10185,
+      10380,
+      11280,
+      11299,
+      11900,
+      12303,
+      12334,
+      12335,
+      12343,
+      12885,
+      16231,
+      16232,
+      16358,
+      16603,
+      17608,
+      20023,
+      32758,
+      36213,
+      37310,
+      44072
+    ],
+    "after_pr_merged_case_ids": [
+      11280,
+      16358,
+      16603,
+      37310,
+      44072
+    ],
+    "positive_late_case_ids": [
+      5264,
+      5267,
+      7682,
+      12334
+    ],
+    "negative_late_count": 45,
+    "after_merge_scanner_positive_count": 0,
+    "late_case_count": 49
+  },
+  "C2_matching": {
+    "affected_pair_count": 9,
+    "affected_pairs": [
+      {
+        "positive_case_id": 708,
+        "control_case_id": 12343,
+        "match_tier": "B"
+      },
+      {
+        "positive_case_id": 3340,
+        "control_case_id": 3342,
+        "match_tier": "A"
+      },
+      {
+        "positive_case_id": 5264,
+        "control_case_id": 16296,
+        "match_tier": "B"
+      },
+      {
+        "positive_case_id": 5267,
+        "control_case_id": 549,
+        "match_tier": "B"
+      },
+      {
+        "positive_case_id": 7682,
+        "control_case_id": 17908,
+        "match_tier": "B"
+      },
+      {
+        "positive_case_id": 12334,
+        "control_case_id": 12335,
+        "match_tier": "A"
+      },
+      {
+        "positive_case_id": 17048,
+        "control_case_id": 4410,
+        "match_tier": "B"
+      },
+      {
+        "positive_case_id": 32759,
+        "control_case_id": 32758,
+        "match_tier": "A"
+      },
+      {
+        "positive_case_id": 33183,
+        "control_case_id": 4021,
+        "match_tier": "A"
+      }
+    ],
+    "affected_tier_A": 4,
+    "affected_tier_B": 5,
+    "late_positive_case_count_in_C2": 4,
+    "late_control_case_count_in_C2": 6,
+    "one_pair_has_both_late": true
+  },
+  "science_limits": {
+    "issue_created_after_PR_open_does_not_imply_no_later_issue_influence": true,
+    "issue_created_after_PR_merged_precludes_issue_influence_before_merge": true,
+    "issue_body_as_of_root_not_authenticated": true,
+    "original_frozen_cohort_changed": false,
+    "original_C6_test_recomputed": false,
+    "full_SQLite_final_sha_verified": false,
+    "D7_annotations_changed": false
+  }
+}

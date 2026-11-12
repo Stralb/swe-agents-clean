@@ -1,0 +1,525 @@
+from __future__ import annotations
+
+import html
+import json
+import streamlit as st
+
+from src.db.database import Database
+from src.pipeline.case_exporter import selected_evidence_zip
+from ui.components.evidence_panels import render_downstream_panel, render_review_panel, render_upstream_panel
+from ui.retrieval import ai_marker_label, derive_stage, render_query_html, signal_label, row_signal_label, derive_query_terms
+
+CASE_QUERY = """
+SELECT
+    c.id AS case_id,
+    c.ai_cohort,
+    c.downstream_signal,
+    c.auto_tags,
+    c.status,
+    c.final_label,
+    c.review_notes,
+    r.full_name AS repo,
+    r.html_url AS repo_url,
+    i.url AS issue_url,
+    i.title AS issue_title,
+    i.body AS issue_body,
+    i.author AS issue_author,
+    i.state AS issue_state,
+    i.created_at AS issue_created_at,
+    i.closed_at AS issue_closed_at,
+    i.comments_count AS issue_comments_count,
+    i.word_count AS issue_word_count,
+    p.url AS pr_url,
+    p.title AS pr_title,
+    p.body AS pr_body,
+    p.author AS pr_author,
+    p.state AS pr_state,
+    p.merged AS pr_merged,
+    p.created_at AS pr_created_at,
+    p.closed_at AS pr_closed_at,
+    p.merged_at AS pr_merged_at,
+    COALESCE((SELECT GROUP_CONCAT(pf.filename, ',') FROM pr_files pf WHERE pf.pr_id=c.pr_id), '') AS file_names,
+    COALESCE((SELECT GROUP_CONCAT(am.matched_tool, ',') FROM ai_markers am WHERE am.case_id=c.id OR am.issue_id=c.issue_id OR am.pr_id=c.pr_id), '') AS ai_marker_terms,
+    COALESCE((SELECT GROUP_CONCAT(ipl.method, ',') FROM issue_pr_links ipl WHERE ipl.issue_id=c.issue_id AND ipl.pr_id=c.pr_id), '') AS link_methods,
+    COALESCE((SELECT GROUP_CONCAT(sr.scanner || ':' || sr.status, ',') FROM scanner_runs sr WHERE sr.pr_id=c.pr_id), '') AS scanner_statuses,
+    COALESCE((SELECT GROUP_CONCAT(sj.job_type || ':' || sj.status, ',') FROM scanner_jobs sj WHERE sj.case_id=c.id), '') AS scanner_job_statuses,
+    uf.has_code_block,
+    uf.has_inline_code,
+    uf.has_traceback_or_log,
+    uf.has_file_path,
+    uf.has_function_or_class,
+    uf.has_dependency_or_version,
+    uf.has_suggested_fix,
+    uf.has_ai_marker,
+    uf.feature_json
+FROM cases c
+JOIN repos r ON c.repo_id = r.id
+JOIN issues i ON c.issue_id = i.id
+JOIN pull_requests p ON c.pr_id = p.id
+LEFT JOIN upstream_features uf ON uf.issue_id = i.id
+WHERE c.id=?
+"""
+
+
+def _case_options(
+    db: Database,
+) -> list[dict]:
+    return db.query(
+        """
+        WITH scanner_statuses AS (
+            SELECT
+                pr_id,
+
+                GROUP_CONCAT(
+                    scanner || ':' || status,
+                    ','
+                ) AS statuses
+
+            FROM scanner_runs
+            GROUP BY pr_id
+        ),
+
+        job_statuses AS (
+            SELECT
+                case_id,
+
+                GROUP_CONCAT(
+                    job_type || ':' || status,
+                    ','
+                ) AS statuses
+
+            FROM scanner_jobs
+            GROUP BY case_id
+        )
+
+        SELECT
+            c.id,
+            r.full_name AS repo,
+
+            SUBSTR(
+                i.title,
+                1,
+                80
+            ) AS issue_title,
+
+            c.status,
+
+            COALESCE(
+                c.downstream_signal,
+                'clean'
+            ) AS signal,
+
+            COALESCE(
+                scanner_statuses.statuses,
+                ''
+            ) AS scanner_statuses,
+
+            COALESCE(
+                job_statuses.statuses,
+                ''
+            ) AS scanner_job_statuses
+
+        FROM cases c
+
+        JOIN repos r
+          ON c.repo_id = r.id
+
+        JOIN issues i
+          ON c.issue_id = i.id
+
+        LEFT JOIN scanner_statuses
+          ON scanner_statuses.pr_id = c.pr_id
+
+        LEFT JOIN job_statuses
+          ON job_statuses.case_id = c.id
+
+        ORDER BY
+            CASE c.status
+                WHEN 'needs_review' THEN 0
+                WHEN 'scanner_running' THEN 1
+                WHEN 'metadata_collected' THEN 2
+                WHEN 'scan_blocked' THEN 3
+                WHEN 'scanner_blocked' THEN 3
+                WHEN 'scanned_clean' THEN 4
+                ELSE 5
+            END,
+
+            c.id ASC
+        """
+    )
+
+
+def _format_option(row: dict) -> str:
+    return f"#{row['id']} · {signal_label(row.get('signal'), row.get('status'))} · {row.get('status')} · {row['repo']} · {row['issue_title']}"
+
+
+def _queue_ids(options: list[dict]) -> list[int]:
+    ids = st.session_state.get("review_queue_ids")
+    if isinstance(ids, list) and ids:
+        valid = {int(o["id"]) for o in options}
+        return [int(x) for x in ids if int(x) in valid]
+    return [int(o["id"]) for o in options]
+
+
+ROUTE_TO_SCANNER = {
+    "semgrep_source": "semgrep",
+    "semgrep_script": "semgrep",
+    "codeql": "codeql",
+    "dependency_downgrade": (
+        "dependency-diff"
+    ),
+    "osv_dependency": "osv-scanner",
+    "secret_ci": "gitleaks",
+    "trivy_dependency": "trivy-scanner",
+    "trivy": "trivy-scanner",
+    "trivy_vuln": "trivy-scanner",
+    "trivy_secret": "trivy-scanner",
+    "trivy_misconfig": "trivy-scanner",
+}
+
+
+def _route_list(
+    value: str | None,
+) -> list[str]:
+    try:
+        parsed = json.loads(
+            value or "[]"
+        )
+    except Exception:
+        return []
+
+    if not isinstance(
+        parsed,
+        list,
+    ):
+        return []
+
+    return [
+        str(item)
+        for item in parsed
+    ]
+
+
+def _render_region_mapping(
+    profile: dict | None,
+    rows: list[dict],
+    scanner_runs: list[dict],
+) -> None:
+    st.markdown("---")
+
+    st.markdown(
+        "#### Artifact-region mapping"
+    )
+
+    st.caption(
+        "Versioned, multi-label routing evidence. "
+        "A region describes the touched artifact; "
+        "it is not a maliciousness decision."
+    )
+
+    if not rows:
+        st.warning(
+            "UNMAPPED: no region record exists for "
+            "this pair. This differs from "
+            "`unknown_machine_readable`, where the "
+            "mapper ran but could not assign a more "
+            "specific artifact category."
+        )
+        return
+
+    regions = sorted({
+        str(
+            row.get("region")
+            or "unknown"
+        )
+        for row in rows
+    })
+
+    versions = sorted({
+        str(
+            row.get("mapping_version")
+            or "unknown"
+        )
+        for row in rows
+    })
+
+    unknown_count = sum(
+        row.get("region")
+        == "unknown_machine_readable"
+        for row in rows
+    )
+
+    columns = st.columns(4)
+
+    columns[0].metric(
+        "Regions",
+        len(regions),
+    )
+
+    columns[1].metric(
+        "Mapped files",
+        len(rows),
+    )
+
+    columns[2].metric(
+        "Unknown artifacts",
+        unknown_count,
+    )
+
+    columns[3].metric(
+        "Mapping version",
+        ", ".join(versions),
+    )
+
+    st.markdown(
+        "**Pair regions:** "
+        + " ".join(
+            "`%s`" % region
+            for region in regions
+        )
+    )
+
+    compatibility_summary = (
+        (profile or {}).get(
+            "primary_region"
+        )
+        or "not stored"
+    )
+
+    st.caption(
+        "Compatibility summary: `%s`. "
+        "This field is not an exclusive "
+        "scientific label."
+        % compatibility_summary
+    )
+
+    latest_status = {}
+
+    # scanner_runs is ordered newest first per
+    # scanner in the current case query.
+    for run in scanner_runs:
+        scanner = str(
+            run.get("scanner")
+            or "unknown"
+        )
+
+        latest_status.setdefault(
+            scanner,
+            str(
+                run.get("status")
+                or "unknown"
+            ),
+        )
+
+    details = []
+
+    for row in rows:
+        routes = _route_list(
+            row.get("scanner_routes")
+        )
+
+        observed = []
+
+        for route in routes:
+            scanner = ROUTE_TO_SCANNER.get(
+                route
+            )
+
+            if scanner:
+                observed.append(
+                    "%s -> %s:%s"
+                    % (
+                        route,
+                        scanner,
+                        latest_status.get(
+                            scanner,
+                            "not run",
+                        ),
+                    )
+                )
+            else:
+                observed.append(
+                    "%s -> no implemented "
+                    "scanner mapping"
+                    % route
+                )
+
+        details.append({
+            "Path": row.get("path"),
+            "Region": row.get("region"),
+            "Language": (
+                row.get("language")
+                or ""
+            ),
+            "Confidence": (
+                row.get("confidence")
+                or ""
+            ),
+            "Reason": (
+                row.get("evidence")
+                or ""
+            ),
+            "Planned routes": (
+                ", ".join(routes)
+                or "none"
+            ),
+            "Observed scanner state": (
+                "; ".join(observed)
+                or "none"
+            ),
+        })
+
+    st.dataframe(
+        details,
+        hide_index=True,
+        width="stretch",
+    )
+
+    if unknown_count:
+        st.warning(
+            "%s artifact(s) are "
+            "`unknown_machine_readable`. "
+            "These should be inspected when "
+            "refining the region taxonomy."
+            % unknown_count
+        )
+
+
+def render_case_review(settings) -> None:
+    db = Database(settings.db_path)
+
+    options = _case_options(db)
+    if not options:
+        st.info("No cases found. Run collect/scan first.")
+        return
+
+    all_ids = [int(o["id"]) for o in options]
+    queue = _queue_ids(options)
+    if not queue:
+        queue = all_ids
+    if st.session_state.get("advance_after_save"):
+        current = int(st.session_state.get("selected_case_id") or queue[0])
+        if current in queue and queue.index(current) < len(queue) - 1:
+            st.session_state["selected_case_id"] = queue[queue.index(current) + 1]
+        st.session_state["advance_after_save"] = False
+
+    default_id = int(st.session_state.get("selected_case_id") or queue[0])
+    if default_id not in all_ids:
+        default_id = queue[0]
+    default_index = all_ids.index(default_id)
+
+    top_a, top_b = st.columns([4.5, 1])
+    with top_a:
+        selected_label = st.selectbox("Open case", options, index=default_index, format_func=_format_option, label_visibility="collapsed")
+        case_id = int(selected_label["id"])
+    with top_b:
+        if st.button("Back", width="stretch"):
+            st.session_state["nav"] = "Overview"
+            st.rerun()
+
+    row = db.one(CASE_QUERY, (case_id,))
+    if not row:
+        st.warning("Case not found.")
+        return
+
+    st.session_state["selected_case_id"] = case_id
+    if case_id in queue:
+        pos = queue.index(case_id)
+    else:
+        pos = 0
+
+    files = db.query("SELECT filename, category, status, additions, deletions, patch FROM pr_files WHERE pr_id=(SELECT pr_id FROM cases WHERE id=?) ORDER BY category, filename", (case_id,))
+    findings = db.query("SELECT scanner, finding_type, severity, rule_id, cwe, file_path, line, description, evidence, raw_json FROM scanner_findings WHERE case_id=? ORDER BY finding_type, scanner", (case_id,))
+    scanner_runs = db.query("SELECT scanner, status, started_at, finished_at, stdout, stderr FROM scanner_runs WHERE pr_id=(SELECT pr_id FROM cases WHERE id=?) ORDER BY scanner, started_at DESC", (case_id,))
+    scanner_jobs = db.query("SELECT job_type, status, priority, route_reason, last_error, worker_id, started_at, finished_at FROM scanner_jobs WHERE case_id=? ORDER BY job_type", (case_id,))
+    region_profile = db.one(
+        """
+        SELECT
+            primary_region,
+            mapping_version,
+            file_count,
+            updated_at
+        FROM pr_region_profiles
+        WHERE case_id=?
+        """,
+        (case_id,),
+    )
+
+    region_rows = db.query(
+        """
+        SELECT
+            path,
+            region,
+            language,
+            scanner_routes,
+            confidence,
+            evidence,
+            mapping_version
+        FROM artifact_regions
+        WHERE case_id=?
+        ORDER BY region, path
+        """,
+        (case_id,),
+    )
+
+    repo_name = html.escape(str(row.get("repo") or ""))
+    repo_url = html.escape(str(row.get("repo_url") or ""))
+    repo_link = f'<a href="{repo_url}" target="_blank">{repo_name}</a>' if repo_url else repo_name
+    stage = html.escape(derive_stage(row))
+    signal = html.escape(row_signal_label(row))
+    ai = html.escape(ai_marker_label(row))
+    terms = derive_query_terms(row)
+    query_html = "<br/>".join(render_query_html(t) for t in terms[:4]) if terms else render_query_html(None)
+
+    st.markdown(
+        f"""
+<div class="review-header">
+  <div class="review-header-top">
+    <div>
+      <div class="small-muted">Case #{case_id} · {pos + 1} of {len(queue)}</div>
+      <div class="review-case-title review-repo">{repo_link}</div>
+      <div class="review-meta">
+        <span class="badge badge-stage">{stage}</span>
+        <span class="badge badge-signal">{signal}</span>
+        <span class="badge badge-ai">AI: {ai}</span>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:8px"><span class="small-muted">Indicators</span><br>{query_html}</div>
+</div>
+""",
+        unsafe_allow_html=True,
+    )
+
+    a1, a2, a3, a4, a5, a6 = st.columns([1, 1, 1.25, 1, 1, 3.25])
+    with a1:
+        if row.get("issue_url"):
+            st.link_button("Open Issue", row.get("issue_url"), width="stretch")
+    with a2:
+        if row.get("pr_url"):
+            st.link_button("Open PR", row.get("pr_url"), width="stretch")
+    with a3:
+        st.download_button(
+            "Export case",
+            data=selected_evidence_zip(db, [case_id]),
+            file_name=f"case_{case_id}_evidence.zip",
+            mime="application/zip",
+            width="stretch",
+        )
+    with a4:
+        if pos > 0 and st.button("Previous", width="stretch"):
+            st.session_state["selected_case_id"] = queue[pos - 1]
+            st.rerun()
+    with a5:
+        if pos < len(queue) - 1 and st.button("Next", type="primary", width="stretch"):
+            st.session_state["selected_case_id"] = queue[pos + 1]
+            st.rerun()
+
+    tab_upstream, tab_downstream, tab_decision = st.tabs(["Upstream evidence", "Downstream evidence", "Decision"])
+    with tab_upstream:
+        render_upstream_panel(row)
+    with tab_downstream:
+        render_downstream_panel(row, files, findings, scanner_runs, scanner_jobs)
+        _render_region_mapping(region_profile, region_rows, scanner_runs)
+    with tab_decision:
+        render_review_panel(row, db, case_id)

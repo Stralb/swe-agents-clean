@@ -1,0 +1,17 @@
+{
+  "state": "REMOTE_FILES_AND_LOAD_DATASET_VERIFIED",
+  "commit": "e71e8b39ed56ffb1c2198b9df2384495b8404317",
+  "previous_commit": "e351ce239f6fbcb102070004a9e2af4ed4d06d8f",
+  "preservation_ref": "preservation-e351ce239f6f",
+  "default_config": "paper_cases",
+  "case_rows": 3809,
+  "positive_cases": 192,
+  "matched_pairs": 190,
+  "archived_files_verified": 154,
+  "archive_moves_this_commit": 0,
+  "source_text_exception_fields": 8,
+  "permissions_unchanged": true,
+  "history_rewritten": false,
+  "release_prefix": "data/paper-cases-20261111-v3",
+  "full_master_sqlite_upload_attested": false
+}

@@ -1,0 +1,37 @@
+{
+  "status": "STATIC_INVENTORY_ONLY_NO_SOURCE_EXECUTION",
+  "python_files": 171,
+  "parse_pass": 171,
+  "parse_fail": 0,
+  "scope_counts": {
+    "analysis": 16,
+    "scripts": 20,
+    "src": 66,
+    "tests": 47,
+    "ui": 22
+  },
+  "third_party_imported_top_level_modules": {
+    "altair": 3,
+    "dotenv": 2,
+    "hdbscan": 3,
+    "joblib": 1,
+    "langdetect": 1,
+    "networkx": 1,
+    "numpy": 7,
+    "packaging": 1,
+    "pandas": 17,
+    "pytest": 2,
+    "requests": 3,
+    "ruptures": 2,
+    "scipy": 5,
+    "sklearn": 4,
+    "streamlit": 17,
+    "tree_sitter_language_pack": 1,
+    "tree_sitter_languages": 1,
+    "yaml": 3
+  },
+  "modules_with_top_level_calls": 53,
+  "modules_with_mutation_hints": 89,
+  "modules_with_unresolved_local_imports": 0,
+  "limitations": "AST static signals only; no transitive import, dynamic import, install or runtime check"
+}

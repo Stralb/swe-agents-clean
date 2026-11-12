@@ -1,0 +1,554 @@
+from __future__ import annotations
+
+import argparse
+import logging
+import os
+import signal
+import time
+from pathlib import Path
+from typing import Any
+
+from src.db.database import Database
+from src.pipeline.collect_pipeline import collect
+from src.settings import load_settings
+from src.utils.logging import setup_logging
+from src.workers.job_queue import (
+    claim_job,
+    heartbeat,
+    run_scanner_job,
+    seed_scanner_jobs,
+    update_case_stages,
+)
+
+ROOT = Path(__file__).resolve().parents[2]
+log = logging.getLogger(__name__)
+
+CHEAP_JOB_TYPES = [
+    "semgrep_source",
+    "secret_ci",
+    "dependency_downgrade",
+    "osv_dependency",
+    "trivy_dependency",
+]
+
+_shutdown_requested = False
+
+
+def _request_shutdown(signum: int, _frame: Any) -> None:
+    global _shutdown_requested
+    _shutdown_requested = True
+    log.info("Received signal %s; stopping after current unit", signum)
+
+
+def _active_db_path() -> Path:
+    configured = str(os.environ.get("DB_PATH") or "").strip()
+
+    if configured:
+        return Path(configured)
+
+    pointer = ROOT / ".current_agentic_js_eval_db"
+
+    if not pointer.exists():
+        raise RuntimeError(
+            "Active evaluation DB pointer is missing: "
+            f"{pointer}"
+        )
+
+    value = pointer.read_text(encoding="utf-8").strip()
+
+    if not value:
+        raise RuntimeError(
+            "Active evaluation DB pointer is empty."
+        )
+
+    os.environ["DB_PATH"] = value
+    return Path(value)
+
+
+def _control_row(
+    db: Database,
+    daemon_name: str,
+) -> dict[str, Any] | None:
+    return db.one(
+        """
+        SELECT *
+        FROM daemon_controls
+        WHERE daemon_name=?
+        """,
+        (daemon_name,),
+    )
+
+
+def _should_continue(
+    db: Database,
+    daemon_name: str,
+    generation: int,
+) -> bool:
+    if _shutdown_requested:
+        return False
+
+    row = _control_row(db, daemon_name)
+
+    if not row:
+        return False
+
+    return (
+        int(row.get("desired_enabled") or 0) == 1
+        and int(row.get("generation") or 0) == generation
+    )
+
+
+def _update_control(
+    db: Database,
+    daemon_name: str,
+    generation: int,
+    *,
+    state: str,
+    worker_id: str,
+    detail: str = "",
+    current_unit: str = "",
+    last_error: str | None = None,
+) -> None:
+    db.execute(
+        """
+        UPDATE daemon_controls
+        SET
+            state=?,
+            scheduler_state='RUNNING',
+            worker_id=?,
+            detail=?,
+            current_unit=?,
+            last_error=CASE
+                WHEN ? IS NULL THEN last_error
+                ELSE ?
+            END,
+            heartbeat_at=CURRENT_TIMESTAMP,
+            started_at=COALESCE(
+                started_at,
+                CURRENT_TIMESTAMP
+            ),
+            updated_at=CURRENT_TIMESTAMP
+        WHERE daemon_name=?
+          AND generation=?
+        """,
+        (
+            state,
+            worker_id,
+            detail[:1000],
+            current_unit[:500],
+            last_error,
+            last_error,
+            daemon_name,
+            generation,
+        ),
+    )
+
+
+def _mark_stopped(
+    db: Database,
+    daemon_name: str,
+    generation: int,
+    worker_id: str,
+    detail: str,
+) -> None:
+    db.execute(
+        """
+        UPDATE daemon_controls
+        SET
+            state='stopped',
+            scheduler_state='COMPLETED',
+            worker_id=?,
+            current_unit=NULL,
+            detail=?,
+            heartbeat_at=CURRENT_TIMESTAMP,
+            stopped_at=CURRENT_TIMESTAMP,
+            updated_at=CURRENT_TIMESTAMP
+        WHERE daemon_name=?
+          AND generation=?
+        """,
+        (
+            worker_id,
+            detail[:1000],
+            daemon_name,
+            generation,
+        ),
+    )
+
+
+def _sleep_cooperatively(
+    db: Database,
+    daemon_name: str,
+    generation: int,
+    worker_id: str,
+    seconds: int,
+) -> None:
+    remaining = max(1, int(seconds))
+
+    while remaining > 0:
+        if not _should_continue(
+            db,
+            daemon_name,
+            generation,
+        ):
+            return
+
+        pause = min(5, remaining)
+
+        _update_control(
+            db,
+            daemon_name,
+            generation,
+            state="idle",
+            worker_id=worker_id,
+            detail=(
+                f"Queue empty; polling again in "
+                f"{remaining}s"
+            ),
+        )
+
+        heartbeat(
+            db,
+            worker_id,
+            f"daemon:{daemon_name}",
+            daemon_name,
+            "idle",
+            f"polling again in {remaining}s",
+        )
+
+        time.sleep(pause)
+        remaining -= pause
+
+
+def _run_mining(
+    db: Database,
+    settings: Any,
+    daemon_name: str,
+    generation: int,
+    worker_id: str,
+    idle_seconds: int,
+) -> None:
+    passes = 0
+
+    while _should_continue(
+        db,
+        daemon_name,
+        generation,
+    ):
+        passes += 1
+
+        _update_control(
+            db,
+            daemon_name,
+            generation,
+            state="working",
+            worker_id=worker_id,
+            current_unit=f"collection_pass={passes}",
+            detail="Collecting GitHub candidates",
+        )
+
+        heartbeat(
+            db,
+            worker_id,
+            "daemon:mining",
+            "mining",
+            "running",
+            f"collection pass {passes}",
+        )
+
+        collect(settings)
+
+        created = seed_scanner_jobs(
+            db,
+            include_codeql=False,
+        )
+
+        update_case_stages(db)
+
+        _update_control(
+            db,
+            daemon_name,
+            generation,
+            state="idle",
+            worker_id=worker_id,
+            detail=(
+                f"Collection pass {passes} complete; "
+                f"seeded_jobs={created}"
+            ),
+        )
+
+        if not _should_continue(
+            db,
+            daemon_name,
+            generation,
+        ):
+            break
+
+        _sleep_cooperatively(
+            db,
+            daemon_name,
+            generation,
+            worker_id,
+            idle_seconds,
+        )
+
+
+def _run_cheap_analysis(
+    db: Database,
+    settings: Any,
+    daemon_name: str,
+    generation: int,
+    worker_id: str,
+    idle_seconds: int,
+) -> None:
+    processed = 0
+
+    # Seed once when this allocation starts. The mining daemon seeds newly
+    # collected cases after every collection pass, so repeating a full seed
+    # before every claim only creates unnecessary SQLite/NFS write pressure.
+    seed_scanner_jobs(
+        db,
+        include_codeql=False,
+    )
+
+    while _should_continue(
+        db,
+        daemon_name,
+        generation,
+    ):
+        job = claim_job(
+            db,
+            CHEAP_JOB_TYPES,
+            worker_id=worker_id,
+        )
+
+        if job is None:
+            update_case_stages(db)
+
+            _sleep_cooperatively(
+                db,
+                daemon_name,
+                generation,
+                worker_id,
+                idle_seconds,
+            )
+
+            continue
+
+        _update_control(
+            db,
+            daemon_name,
+            generation,
+            state="working",
+            worker_id=worker_id,
+            current_unit=(
+                f"case={job.case_id} "
+                f"job={job.job_type}"
+            ),
+            detail="Running one cheap-analysis job",
+        )
+
+        heartbeat(
+            db,
+            worker_id,
+            "daemon:cheap_analysis",
+            "cheap_analysis",
+            "running",
+            f"case={job.case_id} job={job.job_type}",
+        )
+
+        run_scanner_job(
+            db,
+            settings,
+            job,
+        )
+
+        processed += 1
+
+        _update_control(
+            db,
+            daemon_name,
+            generation,
+            state="working",
+            worker_id=worker_id,
+            detail=f"Completed jobs={processed}",
+        )
+
+
+def main() -> None:
+    setup_logging()
+
+    parser = argparse.ArgumentParser(
+        description=(
+            "Cooperative miner daemon controlled through "
+            "daemon_controls."
+        )
+    )
+
+    parser.add_argument(
+        "--daemon",
+        required=True,
+        choices=[
+            "mining",
+            "cheap_analysis",
+            "codeql_security",
+        ],
+    )
+
+    parser.add_argument(
+        "--generation",
+        required=True,
+        type=int,
+    )
+
+    parser.add_argument(
+        "--idle-seconds",
+        type=int,
+        default=10,
+    )
+
+    parser.add_argument(
+        "--check",
+        action="store_true",
+    )
+
+    args = parser.parse_args()
+
+    os.environ.setdefault(
+        "CONFIG",
+        str(ROOT / "config.agentic_js.yml"),
+    )
+
+    db_path = _active_db_path()
+    db = Database(db_path)
+
+    row = _control_row(db, args.daemon)
+
+    if not row:
+        raise SystemExit(
+            f"Missing daemon control row: {args.daemon}"
+        )
+
+    if args.check:
+        print(
+            {
+                "daemon": args.daemon,
+                "database": str(db_path),
+                "generation": int(
+                    row.get("generation") or 0
+                ),
+                "desired_enabled": int(
+                    row.get("desired_enabled") or 0
+                ),
+                "state": row.get("state"),
+                "partition": row.get("partition"),
+            }
+        )
+        return
+
+    if args.daemon == "codeql_security":
+        raise SystemExit(
+            "codeql_security is blocked until the "
+            "isolated security-only queue is installed."
+        )
+
+    if int(row.get("generation") or 0) != args.generation:
+        raise SystemExit(
+            "Daemon generation is stale; refusing to run."
+        )
+
+    if int(row.get("desired_enabled") or 0) != 1:
+        raise SystemExit(
+            "Daemon is disabled; refusing to run."
+        )
+
+    signal.signal(signal.SIGTERM, _request_shutdown)
+    signal.signal(signal.SIGINT, _request_shutdown)
+
+    slurm_job_id = str(
+        os.environ.get("SLURM_JOB_ID") or "local"
+    )
+
+    worker_id = (
+        f"{args.daemon}-"
+        f"{slurm_job_id}-"
+        f"g{args.generation}"
+    )
+
+    settings = load_settings()
+
+    _update_control(
+        db,
+        args.daemon,
+        args.generation,
+        state="starting",
+        worker_id=worker_id,
+        detail=f"Worker starting on DB {db_path}",
+    )
+
+    try:
+        if args.daemon == "mining":
+            _run_mining(
+                db,
+                settings,
+                args.daemon,
+                args.generation,
+                worker_id,
+                args.idle_seconds,
+            )
+        else:
+            _run_cheap_analysis(
+                db,
+                settings,
+                args.daemon,
+                args.generation,
+                worker_id,
+                args.idle_seconds,
+            )
+
+        _mark_stopped(
+            db,
+            args.daemon,
+            args.generation,
+            worker_id,
+            "Stopped after current unit",
+        )
+
+        heartbeat(
+            db,
+            worker_id,
+            f"daemon:{args.daemon}",
+            args.daemon,
+            "stopped",
+            "Stopped after current unit",
+        )
+
+    except Exception as exc:
+        log.exception(
+            "Controlled daemon failed: %s",
+            args.daemon,
+        )
+
+        _update_control(
+            db,
+            args.daemon,
+            args.generation,
+            state="error",
+            worker_id=worker_id,
+            detail="Daemon failed",
+            last_error=str(exc)[:2000],
+        )
+
+        heartbeat(
+            db,
+            worker_id,
+            f"daemon:{args.daemon}",
+            args.daemon,
+            "error",
+            str(exc)[:500],
+        )
+
+        raise
+
+
+if __name__ == "__main__":
+    main()

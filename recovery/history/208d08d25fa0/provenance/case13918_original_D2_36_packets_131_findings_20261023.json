@@ -1,0 +1,678 @@
+{
+  "schema_version": 1,
+  "date_utc": "2026-10-23",
+  "status": "ALL_36_ORIGINAL_D2_ROOT_PACKETS_FULL_SHA256_VERIFIED_131_CANONICAL_FINDINGS_EXACT_SOURCE_MAPPING",
+  "scope": {
+    "case_id": 13918,
+    "repository": "Pimzino/spec-workflow-mcp",
+    "pr": 173,
+    "pr_merged_utc": "2025-12-19T13:54:38Z",
+    "original_D1_sha256": "ff1432d1959b501f62a9aeb18dface0976db11dbc59d31a233a24a816236ddf3",
+    "original_D_export_index_sha256": "cfca8cd2425d7043e89cdb4e06576f3e6794c09736bb5c85b4c0e8332cc3f4e6",
+    "original_C6_root_census_full_sha256_recomputed_current_turn": false
+  },
+  "counts": {
+    "roots": 36,
+    "producing_changes": 36,
+    "canonical_findings": 131,
+    "canonical_finding_range": "CF-0929..CF-1059",
+    "all_131_finding_ids_unique_and_contiguous": true,
+    "distinct_workflows": 1,
+    "roots_with_single_canonical_finding": 10,
+    "max_root_finding_count": 34,
+    "largest_two_root_findings": 51,
+    "largest_two_fraction_of_131": 0.3893129770992366,
+    "all_original_D2_packet_SHA256_checked_from_complete_single_chunk": true,
+    "total_original_D2_packet_bytes": 319315,
+    "excluded_positive_case_13918_from_original_C2": true
+  },
+  "per_root": [
+    {
+      "root_id": "CROOT-13918-01",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-01.json",
+      "original_d2_bytes": 9844,
+      "original_d2_sha256": "f358affc389bac5b043b0926ea1b681aeec23d44efa869e9745085dc4a1e2843",
+      "package_name": "@babel/core",
+      "version": "7.28.5",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-0929"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-02",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-02.json",
+      "original_d2_bytes": 8520,
+      "original_d2_sha256": "04629a26c22f1202c7c5d03c24f45bf59858b4cf787542caf7af4070e87e621f",
+      "package_name": "@hono/node-server",
+      "version": "1.19.7",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-0932",
+        "CF-0933",
+        "CF-0934"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-03",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-03.json",
+      "original_d2_bytes": 9483,
+      "original_d2_sha256": "75f2df467d2b74d2ed62aa5dc32552ee2b0ca12b90f1917eb9b15f6f21bb891d",
+      "package_name": "@modelcontextprotocol/sdk",
+      "version": "1.25.1",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-0936",
+        "CF-0937"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-04",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-04.json",
+      "original_d2_bytes": 10125,
+      "original_d2_sha256": "85a79c0957ac3b028c38e7fd14cd675e16fbc4b5710b75f5ed16868e8274c2ed",
+      "package_name": "@remix-run/router",
+      "version": "1.23.1",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-0938",
+        "CF-0939"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-05",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-05.json",
+      "original_d2_bytes": 8103,
+      "original_d2_sha256": "5cb90fa9516105f61aeeb7ca8cff546490d00f2411294d7b6db0b61dc7c3e70d",
+      "package_name": "ajv",
+      "version": "8.17.1",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-0940"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-06",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-06.json",
+      "original_d2_bytes": 12972,
+      "original_d2_sha256": "24f0df6fbb4a0dac4be9e1f7dbf63be6b487c091464627686763c92b0d91b17c",
+      "package_name": "dompurify",
+      "version": "3.3.1",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-0947",
+        "CF-0948",
+        "CF-0949",
+        "CF-0950",
+        "CF-0951",
+        "CF-0952",
+        "CF-0953",
+        "CF-0954",
+        "CF-0955",
+        "CF-0956",
+        "CF-0957",
+        "CF-0958",
+        "CF-0959",
+        "CF-0960",
+        "CF-0961",
+        "CF-0962",
+        "CF-0963"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-07",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-07.json",
+      "original_d2_bytes": 9042,
+      "original_d2_sha256": "ae38a79c260dfdbaaa77b3919e2cd392019d5466a970a5a0a4286e71b1a949f6",
+      "package_name": "fast-uri",
+      "version": "3.1.0",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-0964",
+        "CF-0966",
+        "CF-0968",
+        "CF-0970",
+        "CF-0972"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-08",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-08.json",
+      "original_d2_bytes": 9541,
+      "original_d2_sha256": "b46f615f3c1c2466607a7a97ce626ca91c30596ad196106d14ad98d10005ad38",
+      "package_name": "fast-uri",
+      "version": "2.4.0",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-0965",
+        "CF-0967",
+        "CF-0969",
+        "CF-0971",
+        "CF-0973"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-09",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-09.json",
+      "original_d2_bytes": 15674,
+      "original_d2_sha256": "96ddba3032dc807dbab02472f8b55d46df085baa2e8eb0aeb32c5d350c3601d5",
+      "package_name": "hono",
+      "version": "4.11.1",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-0978",
+        "CF-0979",
+        "CF-0980",
+        "CF-0981",
+        "CF-0982",
+        "CF-0983",
+        "CF-0984",
+        "CF-0985",
+        "CF-0986",
+        "CF-0987",
+        "CF-0988",
+        "CF-0989",
+        "CF-0990",
+        "CF-0991",
+        "CF-0992",
+        "CF-0993",
+        "CF-0994",
+        "CF-0995",
+        "CF-0996",
+        "CF-0997",
+        "CF-0998",
+        "CF-0999",
+        "CF-1000",
+        "CF-1001",
+        "CF-1002",
+        "CF-1003",
+        "CF-1004",
+        "CF-1005",
+        "CF-1006",
+        "CF-1007",
+        "CF-1008",
+        "CF-1009",
+        "CF-1010",
+        "CF-1011"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-10",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-10.json",
+      "original_d2_bytes": 8656,
+      "original_d2_sha256": "e53dd7d80179273e65534047c77983dc046733a90f426f625e532b98532ce657",
+      "package_name": "linkify-it",
+      "version": "5.0.0",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-1014",
+        "CF-1015"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-11",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-11.json",
+      "original_d2_bytes": 8718,
+      "original_d2_sha256": "99c4e9b4e030d127f264a0e058d86e71e9e28b04573663ebf405d5f681a22193",
+      "package_name": "lodash-es",
+      "version": "4.17.22",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-1016",
+        "CF-1017"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-12",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-12.json",
+      "original_d2_bytes": 8760,
+      "original_d2_sha256": "e4f3b996a03f81aa895000cae3b412bfe0c1b4de67e2eac11c307af21ca44117",
+      "package_name": "markdown-it",
+      "version": "14.1.0",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-1018",
+        "CF-1019"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-13",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-13.json",
+      "original_d2_bytes": 9614,
+      "original_d2_sha256": "ac183a6316cb5d7c41fcf9ee327919cb7e36a3fab2e34780be37dfe6e05d6cb2",
+      "package_name": "mermaid",
+      "version": "10.9.5",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-1020",
+        "CF-1021",
+        "CF-1022",
+        "CF-1023"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-14",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-14.json",
+      "original_d2_bytes": 10310,
+      "original_d2_sha256": "55ac8ccb40368c4a6f18ddce2acb9a4917121d740558168a09caf7a0f3836c48",
+      "package_name": "react-router",
+      "version": "6.30.2",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-1043",
+        "CF-1044",
+        "CF-1045"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-15",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-15.json",
+      "original_d2_bytes": 9911,
+      "original_d2_sha256": "b9d90c33bb963a2dabf6c6f16b340354be4c7c7814a42c35672ea7132fdc92bc",
+      "package_name": "react-router-dom",
+      "version": "6.30.2",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-1046"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-16",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-16.json",
+      "original_d2_bytes": 9758,
+      "original_d2_sha256": "daa7c2a9bb32d1c0375019fd6f1942de02ca5752db1ac599e4b3c0a3298d99c9",
+      "package_name": "rollup",
+      "version": "4.53.5",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-1047"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-17",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-17.json",
+      "original_d2_bytes": 9669,
+      "original_d2_sha256": "cef56d50a45a436e4970efeec542cd82e620d3cdf7364f58e0228d21ba69130e",
+      "package_name": "simple-git",
+      "version": "3.30.0",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-1048",
+        "CF-1049",
+        "CF-1050"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-18",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-18.json",
+      "original_d2_bytes": 7919,
+      "original_d2_sha256": "f2e84584f88252b1e347b0fd030f6cb6e85e608f7dfbc635f08eddbab39a5d1e",
+      "package_name": "uuid",
+      "version": "9.0.1",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-1051"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-19",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-19.json",
+      "original_d2_bytes": 10065,
+      "original_d2_sha256": "d731c077415d58e93150f530e31dd203ad610f07ee081d9ab698cba54959f445",
+      "package_name": "vite",
+      "version": "7.3.0",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-1052",
+        "CF-1053",
+        "CF-1054",
+        "CF-1055",
+        "CF-1056"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-20",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-20.json",
+      "original_d2_bytes": 9811,
+      "original_d2_sha256": "ff4e88150e90602377d423ef0912f3e66bf4568b54c3742c6a39ba57eac985ae",
+      "package_name": "vitest",
+      "version": "4.0.16",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-1057"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-21",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-21.json",
+      "original_d2_bytes": 5515,
+      "original_d2_sha256": "8fc41e67a39d8b969e0038fe353e7e6975b085b3e363b123e3682de42867568c",
+      "package_name": "@fastify/static",
+      "version": "7.0.4",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-0930",
+        "CF-0931"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-22",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-22.json",
+      "original_d2_bytes": 8434,
+      "original_d2_sha256": "cddcc08d955acf48dc34dda80d059da4e3307329bf34205cc8d9313cfc63ec78",
+      "package_name": "@isaacs/brace-expansion",
+      "version": "5.0.0",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-0935"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-23",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-23.json",
+      "original_d2_bytes": 7996,
+      "original_d2_sha256": "262ce2620f5e4e40331d987d2693f98479d2ee661676793889eb60d3054af011",
+      "package_name": "body-parser",
+      "version": "2.2.1",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-0941"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-24",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-24.json",
+      "original_d2_bytes": 10474,
+      "original_d2_sha256": "48a294850a9b532c30a6ad529608f6ae44fc7165e9092c9009323d5d9fe4f28a",
+      "package_name": "brace-expansion",
+      "version": "2.0.2",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-0942",
+        "CF-0943",
+        "CF-0944",
+        "CF-0945"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-25",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-25.json",
+      "original_d2_bytes": 5246,
+      "original_d2_sha256": "aa58d7f9e39cce0a8204fc6139d2d43b8f21eaff719831b7ad442343b6315004",
+      "package_name": "diff",
+      "version": "5.2.0",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-0946"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-26",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-26.json",
+      "original_d2_bytes": 9726,
+      "original_d2_sha256": "ebe9318bd902b97fb622f5d573b15bf82ad74b06c212c2ef9cd7f60f6b4b2a87",
+      "package_name": "fastify",
+      "version": "4.29.1",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-0974",
+        "CF-0975",
+        "CF-0976"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-27",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-27.json",
+      "original_d2_bytes": 6624,
+      "original_d2_sha256": "1b49ebd69d7addde8dcf68c53e11050e1066fe124d88bdeff9785fc96227d547",
+      "package_name": "find-my-way",
+      "version": "8.2.2",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-0977"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-28",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-28.json",
+      "original_d2_bytes": 9992,
+      "original_d2_sha256": "c467d7fbf9981e2ddf80d41ab9a6b4a1272e411c56bbea13ec02f7d05b1121fc",
+      "package_name": "js-yaml",
+      "version": "4.1.1",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-1012",
+        "CF-1013"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-29",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-29.json",
+      "original_d2_bytes": 5416,
+      "original_d2_sha256": "5ac649a5a730d27f4088a1c91623daca462019957fc42fb0022f1e5d5ece45ab",
+      "package_name": "minimatch",
+      "version": "9.0.5",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-1024",
+        "CF-1026",
+        "CF-1028"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-30",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-30.json",
+      "original_d2_bytes": 5684,
+      "original_d2_sha256": "a3df0afbdc3adfefe66a5248d263d5f6b8498b7d313a89db1beeb4d926c0c0e3",
+      "package_name": "minimatch",
+      "version": "10.1.1",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-1025",
+        "CF-1027",
+        "CF-1029"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-31",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-31.json",
+      "original_d2_bytes": 6921,
+      "original_d2_sha256": "0e25f5ac45dbf21636de2b5bae9f0f4a3042b64d66ee83f0dd0494abb8451c34",
+      "package_name": "path-to-regexp",
+      "version": "8.3.0",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-1030",
+        "CF-1031"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-32",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-32.json",
+      "original_d2_bytes": 7619,
+      "original_d2_sha256": "caf56ce35f44d83a7183bfe81c3dc0f9a6ddb269d0b1813f1442967d23e96b18",
+      "package_name": "picomatch",
+      "version": "4.0.3",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-1032",
+        "CF-1034"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-33",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-33.json",
+      "original_d2_bytes": 6595,
+      "original_d2_sha256": "30d907791230c2693c61abb77f8677a0f4a78dec717c2b5c2647d594cf745264",
+      "package_name": "picomatch",
+      "version": "2.3.1",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-1033",
+        "CF-1035"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-34",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-34.json",
+      "original_d2_bytes": 6453,
+      "original_d2_sha256": "b9f4420ac83639158261e7b98658f60d5c0cec8b772f32f6f087982dcc1584e2",
+      "package_name": "postcss",
+      "version": "8.5.6",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-1036",
+        "CF-1037",
+        "CF-1038",
+        "CF-1039"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-35",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-35.json",
+      "original_d2_bytes": 10180,
+      "original_d2_sha256": "1e88051b5d3d57bdcf790fb66ad45db66eb0e796db805296e3191f1b167faa74",
+      "package_name": "qs",
+      "version": "6.14.0",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-1040",
+        "CF-1041",
+        "CF-1042"
+      ]
+    },
+    {
+      "root_id": "CROOT-13918-36",
+      "original_d2_packet": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/by_root_A/CROOT-13918-36.json",
+      "original_d2_bytes": 9945,
+      "original_d2_sha256": "4e8eda322357f2d695aa972e9e2f0c3755c29252dbcf1a20f6056eb1315a54b2",
+      "package_name": "ws",
+      "version": "8.18.3",
+      "pc_count": 1,
+      "canonical_finding_ids": [
+        "CF-1058",
+        "CF-1059"
+      ]
+    }
+  ],
+  "source_acquisition": {
+    "AServerV6_read_artifact_chunk_max_length": 32768,
+    "each_original_packet_fits_one_chunk": true,
+    "each_packet_chunk_bytes_equal_total_original_bytes": true,
+    "sha256_is_complete_file_digest_each": true,
+    "per_root_Canonical_Finding_IDs_crosschecked_against_JSON_evidence": true,
+    "original_36_packet_raw_bytes_committed_to_Git": false
+  },
+  "scientific_limits": {
+    "original_D_final_route_labels_recovered": false,
+    "all_131_advisory_publication_dates_verified": false,
+    "all_131_findings_independent_vulnerabilities": false,
+    "all_36_roots_independent_agent_decisions": false,
+    "all_root_packages_reachable_exploitable": false,
+    "findings_equivalent_to_36_producing_changes": false,
+    "cases13918_in_190_original_C2_pairs": false,
+    "original_root_boundaries_modified": false
+  },
+  "cross_version_CVE_repetition": {
+    "description": "Source-identified identical CVE strings in the Rule ID(s) fields of two separate case13918 package-lock root packets for each package name; root-level repetition, not a distinct-vulnerability count.",
+    "observed_pairs": [
+      {
+        "package_name": "fast-uri",
+        "root_ids": [
+          "CROOT-13918-07",
+          "CROOT-13918-08"
+        ],
+        "versions": [
+          "3.1.0",
+          "2.4.0"
+        ],
+        "repeated_CVE_ids": [
+          "CVE-2026-13676",
+          "CVE-2026-16221",
+          "CVE-2026-18446",
+          "CVE-2026-6321",
+          "CVE-2026-6322"
+        ]
+      },
+      {
+        "package_name": "minimatch",
+        "root_ids": [
+          "CROOT-13918-29",
+          "CROOT-13918-30"
+        ],
+        "versions": [
+          "9.0.5",
+          "10.1.1"
+        ],
+        "repeated_CVE_ids": [
+          "CVE-2026-26996",
+          "CVE-2026-27903",
+          "CVE-2026-27904"
+        ]
+      },
+      {
+        "package_name": "picomatch",
+        "root_ids": [
+          "CROOT-13918-32",
+          "CROOT-13918-33"
+        ],
+        "versions": [
+          "4.0.3",
+          "2.3.1"
+        ],
+        "repeated_CVE_ids": [
+          "CVE-2026-33671",
+          "CVE-2026-33672"
+        ]
+      }
+    ],
+    "repeated_distinct_CVE_identifiers_across_6_roots": 10,
+    "same_CVE_in_two_root_packets_not_two_distinct_CVEs": true
+  },
+  "publication_sanity_checks_CVE_2025": {
+    "scope": "All three CVE-2025 strings in the original 36 root packet Rule ID(s) field; public GHSA dates individually looked up; publication time is not defect onset or earliest private report.",
+    "pr_merged_utc": "2025-12-19T13:54:38Z",
+    "records": [
+      {
+        "root_id": "CROOT-13918-05",
+        "package_name": "ajv",
+        "cve": "CVE-2025-69873",
+        "ghsa": "GHSA-2g4f-4pwh-qvx6",
+        "public_advisory_date_utc": "2026-02-11",
+        "url": "https://github.com/advisories/GHSA-2g4f-4pwh-qvx6"
+      },
+      {
+        "root_id": "CROOT-13918-11",
+        "package_name": "lodash-es",
+        "cve": "CVE-2025-13465",
+        "ghsa": "GHSA-xxjr-mmjv-4gpg",
+        "public_advisory_date_utc": "2026-01-21",
+        "url": "https://github.com/lodash/lodash/security/advisories/GHSA-xxjr-mmjv-4gpg"
+      },
+      {
+        "root_id": "CROOT-13918-35",
+        "package_name": "qs",
+        "cve": "CVE-2025-15284",
+        "ghsa": "GHSA-6rw7-vpxm-498p",
+        "public_advisory_date_utc": "2025-12-30",
+        "url": "https://github.com/ljharb/qs/security/advisories/GHSA-6rw7-vpxm-498p"
+      }
+    ],
+    "post_merge_publication_all_three": true,
+    "first_publication_date_earlier_than_GHSA_ruled_out": false,
+    "all_other_2026_CVE_ids_publication_dates_individually_verified": false
+  },
+  "original_D2_archived_checksum_manifest": {
+    "path": "D_COMPLETE_ROOT_PROVENANCE_v1_0/02_PACKETS/SHA256SUMS.txt",
+    "size_bytes": 63478,
+    "sha256_independently_recomputed_this_session": "5bf8ed6baece182d263be4ef1e23f39cb6eba87043c17dcce4f610444397791b",
+    "independently_recomputed_sha256_tested_against_abc": true,
+    "unique_checksum_entries": 690,
+    "original_by_root_A_case13918_entries": 36,
+    "matches_live_complete_source_SHA256_for_all_36_packets": 36,
+    "checksum_mismatches": 0,
+    "checksum_entries_collisions": 0,
+    "original_36_packet_files_themselves_client_side_SHA256_recomputed_this_session": false,
+    "conclusion": "All 36 present-day Wits D2 source packet hashes match the corresponding original archived D2 SHA256SUMS.txt entries; this is source lineage verification, not independent classification adjudication."
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "archive_sha256": {
+    "drivers": "d004abaafea36b9e54c8620ac456072ae74937b483608b469f9198d103c135c3",
+    "patches": "1495e6797aec65d912ac3bc77b893cf79561f471749f78d6807fecbc619e0049"
+  },
+  "drivers": {
+    "broken_script": {
+      "kind": "SyntaxError",
+      "line": 101,
+      "relative_job_path": "owp14_20261018_v4/eval_668_uploaded_scannerfix.py"
+    },
+    "case_00668_old_frozen_packet_exception": true,
+    "complete_model_session_transcripts_in_uploaded_archive": false,
+    "generation_cohort_comparability_verified": false,
+    "original_issue_asof_pr_verified": false,
+    "packet_template_defined": true,
+    "python_files": 41,
+    "python_syntax_fail": 1,
+    "python_syntax_pass": 40,
+    "slurm_scripts": 63,
+    "stderr_logs": 248,
+    "stdout_logs": 248,
+    "target_specs": 14
+  },
+  "indexed_members_verified": {
+    "drivers": 600,
+    "patches": 368
+  },
+  "limitations": [
+    "This archive contains prompt construction code and Slurm logs, not complete coding-agent session transcripts.",
+    "Historical pre-PR issue text and independent generation cohorts are explicitly not verified.",
+    "W contains an exact historical CodeQL warning; this is a retrospective oracle, not a prospective predictor.",
+    "P contains task-specific safety/property information; neither arm has matched token budget or model settings established.",
+    "No independent original-issue functional acceptance, warning delta recomputation, or vulnerability prevention is demonstrated.",
+    "All source-root originals and baseline SARIF remain external and require digest-verified separate recovery."
+  ],
+  "owp": {
+    "arms": {
+      "O": 12,
+      "P": 14,
+      "W": 14
+    },
+    "case_count": 14,
+    "missing_O_cases": [
+      8461,
+      15151
+    ],
+    "nested_transfers": {
+      "O": {
+        "direct_patch_matches": 12,
+        "nested_patch_zip_sha256": "a9b6965de4d246d1b7a6765e71ac50d3f578440d6678f53bedea4d1f84aaf85f"
+      },
+      "P": {
+        "direct_patch_matches": 14,
+        "nested_patch_zip_sha256": "ccae9ab03303e91d2231e1291766d4cb47159981053fc84a4182c5eba4851f67"
+      },
+      "W": {
+        "direct_patch_matches": 14,
+        "nested_patch_zip_sha256": "6ca2054bd994bc50cc7228ce957b05fe221c16df02a032ac3c995998191440c9"
+      }
+    },
+    "patch_count": 40
+  },
+  "patch_file_counts": {
+    "owp14_user12_o_preflight_job71153": 12,
+    "owp14_user14_p_preflight_job71201": 14,
+    "owp14_user14_w_preflight_job71208": 14,
+    "screen65_iter3_staged_20261019_v2_bigbatch": 65,
+    "screen65_second_20261018_v1": 65,
+    "screen65_static_analysis_job70606": 65
+  },
+  "scanner_join": {
+    "archived_baseline_modes": {
+      "archived_FROZEN_base_compatible_CodeQL_version": 40
+    },
+    "baseline_files_present_in_scan_zip": false,
+    "distinct_case_baselines": 14,
+    "patch_to_scanner_sha_matches": 40,
+    "scanner_versions": {
+      "2.25.6": 40
+    }
+  },
+  "screening": {
+    "cases_with_identical_patch_bytes_in_any_two_stages": 0,
+    "distinct_cases": 65,
+    "patches_across_three_stages": 195,
+    "stage_names": [
+      "screen65_iter3_staged_20261019_v2_bigbatch",
+      "screen65_second_20261018_v1",
+      "screen65_static_analysis_job70606"
+    ]
+  },
+  "status": "ARCHIVE_AND_PATCH_SCAN_LINEAGE_VERIFIED_ONLY"
+}

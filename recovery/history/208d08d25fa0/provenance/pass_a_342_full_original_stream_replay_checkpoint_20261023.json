@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "status": "IN_PROGRESS_UNVERIFIED",
+  "source_path": "D_COMPLETE_ROOT_PROVENANCE_v1_0/04_EVIDENCE_EXPORT/PASS_A/D_PASS_A_EVIDENCE_342.jsonl",
+  "source_length": 25549416,
+  "expected_archived_sha256": "4510cd4dacf218c918b82d4dfde4afefee270ba5b147a5558e7dbe87e486e8c0",
+  "expected_root_id_order_sha256": "a872c31cc833d397f1876bd062f58016146f47642dda7684548c33c8fd1dd050",
+  "next_offset": 0,
+  "records": 0,
+  "pcs": 0,
+  "case_transitions": 0,
+  "last_case_id": null,
+  "last_root_id": null,
+  "chunks": 0,
+  "source_hash_state": {
+    "H": [
+      1779033703,
+      3144134277,
+      1013904242,
+      2773480762,
+      1359893119,
+      2600822924,
+      528734635,
+      1541459225
+    ],
+    "tail": [],
+    "processed": 0
+  },
+  "ids_hash_state": {
+    "H": [
+      1779033703,
+      3144134277,
+      1013904242,
+      2773480762,
+      1359893119,
+      2600822924,
+      528734635,
+      1541459225
+    ],
+    "tail": [],
+    "processed": 0
+  },
+  "counts": {
+    "channel": {},
+    "issue_eligibility": {},
+    "issue_order": {},
+    "methods": {},
+    "methods_status": {},
+    "item_eligibility": {},
+    "review_flags": {},
+    "intro_items": 0,
+    "intro_resolved": 0,
+    "parse_missing_issue": 0,
+    "parse_missing_PR": 0
+  },
+  "case154_seen": false
+}

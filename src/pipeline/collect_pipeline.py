@@ -2136,7 +2136,7 @@ def _bot_author_terms(settings: Settings) -> list[str]:
             out.append(t)
         else:
             out.append(f"{t}[bot]" if t in {"dependabot", "renovate", "github-actions", "pre-commit-ci", "mergify", "pyup"} else t)
-    # Ensure the supervisor-required maintenance bots are excluded even when a
+    # Ensure the controller-required maintenance bots are excluded even when a
     # custom config omits them.
     for required in ("dependabot[bot]", "renovate[bot]", "github-actions[bot]", "pre-commit-ci[bot]", "mergify[bot]"):
         if required not in out:

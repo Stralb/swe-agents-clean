@@ -1,0 +1,15 @@
+\begin{table}[H]
+\caption{Selected cases illustrating the difference between task relevance and the warning-producing detail. These examples are not a prevalence sample.}
+\label{tab:case-synthesis}
+\footnotesize\renewcommand{\arraystretch}{1.14}
+\begin{tabularx}{\linewidth}{@{}L{1.85cm}L{1.55cm}L{3.05cm}Y@{}}
+\toprule
+\textbf{Case} & \textbf{Task role} & \textbf{Flagged detail} & \textbf{What the case establishes}\\
+\midrule
+Spotify & Direct & Modulo-based verifier generation & The request did not prescribe this token-generation method.\\
+GSD tool-call repair & Direct & Regex-based repair of malformed arguments & Runtime repair was implemented instead of the prompt or schema remedies proposed in the issue.\\
+Grok file mentions & Direct & Separate metadata check and pathname read & The requested file loading did not prescribe this access sequence.\\
+Paperclip & Supporting test code & File checks and reads in regression tests & A PR warning does not by itself establish production exposure.\\
+\bottomrule
+\end{tabularx}
+\end{table}
