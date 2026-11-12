@@ -8,6 +8,7 @@
 - `src/` and `scripts/`: the recovered miner implementation.
 - `analysis/`: offline checks for recorded counts and separately supplied original files.
 - `dataset/`: documentation, schema and build scripts for the study dataset.
+- `experiments/rq3/`: the cluster scripts behind the RQ3 replay comparison, copied verbatim with SHA-256 provenance. They are tied to the cluster directory layout and are not run by `make check`.
 
 The miner was imported from a recovered 20 October 2026 source candidate, and the initial import was checked against the source file hashes. Later changes reorganized paths, imports, commands, tests, and documentation without rewriting the collection or scanner algorithms. It is not independently established that these exact source bytes produced every historical scanner result. The original frozen SQLite database, scanner outputs, query packs, and runtime environment are not included in this repository. Case-level data, including annotations, are released separately as the study dataset (see `dataset/README.md`).
 

@@ -17,7 +17,7 @@ install:
 	$(PYTHON) -m pip install -r requirements.txt
 
 check:
-	$(PYTHON) -m compileall -q src scripts analysis dataset tests
+	$(PYTHON) -m compileall -q src scripts analysis dataset experiments tests
 	$(PYTHON) -m analysis.matched_results --check
 	$(PYTHON) -m analysis.cohort_lineage audit-recorded
 	$(PYTHON) -m analysis.pathway_tables replay-indexed
