@@ -1,4 +1,4 @@
-from miner.filters.pr_filters import categorize_file, classify_pr_files
+from miner.filters.pr_filters import classify_pr_files
 
 
 def files(*names):

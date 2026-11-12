@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import re
-from urllib.parse import urlparse
 
 # Closing keywords are the strongest GitHub-native signal. They may be used with
 # bare numbers ("fixes #123") or full issue URLs.

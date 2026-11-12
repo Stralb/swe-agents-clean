@@ -19,7 +19,6 @@ from miner.filters.tool_applicability import (
     has_any_applicable_downstream_worker,
     has_primary_applicable_downstream_worker,
     has_high_yield_downstream_surface,
-    high_yield_surface_reasons,
     route_reasons,
 )
 from miner.github.client import GitHubAPIError, GitHubClient, GitHubSecondaryRateLimit

@@ -1,9 +1,8 @@
 from __future__ import annotations
-from miner.github.stop_control import CooperativeStopRequested, cooperative_sleep
+from miner.github.stop_control import cooperative_sleep
 
 import math
 import os
-import sqlite3
 
 import hashlib
 import json

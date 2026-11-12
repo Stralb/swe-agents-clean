@@ -1,4 +1,3 @@
-from pathlib import Path
 
 from miner.scanners.semgrep_scanner import (
     changed_python_paths,

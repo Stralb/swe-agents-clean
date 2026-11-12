@@ -18,7 +18,17 @@ make setup
 make check
 ```
 
-`make check` checks Python syntax, recalculates the paired tests from the bundled aggregates, checks the recorded cohort totals, and runs the tests. It does not access GitHub, launch scanners, or modify data.
+`make check` checks Python syntax, recalculates the paired tests from the bundled aggregates, checks the recorded cohort totals, and runs the tests. It does not access GitHub, launch scanners, or modify data. A passing run prints the paired-test table and ends with `131 passed, 2 xfailed`:
+
+```
+Comparison                                 N     Effect           p        Holm
+Issue purpose                            190   0.100000  0.09719257  0.68034796
+Instruction specificity                  190   0.142105  0.00052012  0.00468105
+Goal alignment                           190   0.121053  0.00101867  0.00814940
+...
+```
+
+With Docker instead: `docker build -t checks . && docker run --rm checks`.
 
 ## Layout
 

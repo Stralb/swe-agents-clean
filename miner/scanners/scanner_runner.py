@@ -5,7 +5,7 @@ import logging
 from typing import Any
 
 from miner.db.database import Database
-from miner.scanners.codeql_scanner import codeql_languages_for_files, default_query_suite_for_language, diff_findings, filter_findings_to_pr_delta, has_codeql_source_changes, has_python_source_changes, scan_snapshot_with_codeql
+from miner.scanners.codeql_scanner import codeql_languages_for_files, default_query_suite_for_language, diff_findings, filter_findings_to_pr_delta, scan_snapshot_with_codeql
 from miner.scanners.dependency_diff import detect_dependency_regressions
 from miner.scanners.gitleaks_scanner import scan_files_with_gitleaks
 from miner.scanners.osv_scanner import scan_dependency_snapshots

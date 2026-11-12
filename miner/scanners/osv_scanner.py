@@ -6,7 +6,7 @@ import tempfile
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-from miner.scanners.dependency_diff import _parse_added_removed, is_dependency_file
+from miner.scanners.dependency_diff import is_dependency_file
 from miner.utils.shell import parse_json_maybe, run_cmd
 
 

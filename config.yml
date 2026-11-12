@@ -1,3 +1,4 @@
+# Collection and scanner configuration used for the study.
 github:
   min_stars: 100
   language: JavaScript
