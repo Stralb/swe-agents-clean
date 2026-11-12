@@ -37,9 +37,14 @@ make check
 
 The recorded population is 3,809 linked issue-to-pull-request workflows, of which 192 are scanner-positive. The matched analysis uses 190 pairs, 115 of them within the same repository. These are source-recorded counts. A scanner finding is not proof of an exploitable vulnerability or of a malicious issue, and matching does not establish causality.
 
-## Not included
+## How the results were produced
 
-The original frozen database, scanner outputs, query packs and runtime environment are not part of this repository, so the full historical study cannot be reproduced from it alone. Case-level data is released through the dataset above. See [docs/reproducibility.md](docs/reproducibility.md) for exactly what has been checked and what remains unavailable.
+- **Collection and scanning:** the miner in `src/` and `scripts/` finds merged, issue-linked, agent-associated pull requests and runs the scanners on them.
+- **Analysis:** `analysis/` recomputes the paired tests and cohort totals reported in the paper from the bundled aggregates.
+- **RQ3 replays:** `experiments/rq3/` holds the cluster scripts that built the packets and scanned the 40 patches.
+- **Data:** every case, annotation, matched pair and replay record is in the dataset above. The full operational database is too large for Git and is kept outside it.
+
+Details, including what each check covers, are in [docs/reproducibility.md](docs/reproducibility.md).
 
 ## Running the miner (optional)
 
