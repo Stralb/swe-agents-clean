@@ -11,7 +11,7 @@ load_dotenv()
 raw = os.getenv("GITHUB_TOKENS") or os.getenv("GITHUB_TOKEN") or os.getenv("GH_TOKEN")
 tokens = [t.strip() for t in re.split(r"[,;\s]+", raw or "") if t.strip()]
 if not tokens:
-    print("ERROR: No GitHub token detected. Put GITHUB_TOKENS=token1,token2 in .env.cluster or pass GH_TOKEN=... to make.", file=sys.stderr)
+    print("ERROR: No GitHub token detected. Put GITHUB_TOKENS=token1,token2 in .env or pass GH_TOKEN=... to make.", file=sys.stderr)
     sys.exit(2)
 
 ok = 0

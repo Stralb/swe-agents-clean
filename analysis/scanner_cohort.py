@@ -1,7 +1,7 @@
 """Standalone, read-only byte and case-label audit of original frozen C1 CSV.
 
-Does not need C2, perform scanner runs, reconstruct positives from SQLite,
-or prove historical alert correctness. Private C1 rows remain outside Git.
+Needs no C2 file, scanner run or SQLite database. The C1 rows are supplied
+separately and are not stored in Git.
 """
 from __future__ import annotations
 

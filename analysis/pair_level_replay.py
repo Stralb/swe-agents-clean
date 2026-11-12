@@ -1,8 +1,7 @@
 """Reproduce all nine primary C6 paired tests from the ORIGINAL 190-pair CSV.
 
-The full 190-row C6_MATCHED_PAIR_MASTER_190.csv text was recovered from the
-user's private Library, and five marginal-homogeneity + three exact-McNemar
-tests were independently recalculated. This code replays all nine, including
+Five marginal-homogeneity and three exact-McNemar tests are recalculated
+from the aggregate tables. This code replays all nine, including
 Wilcoxon and original missing-data exclusions, when an authorized ORIGINAL
 raw CSV is staged locally (original file-size gate + new SHA256 output).
 

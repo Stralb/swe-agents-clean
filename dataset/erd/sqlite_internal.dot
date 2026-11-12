@@ -1,3 +1,0 @@
-digraph schema {graph [rankdir=TB,splines=ortho,concentrate=false,pack=true,packmode="array_u3",nodesep=0.8,ranksep=1.2,pad=0.3,bgcolor="white",outputorder=edgesfirst];node [shape=plain,fontname="DejaVu Sans",fontsize=12];edge [color="#4d6789",penwidth=1.4,arrowsize=0.75];
-"sqlite_sequence" [label=<<TABLE BORDER="1" COLOR="#70849d" CELLBORDER="0" CELLSPACING="0" CELLPADDING="7"><TR><TD COLSPAN="3" BGCOLOR="#d7e9ff"><B>sqlite_sequence</B></TD></TR></TABLE>>];
-}

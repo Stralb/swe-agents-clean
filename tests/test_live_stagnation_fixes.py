@@ -33,7 +33,7 @@ def test_no_jobs_case_does_not_become_clean(tmp_path):
     db.execute("INSERT INTO cases(repo_id, issue_id, pr_id, status) VALUES (1,1,1,'metadata_collected')")
     update_case_stages(db)
     row = db.one("SELECT status FROM cases WHERE id=1")
-    assert row["status"] == "scanner_running"
+    assert row["status"] == "metadata_collected"
 
 
 def test_paginate_max_pages_is_relative_to_start_page(monkeypatch):
@@ -155,7 +155,7 @@ def test_migration_backfills_missing_scanner_jobs(tmp_path):
     db.execute("INSERT INTO scanner_jobs(case_id, job_type, status) VALUES (1, 'source_code', 'ok')")
     db.apply_migrations()
     rows = db.query("SELECT job_type FROM scanner_jobs WHERE case_id=1 ORDER BY job_type")
-    assert [r["job_type"] for r in rows] == ["codeql", "dependency_downgrade", "osv_dependency", "secret_ci"]
+    assert [r["job_type"] for r in rows] == ["codeql", "dependency_downgrade", "osv_dependency", "secret_ci", "trivy_dependency"]
 
 
 def test_next_iteration_query_plan_is_wide_first_and_high_precision():

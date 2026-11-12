@@ -81,6 +81,8 @@ class CodeQLForceRescanTests(
             if job_type not in {
                 "codeql_security",
                 "secret_ci",
+                "semgrep_source",
+                "trivy_dependency",
             }
         )
 

@@ -1,9 +1,7 @@
 """Independently recalculate C6 matched categorical tests from indexed aggregate counts.
 
-Scientific boundary: the checked-in aggregate matrices are parsed *index representations*
-not authenticated bytes of the original private C6/C7 research files. An optional
-future staged-file checker verifies an external SHA before comparing its counts.
-No new labels, imputation, network calls or writes to source material are permitted.
+The checked-in aggregate matrices are index representations of the C6/C7 paired
+tables. No new labels, imputation, network calls or writes to source files.
 """
 from __future__ import annotations
 

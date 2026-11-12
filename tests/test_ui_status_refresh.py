@@ -35,7 +35,7 @@ def test_direct_full_scan_syncs_jobs_and_marks_clean(tmp_path):
     case_id = make_case(db, [{"filename": "src/app.py", "patch": "+print(1)"}])
     seed_scanner_jobs(db, include_codeql=True, case_ids=[case_id])
     pr_id = db.one("SELECT pr_id FROM cases WHERE id=?", (case_id,))["pr_id"]
-    for scanner in ["gitleaks", "dependency-diff", "osv-scanner", "codeql-base", "codeql-head", "codeql"]:
+    for scanner in ["gitleaks", "dependency-diff", "osv-scanner", "semgrep", "trivy-scanner", "codeql-base", "codeql-head", "codeql"]:
         db.execute("INSERT INTO scanner_runs(case_id, pr_id, scanner, status) VALUES (?, ?, ?, 'ok')", (case_id, pr_id, scanner))
     sync_jobs_from_scanner_runs(db, case_id)
     update_case_stages(db)

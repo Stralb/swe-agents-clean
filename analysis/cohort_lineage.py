@@ -1,7 +1,7 @@
 """Fail-closed source-recorded lineage audit and optional local C1/C2 CSV replay.
 
-The committed JSON records *aggregate observations made via Wits read-only
-tools*, not frozen row-level inputs or a claim of independent reproduction.
+The committed JSON records *aggregate observations read from the research
+database*, not row-level inputs.
 The optional local file command independently verifies separately provided
 original C1 and C2 CSV bytes against pre-established frozen SHA-256 digests
 and replays membership/tier relations without generating new controls.

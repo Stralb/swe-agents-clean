@@ -2,7 +2,7 @@
   "schema_version": 1,
   "status": "SOURCE_RECORDED_STAGE_RELATIONS_ONLY",
   "observed_on": "2026-10-21",
-  "source_type": "Wits cluster research_artifacts read-only text summaries and SELECT group-by on pre-final miner snapshots",
+  "source_type": "read-only text summaries and SELECT group-by queries on pre-final miner snapshots",
   "final_discovery_database": {
     "archived_source_and_manifest_expected_sha256": "126860eeb6e55786a2db29e4010672749cce58f29f511459d40166a1b07936fa",
     "final_database_bytes_independently_hashed": false,
