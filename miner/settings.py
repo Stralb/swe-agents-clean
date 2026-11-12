@@ -17,7 +17,7 @@ PROJECT_ROOT = ROOT
 def _project_path_from_env(env_name: str, default_relative: str) -> Path:
     """Resolve config/db paths without relying on the process current directory.
 
-    Streamlit can be launched from a directory that later disappears or from an
+    The process can be launched from a directory that later disappears or from an
     arbitrary working directory.  Calling Path(...).resolve() on a relative path
     then touches os.getcwd(), which can raise FileNotFoundError.  Relative paths
     are therefore resolved from the project root, not from cwd.
