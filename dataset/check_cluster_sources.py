@@ -34,7 +34,7 @@ for name in paths:
   extra.append({'source':str(p),'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()})
 sys.path.insert(0,str(root/'mcp_uploads/jobs/dataset_cleanup_20261111T195749Z_bec2d6/dependencies'))
 from huggingface_hub import HfApi,hf_hub_download
-api=HfApi();repo='Stralb/malicious-issue-miner-data';info=api.repo_info(repo,repo_type='dataset',files_metadata=True)
+api=HfApi();repo='Stralb/adversarial-swe-agents';info=api.repo_info(repo,repo_type='dataset',files_metadata=True)
 data=json.loads(Path(hf_hub_download(repo,'DATASET.json',repo_type='dataset',revision=info.sha)).read_text())
 receipt=json.loads(Path(hf_hub_download(repo,'UPLOAD_RECEIPT.json',repo_type='dataset',revision=info.sha)).read_text())
 import pyarrow.parquet as pq

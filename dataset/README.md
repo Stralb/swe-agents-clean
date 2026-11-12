@@ -1,6 +1,8 @@
-# Research dataset
+# adversarial-swe-agents
 
-Start with the [private Hugging Face dataset](https://huggingface.co/datasets/Stralb/malicious-issue-miner-data). Its default configuration, `paper_cases`, contains one row per issue–PR case, with repository names, source text, URLs and explicit paper-cohort flags.
+**Database filename:** `adversarial-swe-agents.sqlite`.
+
+Start with the [private Hugging Face dataset](https://huggingface.co/datasets/Stralb/adversarial-swe-agents). Its default configuration, `paper_cases`, contains one row per issue–PR case, with repository names, source text, URLs and explicit paper-cohort flags.
 
 **Verified data revision:** `e71e8b39ed56ffb1c2198b9df2384495b8404317`.
 
@@ -21,7 +23,7 @@ The ten Parquet configurations keep cases, positive cases, changes, roots, pairs
 from datasets import load_dataset
 
 cases = load_dataset(
-    "Stralb/malicious-issue-miner-data",
+    "Stralb/adversarial-swe-agents",
     split="train",
     revision="e71e8b39ed56ffb1c2198b9df2384495b8404317",
     token=True,
@@ -42,6 +44,6 @@ The [completion receipt](HUGGINGFACE_RELEASE.json) attests remote file checks an
 
 [SCHEMA.sql](SCHEMA.sql), the [ERD](erd/OVERVIEW.svg) and [builder](build_dataset.py) describe a prepared neutral derivative containing 111 tables and 18 views. That derivative has not been verified as built or uploaded. These schema artifacts must not be presented as the deployed schema of the original operational master.
 
-The verified Hugging Face Parquet schemas are those recorded in its release manifest. The source database remains unchanged.
+The verified Hugging Face Parquet schemas are those recorded in its release manifest. The database content is unchanged. Its canonical filename is `adversarial-swe-agents.sqlite`; a compatibility alias keeps older local scripts working.
 
 [Dataset exporter and cleanup](clean_hub.py) · [Cluster launcher](run_hub_cleanup.py)

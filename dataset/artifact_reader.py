@@ -16,7 +16,7 @@ def quote(s):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--db',type=Path,default=Path(__file__).with_name('research_dataset.sqlite'))
+    parser.add_argument('--db',type=Path,default=Path(__file__).with_name('adversarial-swe-agents.sqlite'))
     sub=parser.add_subparsers(dest='action',required=True)
     listing=sub.add_parser('list');listing.add_argument('--case',type=int);listing.add_argument('--run')
     extracting=sub.add_parser('extract');extracting.add_argument('artifact_key');extracting.add_argument('output',type=Path)

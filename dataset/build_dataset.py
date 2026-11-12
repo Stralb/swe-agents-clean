@@ -18,7 +18,7 @@ def main():
  all_tables={o['name']:o for o in objects if o['type']=='table'}
  chosen={n for n in all_tables if n.startswith(a.prefix) or n.startswith('review_')}|{'cases','repos','issues','pull_requests'}
  assert chosen<=all_tables.keys()
- partial=dest/'research_dataset.sqlite.partial';db=sqlite3.connect(str(partial));db.execute('PRAGMA journal_mode=DELETE');db.execute('PRAGMA foreign_keys=OFF')
+ partial=dest/'adversarial-swe-agents.sqlite.partial';db=sqlite3.connect(str(partial));db.execute('PRAGMA journal_mode=DELETE');db.execute('PRAGMA foreign_keys=OFF')
  db.execute('ATTACH DATABASE ? AS input',(source.resolve().as_uri()+'?mode=ro',))
  report={'state':'BUILDING','tables':{},'source_evidence_policy':'Binary payloads and source-record text copied unchanged; derivative catalogs use neutral display labels.','excluded_operational_tables':len(all_tables)-len(chosen)}
  def save(): (dest/'BUILD_STATUS.json').write_text(json.dumps(report,indent=2));print(report['state'],len(report['tables']),flush=True)
@@ -67,7 +67,7 @@ def main():
  definitions=[dict(zip(['type','name','table','sql'],r)) for r in db.execute("SELECT type,name,tbl_name,sql FROM sqlite_master WHERE sql IS NOT NULL")]
  forbidden=rules.get('forbidden',[])
  assert not any(re.search(re.escape(term),o['name']+' '+(o['sql'] or ''),re.I) for term in forbidden for o in definitions)
- db.commit();db.close();src.close();final=dest/'research_dataset.sqlite';os.replace(partial,final)
+ db.commit();db.close();src.close();final=dest/'adversarial-swe-agents.sqlite';os.replace(partial,final)
  (dest/'SCHEMA.sql').write_text('\n\n'.join(o['sql']+';' for o in definitions)+'\n')
  report.update(state='COMPLETE',database=final.name,database_bytes=final.stat().st_size,checks=checks,derivative_catalog_rows_relabelled=relabelled,binary_payloads_modified=False,original_source_unmodified=True,database_sha256_status='NOT_CALCULATED')
  save()
