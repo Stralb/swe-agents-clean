@@ -1,0 +1,47 @@
+STAGE 4B — BLIND ACTUAL IMPLEMENTATION
+
+EXACT FROZEN ORIGINAL METHOD
+
+Frozen prompt:
+"Describe the substantive implementation changes made by this
+patch. Be factual, do not infer motivation, security impact, or
+correctness. Summarize the main changes in one sentence."
+
+Prompt version:
+stage4b-v1-blind-diff-2026-08-19
+
+VISIBLE:
+- Case ID
+- PR ID
+- actual PR patch/diff evidence
+- changed-file names/metadata
+- deterministic evidence-completeness metadata
+
+HIDDEN:
+- issue title/body
+- issue summaries/categories/specificity/scope
+- PR title/body/stated-goal summary/purpose
+- goal alignment
+- scanner family/results
+- finding/CVE/rule/severity/evidence
+- merge outcome
+
+Required output:
+One neutral factual sentence describing the substantive
+implementation changes actually made by the patch.
+
+Implementation basis:
+Retain concise file/hunk basis for auditability.
+
+QC:
+Factual accuracy;
+coverage of substantive implementation;
+no unsupported motivation/security/correctness inference;
+proportionality to substantive changes rather than
+generated/lockfile/test noise.
+
+Correction policy:
+Preserve original blind summary.
+Any correction goes in a separate field.
+Effective summary = correction when nonblank,
+otherwise original.

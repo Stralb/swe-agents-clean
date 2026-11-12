@@ -2,7 +2,7 @@
 
 Code and analysis for an observational study of GitHub issues and pull requests associated with coding agents. The study traces scanner-reported findings in the resulting changes back to the changed operations responsible for them, and compares the affected workflows with matched controls.
 
-**Paper:** [paper/main.pdf](paper/main.pdf)
+**Paper:** [paper/main.pdf](paper/main.pdf) · [source](paper/README.md)
 **Dataset:** [Hugging Face](https://huggingface.co/datasets/Stralb/adversarial-swe-agents) *(private access required)* · [data guide](data/README.md)
 **Database:** [full ERD](data/erd/full.svg) · [schema](data/study_schema.sql)
 **Archive (DOI):** *to be added*
@@ -37,10 +37,10 @@ With Docker instead: `docker build -t checks . && docker run --rm checks`.
 | `miner/` | ([README](miner/README.md)) The pipeline: collection, issue linking, filters, scanners, database, workers. Run with `python -m miner {init-db,collect,scan,export}` |
 | `checks/` | ([README](checks/README.md)) Recomputes the paper's paired tests and bootstrap checks and verifies the cohort totals, from `data/` |
 | `replay/` | The O/W/P patch replay and CodeQL comparison (RQ3) ([README](replay/README.md)) |
-| `annotation/` | Prompts, coding protocols and codebooks for the annotation stages ([README](annotation/README.md)) |
+| `annotation/` | Prompts, blinding protocols and codebooks for the annotation stages ([README](annotation/README.md)) |
 | `data/` | Aggregate results, database schema and dataset guide ([README](data/README.md)) |
 | `tests/` | Unit tests |
-| `paper/` | Manuscript |
+| `paper/` | LaTeX source and PDF of the paper ([README](paper/README.md)) |
 | `config.yml` | Collection and scanner configuration used for the study |
 
 ## Study

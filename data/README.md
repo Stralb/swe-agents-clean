@@ -11,6 +11,7 @@ Aggregate results used by the `checks/` modules, plus documentation for the stud
 | `pathway_aggregates.json`, `bootstrap_reference.json` | Indexed paired counts and bootstrap references |
 | `study_schema.sql` | Table and view layout of the study database (111 tables, 18 views) |
 | `erd/` | Entity-relationship diagrams: full, overview, and the parts used by `miner/`, `replay/` and `checks/` |
+| `scanner_versions.md` | Scanner versions and configuration |
 | `queries.sql` | Descriptive counts per analysis unit, and a walkthrough of one case |
 
 ## Database ERD

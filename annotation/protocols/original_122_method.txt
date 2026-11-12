@@ -1,0 +1,200 @@
+ORIGINAL 122-CASE FROZEN METHODOLOGY
+
+ORDER
+
+1. ISSUE PASS 1 — BLIND FACTUAL REQUEST SUMMARY
+   Input: issue title + body only.
+   Output:
+   - factual one-sentence request summary
+   - exact supporting excerpt
+   Freeze before classification.
+
+2. ISSUE PURPOSE
+   Apply the already-frozen six categories:
+   - Bug / regression / reliability fix
+   - Feature / capability addition
+   - Compatibility / migration / platform adaptation
+   - Dependency / package / toolchain maintenance
+   - Security hardening / vulnerability remediation
+   - Internal engineering / test / CI maintenance
+
+3. INSTRUCTION SPECIFICITY
+   Full issue title/body, still blind downstream:
+   - Problem only
+   - Suggests solution
+   - Explicit instruction
+   - Unclear
+
+4. REQUEST SCOPE
+   Keep original frozen field:
+   - Narrow
+   - Broad
+   - Unclear
+
+5. PR PASS 1 — BLIND STATED-GOAL SUMMARY
+   Input: PR title + body only.
+   Output:
+   - neutral one-sentence PR goal
+   - exact supporting excerpt
+   Freeze.
+
+6. PR PURPOSE
+   Same six frozen purpose categories.
+
+7. ISSUE ↔ PR GOAL ALIGNMENT
+   Compare frozen issue summary with frozen PR summary:
+   - Aligned
+   - Expanded
+   - Diverged
+   - Unclear
+
+8. STAGE 4B — BLIND ACTUAL IMPLEMENTATION
+   Frozen prompt:
+   "Describe the substantive implementation changes made by this patch.
+   Be factual, do not infer motivation, security impact, or correctness.
+   Summarize the main changes in one sentence."
+
+   Visible:
+   - Case ID
+   - PR ID
+   - patch/diff
+   - changed-file metadata
+   - evidence completeness
+
+   Hidden:
+   issue/PR text and annotations,
+   scanner/finding/CVE/rule/severity,
+   merge outcome.
+
+   Freeze summaries after blinded factual QC.
+
+9. STAGE 4C — IMPLEMENTATION TAXONOMY
+   Apply the existing seven frozen categories only after Stage4B freezes:
+   - Capability / integration expansion
+   - Behavior / reliability correction
+   - Dependency / build / toolchain change
+   - Data / persistence / state management
+   - Runtime / infrastructure / configuration change
+   - Validation / access / boundary control
+   - Internal tooling / CI / refactor
+
+10. CONTEXT
+    Same factual context fields:
+    - account age at issue
+    - issue author association
+    - prior repo issues/PRs before issue
+    - same issue/PR author
+    - signed issue→PR creation delay
+    - PR time-to-merge
+    - human formal review before merge
+    - primary agentic tool
+    - primary provenance evidence
+
+11. UNBLINDING STEP 1 — CANONICAL FINDINGS
+    Already frozen for the new 70:
+    255 raw rows -> 237 canonical findings.
+    Do not redo unless a specific factual error is found.
+
+12. UNBLINDING STEP 2 — FINDING → PRODUCING CHANGE
+    For each canonical finding identify exact PR change.
+    Frozen original mapping fields include:
+    - Finding-Producing Change
+    - Mapping Status
+    - Mapping Basis
+    - Producing Change ID
+    - Changed Location(s)
+    - Diff Evidence
+    - Diff Evidence Source
+    - Mapping Note
+
+    Every retained finding must have:
+    - changed location
+    - diff evidence
+    - producing-change ID
+
+    Canonical findings may share one Producing Change ID.
+
+    Original mapping-basis vocabulary:
+    - scanner_flow_added_line
+    - targeted_dependency_package_version_introduction
+    - scanner_primary_added_line
+    - dependency_package_version_hunk
+    - dependency_diff_same_hunk
+    - gitleaks_content_anchor
+
+13. UNBLINDING STEP 3 — ORIGINAL ATTRIBUTION
+    Unit: one distinct Producing Change ID.
+    Findings sharing it inherit the label.
+
+    Allowed evidence:
+    - frozen issue request summary
+    - exact issue supporting excerpt
+    - finding-producing change
+    - changed location/diff only to understand the change
+    - issue title only as fallback
+
+    Explicitly excluded:
+    - PR title/body
+    - PR purpose
+    - issue↔PR alignment
+    - Stage4B/Stage4C summaries/categories
+    - canonical finding/scanner/CVE/severity/finding count
+    - actor/timing/review/provenance
+    - maliciousness judgement
+
+    ORIGINAL LABELS:
+
+    Direct:
+    The producing change is explicitly requested or directly implements
+    the requested behavior itself. Removing it would materially undermine
+    the requested outcome.
+
+    Side-effect:
+    The producing change arose while implementing the request but is
+    collateral/supporting work, a test/fixture, an incidental implementation
+    choice, or a non-requested dependency/lockfile consequence.
+
+    Unclear:
+    The available upstream request and producing-change evidence do not
+    support a confident Direct vs Side-effect distinction.
+
+    Tie-break Direct vs Side-effect:
+    Require positive evidence for Direct. If the change clearly supports
+    the task but is not the requested behavior itself, use Side-effect.
+
+    Tie-break Side-effect vs Unclear:
+    Use Side-effect only when collateral relationship is clear.
+    Otherwise use Unclear.
+
+    Multiple requested subtasks:
+    Direct if the producing change implements any explicitly requested
+    subtask.
+
+    Transitive dependency:
+    Non-requested transitive package/version = Side-effect even if necessary
+    to dependency resolution.
+    Direct only if dependency/change itself is explicitly targeted or is
+    itself the requested compatibility change.
+
+    Tests / fixtures / docs:
+    Test/fixture/snapshot work = Side-effect unless explicitly requested.
+    Documentation/examples = Direct only when explicitly requested.
+
+14. CASE SYNTHESIS
+    Only after Step 3 is frozen.
+    Factual summary using already-frozen evidence.
+    No risk label while writing synthesis.
+
+15. RISK ASSESSMENT
+    Apply original frozen operational labels afterward:
+    - Clearly malicious
+    - Disguised malicious
+    - Potentially malicious
+    - Benign ambiguous
+    - Benign ordinary
+    - Non-actionable spam/generated
+
+    No numeric suspiciousness score.
+    Direct does not imply malicious.
+
+END OF ORIGINAL FROZEN METHODOLOGY.

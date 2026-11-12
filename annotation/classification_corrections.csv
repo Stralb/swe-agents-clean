@@ -1,0 +1,2 @@
+case_id,repository,pr,classification,archived_value,corrected_value,evidence,aggregate_status
+6017,vfarcic/dot-ai,286,affected_artifact,production source,documentation,examples/gateway-api/README.md; literal YOUR_AUTH_TOKEN in curl example,Original three-panel figure restored; historical file-type misclassification disclosed in caption and case; no aggregate percentages recalculated

@@ -1,5 +1,7 @@
+\input{font-maps.tex}
 \documentclass[acmsmall,screen,nonacm]{acmart}
 \usepackage[T1]{fontenc}
+\usepackage{pdfpages}
 \usepackage{microtype,float,graphicx,booktabs,tabularx,array,ragged2e,tikz,needspace,colortbl,placeins,longtable}
 \usetikzlibrary{arrows.meta,positioning,calc}
 \settopmatter{printacmref=false,printfolios=true,printccs=true}
@@ -82,6 +84,7 @@ The central distinction is between what an issue requests and how a change imple
 
 \Needspace{20\baselineskip}
 \subsection{Research Questions}\label{sec:rqs}
+\vspace{\baselineskip}
 
 The study asks three questions of unequal weight. RQ1 provides the main evidence: it relates recorded security findings to the changed operations behind them and to the work requested in the linked issues. RQ2 and RQ3 examine related questions about guidance, namely whether issue instruction specificity differs between issues with and without new findings, and how implementations and CodeQL results differ when historical tasks are replayed with additional security information.
 \begin{itemize}
@@ -188,7 +191,7 @@ Figure~\ref{fig:rq1-method} shows how retained findings are linked to responsibl
 \begin{figure}[!tbp]
 \centering
 \includegraphics[width=0.9\textwidth]{figures/RQ1_Methodology.pdf}
-\caption{From findings to responsible changes and implementation choices. Blue bars mark model-assisted steps; teal callouts identify admissible evidence, and red marks unsupported links or later evidence excluded from origin coding. Dark outlines show retained counts. The first yes/no decision tests link support; the second distinguishes changes grouped into choices. The dashed final box denotes explanation tiers for M choices. Retained links require a changed file, line or hunk and a supporting explanation (Section~\ref{sec:attrib}).}
+\caption{From findings to responsible changes and implementation choices. Blue bars mark model-assisted steps; teal callouts identify admissible evidence, and red marks unsupported links or later evidence excluded from origin coding. Dark outlines show retained counts. The first yes/no decision tests link support; the second distinguishes changes grouped into choices. The dashed final box denotes explanation tiers for $M$ choices. Retained links require a changed file, line or hunk and a supporting explanation (Section~\ref{sec:attrib}).}
 \Description{Scanner findings are deduplicated and linked to changed operations using code evidence. Operations receive task roles and are grouped into implementation choices, which are classified using earlier public evidence.}
 \label{fig:rq1-method}
 \end{figure}
@@ -381,7 +384,6 @@ This reading differs from the one suggested by controlled attack studies, in whi
 
 For each of these open details, the public record offers context but not a decision history. Repository helpers, generated dependency files and remedies suggested in an issue are observable before the change. The pre-PR Spotify repository already encoded session tokens without modulo reduction, and the GSD issue itself proposed prompt and schema changes rather than a runtime repair. Such evidence supports a distinction between a technique that public evidence required, a technique for which a precedent or alternative was available, and a technique produced mechanically by tooling. In the extended model-assisted classification, public prescription was rare (6 of 342 choices), while most choices were selected among alternatives (233) or produced mechanically (103). The evidence does not show that a contributor saw a precedent, considered an alternative or chose deliberately (Section~\ref{sec:roles}), and the alternatives named in the cases were not all tested as equivalent replacements. The study therefore characterises what was left open and what was publicly available, not why a particular technique was used.
 
-\enlargethispage{2\baselineskip}
 \subsection{Implications and Follow-up}
 
 The clearest implication concerns how findings on agent-associated PRs are read. Identifying the responsible change, and noting whether it lies in deployed source, a test, documentation or a lockfile, showed in this cohort which reports repeated a single operation and which operations carried the requested behaviour. The study did not measure whether this information helps reviewers triage warnings. It does show that the same list of alerts supports quite different conclusions once these facts are known.
@@ -392,7 +394,8 @@ More tentatively, the details left open in the cases suggest where guidance migh
 
 Follow-up work can address the limits of the secondary analyses directly. For RQ2, blinded, mixed-order coding of positive and control issues with independent agreement assessment would address the possible coding-pass confounder. For RQ3, a test of guidance should record complete model inputs, repeat each input condition independently and validate that the resulting patches complete the task, so that differences in alerts can be separated from generation variability and from omitted functionality. Warning-derived guidance should remain explicitly retrospective; guidance inferred only from the task and the pre-change repository would test a different, prospective claim. A human-authored comparison could then examine whether the observed patterns are specific to agent-associated work.
 
-\section{Threats to Validity}\label{sec:threats}
+\section{Threats to Validity}
+\enlargethispage{2\baselineskip}\label{sec:threats}
 
 \paragraph{Attribution and annotation.} Finding-to-change links and many task-role and mechanism-origin labels were proposed by a language model and retained under the stated evidence rules (Section~\ref{sec:attrib}). The original workbook documents 11 task-role corrections but does not establish complete, independent human review of the 605 links or a second-annotator agreement rate. These model-assisted annotations should not be treated as independent human ground truth. Errors in judging whether an operation directly fulfils an issue requirement could move changes between Direct and Supporting. No direction of systematic error is assumed. The role distribution also changes when weaker issue-side-only agent markers are excluded (Section~\ref{sec:rq1-roles}). Results about task roles, concentration and implementation choices therefore depend on these annotations. Four of the 122 original PRs predate their linked issue, and 15 more were opened within ten minutes afterward. Together with uncertain agent association, this limits any claim about what instructions produced the code.
 
@@ -400,8 +403,8 @@ Follow-up work can address the limits of the secondary analyses directly. For RQ
 
 \paragraph{Matching and replay.} The paired wording statistic is reproducible from Table~\ref{tab:rq2}, but matching does not control task content or all confounders. Positive and control wording labels were produced in different annotation passes without a cross-pass agreement estimate. Stronger merge-base dependency verification is evidenced for the original annotation cohort only; the comparison therefore retains possible measurement differences. The observed wording difference is an association, not an effect. RQ3 used retrospectively selected tasks and hindsight-derived inputs. With one retained output per task and input condition, the replay analysis cannot distinguish differences associated with the supplied information from variation between model generations. The alert counts are consequently descriptive, not estimates of an intervention effect. The historical alert totals were not independently regenerated, and generated patches were not functionally validated; fewer alerts therefore do not establish prevention or repair.
 
-\enlargethispage{2\baselineskip}
 \section{Conclusion}
+\enlargethispage{2\baselineskip}
 
 This study traced recorded security findings in merged, agent-associated pull requests back to the changed operations responsible for them and to the requirements of the linked public issues. Doing so shows what warning counts conceal. Findings and changes are different quantities. In the first 122 annotated instances, 605 findings corresponded to 322 responsible changes, and seven instances, dominated by dependency updates and repeated data-flow reports, held more than half of the findings. Most responsible changes in that cohort supported the requested work rather than implementing it, and findings in tests, documentation or dependency files require a different interpretation from findings in deployed source. Where a flagged change did implement the requested behaviour, as in the Spotify, GSD and Grok CLI cases, the warning concerned a security-relevant technique that the issue had not prescribed.
 
@@ -448,4 +451,6 @@ The study data and code can be found in the \href{https://github.com/Stralb/adve
 
 \input{supplement.tex}
 
+\clearpage
+\includepdf[pages=-,fitpaper=true,pagecommand={\thispagestyle{empty}}]{declaration/AI_declaration_signed.pdf}
 \end{document}

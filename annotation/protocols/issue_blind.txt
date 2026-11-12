@@ -1,0 +1,40 @@
+PASS 1 — BLINDED UPSTREAM REQUEST SUMMARISATION
+
+EXACT FROZEN METHOD FROM ORIGINAL 122 WORKFLOW
+
+Purpose:
+Create a neutral, auditable one-sentence description of what each
+issue author is asking to be changed, fixed, or achieved before any
+downstream evidence is reviewed.
+
+Visible:
+- Case ID
+- Issue title
+- Full issue body
+
+Hidden:
+- PR text
+- PR summaries/categories
+- changed files
+- patch/diff
+- scanner results
+- CVEs/rules/severity
+- merge outcome
+- actor/context information
+- later relationship/risk judgements
+
+Summary rule:
+One factual sentence describing the stated goal.
+Preserve ambiguity rather than guessing.
+Include a proposed solution only when the issue itself states it.
+
+Bias guardrails:
+Do not infer maliciousness, risk, intent, security consequences,
+or downstream causation.
+Do not pre-classify into purpose categories during Pass 1.
+
+Required supporting evidence:
+A short exact excerpt copied verbatim from issue title/body.
+
+Freeze:
+Human confirm/correct before purpose/specificity/scope coding.

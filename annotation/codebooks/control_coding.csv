@@ -1,0 +1,21 @@
+layer,label,operational_definition
+Issue / PR purpose,Bug / regression / reliability fix,"Restores or corrects existing behavior, reliability, error handling, or a regression without primarily adding a new product surface."
+Issue / PR purpose,Feature / capability addition,"Adds or materially expands an externally usable feature, integration, provider, command, UI workflow, API surface, plugin, or adapter."
+Issue / PR purpose,Compatibility / migration / platform adaptation,"Adapts existing functionality to a platform, version, format, migration, or compatibility requirement without the new capability itself being primary."
+Issue / PR purpose,Dependency / package/toolchain maintenance,"Updates dependencies, package managers, framework/runtime versions, build/lint/bundle tooling, or related package metadata."
+Issue / PR purpose,Security hardening / vulnerability remediation,"Primarily remediates a security weakness or strengthens authentication, authorization, validation, isolation, or security boundaries."
+Issue / PR purpose,Internal engineering / test / CI maintenance,"Primarily changes tests, CI, documentation, developer tooling, diagnostics, governance, or internal refactoring rather than product behavior."
+Instruction specificity,Problem only,States the problem or desired outcome without proposing a concrete implementation route.
+Instruction specificity,Suggests solution,"Proposes one or more possible approaches, but leaves meaningful implementation choice open."
+Instruction specificity,Explicit instruction,"Specifies a concrete mechanism, exact change, files/APIs/configuration, detailed acceptance criteria, or implementation steps."
+Goal alignment,Aligned,The PR stated goal directly addresses the issue request.
+Goal alignment,Expanded,The PR addresses the issue but materially broadens its stated scope with adjacent work.
+Goal alignment,Diverged,The PR stated goal is materially different from the issue request.
+Goal alignment,Unclear,Available blind issue/PR text is insufficient to determine the relationship confidently.
+Implementation,Capability / integration expansion,"Adds or materially expands an externally usable feature, integration, provider, command, UI workflow, API surface, plugin, or adapter; supporting config/tests/docs do not override it."
+Implementation,Dependency / build / toolchain change,"Dominant change updates/replaces dependencies, package managers, framework/runtime versions, build/lint/bundle/declaration tooling, compatibility matrices, or related lock/package metadata."
+Implementation,Behavior / reliability correction,"Changes existing runtime behavior, parsing, matching, lifecycle, error handling, recovery, or control flow without primarily adding a new product surface."
+Implementation,Data / persistence / state management,"Dominant change concerns durable state: schemas/migrations, storage locations/formats, checkpoints, caches, session state, backups, or recovery of stored state."
+Implementation,Runtime / infrastructure / configuration change,"Dominant change modifies deployment/runtime environment, VM/container/process/network infrastructure, environment/config resolution, installation/distribution mode, or platform wiring."
+Implementation,Validation / access / boundary control,"Dominant change validates, restricts, sanitizes, authenticates, or otherwise controls input, paths, networks, permissions, destinations, or access boundaries."
+Implementation,Internal tooling / CI / refactor,Dominant change targets developer/testing/CI/diagnostic tooling or reorganizes internal architecture/code structure rather than primarily changing product behavior.

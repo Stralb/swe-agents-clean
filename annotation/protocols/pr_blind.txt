@@ -1,0 +1,44 @@
+PR PASS 1 — BLINDING AND SUMMARY PROTOCOL
+
+EXACT FROZEN METHOD FROM ORIGINAL 122 WORKFLOW
+
+Goal:
+Capture what the PR itself claims to change or achieve,
+independently of the linked issue and independently of what
+the code diff or scanner later shows.
+
+Visible:
+- Case ID
+- PR title
+- Full PR body
+
+Hidden:
+- issue title/body
+- issue summary/category/specificity/scope
+- changed files
+- patch/diff
+- scanner/finding/CVE/severity
+- merge outcome
+- author history
+- later relationship/risk judgement
+
+Summary form:
+One neutral factual sentence.
+Preserve concrete actions explicitly stated by the PR.
+Do not infer maliciousness, security impact, causal linkage,
+or hidden intent.
+
+Multiple goals:
+If several substantive changes are explicitly claimed,
+summarize the connected set without silently dropping
+a major sub-goal.
+
+Sparse PR:
+Use the title if the body is sparse.
+Do not invent missing detail.
+
+Supporting excerpt:
+Short exact PR-body excerpt where possible;
+title only as fallback.
+
+Freeze before issue↔PR comparison.
