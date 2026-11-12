@@ -9,7 +9,7 @@ Aggregate results used by the `checks/` modules, plus documentation for the stud
 | `matched_aggregates.json` | Paired category matrices, discordant binary counts and the reported delay result |
 | `cohort_lineage.json` | Recorded cohort and matching totals |
 | `pathway_aggregates.json`, `bootstrap_reference.json` | Indexed paired counts and bootstrap references |
-| `schema.sql` | Table and view layout of the study database (111 tables, 18 views) |
+| `study_schema.sql` | Table and view layout of the study database (111 tables, 18 views) |
 | `erd/` | Entity-relationship diagrams: full, overview, and the parts used by `miner/`, `replay/` and `checks/` |
 | `queries.sql` | Descriptive counts per analysis unit, and a walkthrough of one case |
 

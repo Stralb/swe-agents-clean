@@ -16,7 +16,7 @@ def _settings(config):
     )
 
 
-def test_wide_first_defaults_are_not_early_drop_caps():
+def test_default_config_has_no_early_caps():
     cfg = yaml.safe_load(Path('config.yml').read_text())
     assert cfg['github']['min_stars'] == 100
     assert cfg['github']['strict_primary_language'] is False

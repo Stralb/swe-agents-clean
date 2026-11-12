@@ -4,7 +4,7 @@ Code and analysis for an observational study of GitHub issues and pull requests 
 
 **Paper:** [paper/main.pdf](paper/main.pdf)
 **Dataset:** [Hugging Face](https://huggingface.co/datasets/Stralb/adversarial-swe-agents) *(private access required)* · [data guide](data/README.md)
-**Database:** [full ERD](data/erd/full.svg) · [schema](data/schema.sql)
+**Database:** [full ERD](data/erd/full.svg) · [schema](data/study_schema.sql)
 **Archive (DOI):** *to be added*
 
 ## Quick start
@@ -66,7 +66,7 @@ The comparisons are observational. A scanner finding is not proof of an exploita
 
 ## Database
 
-The study database (111 tables, 18 views) is documented in [`data/schema.sql`](data/schema.sql). The overview below shows how its main parts connect; the [full ERD](data/erd/full.svg) shows every table.
+The study database (111 tables, 18 views) is documented in [`data/study_schema.sql`](data/study_schema.sql). The overview below shows how its main parts connect; the [full ERD](data/erd/full.svg) shows every table.
 
 ![Database overview](data/erd/overview.svg)
 
