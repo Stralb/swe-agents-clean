@@ -3,9 +3,9 @@ from pathlib import Path
 
 import pytest
 
-from src.github.client import GitHubAPIError, GitHubClient, GitHubSecondaryRateLimit
-from src.pipeline.collect_pipeline import _process_pr
-from src.settings import RuntimeLimits, Settings
+from miner.github.client import GitHubAPIError, GitHubClient, GitHubSecondaryRateLimit
+from miner.pipeline.collect_pipeline import _process_pr
+from miner.settings import RuntimeLimits, Settings
 
 
 class DummyResponse:

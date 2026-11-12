@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from src.settings import PROJECT_ROOT, load_settings
+from miner.settings import PROJECT_ROOT, load_settings
 
 
 def test_load_settings_does_not_depend_on_cwd(tmp_path, monkeypatch):

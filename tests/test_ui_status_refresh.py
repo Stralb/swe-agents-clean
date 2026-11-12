@@ -1,13 +1,13 @@
 from pathlib import Path
 
-from src.db.database import Database
-from src.pipeline.case_builder import update_case_tags_and_status
-from src.workers.job_queue import seed_scanner_jobs, sync_jobs_from_scanner_runs, update_case_stages
+from miner.db.database import Database
+from miner.pipeline.case_builder import update_case_tags_and_status
+from miner.workers.job_queue import seed_scanner_jobs, sync_jobs_from_scanner_runs, update_case_stages
 
 
 def init_db(tmp_path: Path) -> Database:
     db = Database(tmp_path / "miner.db")
-    db.init_schema(Path("src/db/schema.sql"))
+    db.init_schema(Path("miner/db/schema.sql"))
     return db
 
 

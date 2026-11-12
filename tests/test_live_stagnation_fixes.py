@@ -1,7 +1,7 @@
 from pathlib import Path
-from src.db.database import Database
-from src.github.client import GitHubClient
-from src.workers.job_queue import applicable_job_types, update_case_stages
+from miner.db.database import Database
+from miner.github.client import GitHubClient
+from miner.workers.job_queue import applicable_job_types, update_case_stages
 
 
 def test_search_issues_accepts_start_page(monkeypatch):
@@ -24,7 +24,7 @@ def test_secret_job_applies_to_generic_valid_case():
 
 def test_no_jobs_case_does_not_become_clean(tmp_path):
     db_path = tmp_path / "miner.db"
-    schema = Path(__file__).resolve().parents[1] / "src" / "db" / "schema.sql"
+    schema = Path(__file__).resolve().parents[1] / "miner" / "db" / "schema.sql"
     db = Database(db_path)
     db.init_schema(schema)
     db.execute("INSERT INTO repos(full_name, html_url, stars, language, archived) VALUES ('o/r','https://github.com/o/r',100,'Python',0)")
@@ -52,7 +52,7 @@ def test_paginate_max_pages_is_relative_to_start_page(monkeypatch):
 
 def test_migration_repairs_retrieval_queries_stuck_on_page_one(tmp_path):
     db_path = tmp_path / "miner.db"
-    schema = Path(__file__).resolve().parents[1] / "src" / "db" / "schema.sql"
+    schema = Path(__file__).resolve().parents[1] / "miner" / "db" / "schema.sql"
     db = Database(db_path)
     db.init_schema(schema)
     db.execute(
@@ -69,8 +69,8 @@ def test_migration_repairs_retrieval_queries_stuck_on_page_one(tmp_path):
     assert row["exhausted"] == 0
     assert "reset_legacy_unaccounted_retrieval_for_replay" in row["last_error"]
 
-from src.pipeline.collect_pipeline import TARGETED_BASE_QUERY, _process_pr, _targeted_query_jobs, TARGETED_ISSUE_LINK_TERMS, TARGETED_STREAMS
-from src.settings import RuntimeLimits, Settings
+from miner.pipeline.collect_pipeline import TARGETED_BASE_QUERY, _process_pr, _targeted_query_jobs, TARGETED_ISSUE_LINK_TERMS, TARGETED_STREAMS
+from miner.settings import RuntimeLimits, Settings
 
 
 def test_targeted_base_query_constrains_search_to_title_body():
@@ -108,7 +108,7 @@ class FakeGitHubForProcess:
 
 def test_process_pr_uses_jan_2025_lookback_and_comment_link_fallback(tmp_path):
     db_path = tmp_path / "miner.db"
-    schema = Path(__file__).resolve().parents[1] / "src" / "db" / "schema.sql"
+    schema = Path(__file__).resolve().parents[1] / "miner" / "db" / "schema.sql"
     db = Database(db_path)
     db.init_schema(schema)
     settings = Settings(
@@ -145,7 +145,7 @@ def test_process_pr_uses_jan_2025_lookback_and_comment_link_fallback(tmp_path):
 
 def test_migration_backfills_missing_scanner_jobs(tmp_path):
     db_path = tmp_path / "miner.db"
-    schema = Path(__file__).resolve().parents[1] / "src" / "db" / "schema.sql"
+    schema = Path(__file__).resolve().parents[1] / "miner" / "db" / "schema.sql"
     db = Database(db_path)
     db.init_schema(schema)
     db.execute("INSERT INTO repos(full_name, html_url, stars, language, archived) VALUES ('o/r','https://github.com/o/r',100,'Python',0)")

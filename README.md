@@ -23,13 +23,13 @@ make check
 
 | Path | Contents |
 | --- | --- |
-| `src/` | Collection, issue linking, filters, scanners, database, workers |
-| `scripts/` | Commands for collecting, scanning, exporting and checking cases |
-| `scripts/rq3/` | The O/W/P CodeQL replay pipeline ([README](scripts/rq3/README.md)) |
-| `analysis/` | Cohort checks and paired comparisons |
+| `miner/` | The pipeline: collection, issue linking, filters, scanners, database, workers. Run with `python -m miner {init-db,collect,scan,export}` |
+| `analysis/` | Paired tests and cohort checks |
+| `rq3/` | The O/W/P CodeQL replay pipeline ([README](rq3/README.md)) |
 | `data/` | Aggregate results, database schema and dataset guide ([README](data/README.md)) |
+| `tests/` | Unit tests |
 | `paper/` | Manuscript |
-| `tests/` | Miner and analysis tests |
+| `config.yml` | Collection and scanner configuration used for the study |
 
 ## Study
 
@@ -56,9 +56,7 @@ The comparisons are observational. A scanner finding is not proof of an exploita
 ## Reproducing the results
 
 - `make check` recomputes the eight paired tests from `data/matched_aggregates.json` and checks the cohort totals in `data/cohort_lineage.json`. The delay result is carried from the original analysis.
-- `python3 -m analysis.pair_level_replay --original-pair-master PATH` recomputes all nine tests from the 190-pair CSV.
-- `python3 -m analysis.cohort_lineage verify-staged-c1-c2` checks the cohort and matching CSVs against recorded hashes.
-- The RQ3 pipeline is in `scripts/rq3/`.
+- The RQ3 pipeline is in `rq3/`.
 - Every case, annotation, matched pair and replay record is in the dataset.
 
 ## Running the miner
@@ -70,10 +68,10 @@ cp .env.example .env
 # set GITHUB_TOKEN; inspect CONFIG and DB_PATH
 make install
 make collect
-make scan
+make scan   # or: python -m miner collect / scan / export
 ```
 
-`config.agentic_javascript.yml` is the configuration used for the study; check its scope and limits first.
+`config.yml` is the study configuration; check its scope and limits first.
 
 ## Citation
 

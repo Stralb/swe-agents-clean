@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from src.scanners.semgrep_scanner import (
+from miner.scanners.semgrep_scanner import (
     changed_python_paths,
     filter_semgrep_to_pr_delta,
     parse_semgrep_json,

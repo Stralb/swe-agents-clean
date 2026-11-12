@@ -1,5 +1,5 @@
 
-from src.scanners import scanner_runner
+from miner.scanners import scanner_runner
 
 
 def test_codeql_default_trigger_is_all(monkeypatch):

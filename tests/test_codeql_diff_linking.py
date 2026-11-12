@@ -1,4 +1,4 @@
-from src.scanners.codeql_scanner import (
+from miner.scanners.codeql_scanner import (
     added_line_numbers_by_file,
     diff_findings,
     filter_findings_to_pr_delta,

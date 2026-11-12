@@ -1,4 +1,4 @@
-from src.filters.pr_filters import categorize_file
+from miner.filters.pr_filters import categorize_file
 
 
 def test_categorize_source():

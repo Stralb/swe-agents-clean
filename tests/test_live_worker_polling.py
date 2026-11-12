@@ -1,8 +1,8 @@
 from pathlib import Path
 
-from src.db.database import Database
-from src.settings import RuntimeLimits, Settings
-from src.workers import worker_manager as controller
+from miner.db.database import Database
+from miner.settings import RuntimeLimits, Settings
+from miner.workers import worker_manager as controller
 
 
 class DummyThread:
@@ -13,7 +13,7 @@ class DummyThread:
 def make_settings(tmp_path):
     db_path = tmp_path / "miner.db"
     db = Database(db_path)
-    db.init_schema(Path("src/db/schema.sql"))
+    db.init_schema(Path("miner/db/schema.sql"))
     return Settings(
         config_path=Path("config.yml"),
         db_path=db_path,

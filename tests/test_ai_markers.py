@@ -1,4 +1,4 @@
-from src.markers.ai_markers import detect_ai_markers
+from miner.markers.ai_markers import detect_ai_markers
 
 
 def test_ai_marker_high_path_marker():

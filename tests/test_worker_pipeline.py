@@ -2,14 +2,14 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from src.db.database import Database
-from src.github.rate_limit import RateLimitManager
-from src.workers.job_queue import applicable_job_types, claim_job, finish_job, seed_scanner_jobs, update_case_stages
+from miner.db.database import Database
+from miner.github.rate_limit import RateLimitManager
+from miner.workers.job_queue import applicable_job_types, claim_job, finish_job, seed_scanner_jobs, update_case_stages
 
 
 def init_db(tmp_path: Path) -> Database:
     db = Database(tmp_path / "miner.db")
-    db.init_schema(Path("src/db/schema.sql"))
+    db.init_schema(Path("miner/db/schema.sql"))
     return db
 
 
@@ -104,7 +104,7 @@ def test_all_successful_scanner_jobs_mark_case_clean(tmp_path):
 def test_rate_limit_manager_sleeps_when_below_reserve(tmp_path, monkeypatch):
     db = init_db(tmp_path)
     sleeps: list[int] = []
-    monkeypatch.setattr("src.github.rate_limit.cooperative_sleep", lambda seconds: sleeps.append(int(seconds)))
+    monkeypatch.setattr("miner.github.rate_limit.cooperative_sleep", lambda seconds: sleeps.append(int(seconds)))
     monkeypatch.setattr("time.time", lambda: 1000)
     mgr = RateLimitManager(db.path, min_remaining=100)
     mgr.update_from_headers({"X-RateLimit-Remaining": "50", "X-RateLimit-Limit": "5000", "X-RateLimit-Reset": "1030", "X-RateLimit-Resource": "core"})
@@ -134,7 +134,7 @@ def test_search_bucket_waits_only_when_near_search_reserve(tmp_path, monkeypatch
 
 
 def test_reset_running_jobs_on_evaluate_restart(tmp_path):
-    from src.workers.job_queue import reset_running_jobs_on_start
+    from miner.workers.job_queue import reset_running_jobs_on_start
     db = init_db(tmp_path)
     case_id = make_case(db, [{"filename": "README.md", "patch": "+x"}])
     seed_scanner_jobs(db, include_codeql=True)

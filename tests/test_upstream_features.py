@@ -1,4 +1,4 @@
-from src.markers.upstream_features import extract_upstream_features
+from miner.markers.upstream_features import extract_upstream_features
 
 
 def test_features_code_block():

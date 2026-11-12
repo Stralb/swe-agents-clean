@@ -1,4 +1,4 @@
-from src.github.issue_linker import find_linked_issue_numbers
+from miner.github.issue_linker import find_linked_issue_numbers
 
 
 def test_same_repo_url_links():

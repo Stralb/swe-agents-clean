@@ -1,4 +1,4 @@
-from src.filters.pr_filters import categorize_file, classify_pr_files
+from miner.filters.pr_filters import categorize_file, classify_pr_files
 
 
 def files(*names):
@@ -25,7 +25,7 @@ def test_ambiguous_machine_readable_files_are_kept():
     assert classify_pr_files(files("data/schema.json")) == "ambiguous"
     assert classify_pr_files(files("notebooks/tutorial.ipynb")) == "ambiguous"
 
-from src.filters.pr_filters import is_docs_scope_only
+from miner.filters.pr_filters import is_docs_scope_only
 
 
 def test_docs_scope_only_catches_docs_conf_py_but_not_source_or_dependency():

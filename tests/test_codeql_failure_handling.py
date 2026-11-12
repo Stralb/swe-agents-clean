@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import unittest
 
-from src.scanners.codeql_scanner import (
+from miner.scanners.codeql_scanner import (
     _codeql_no_source_seen,
     _command_timed_out,
     _no_source_meta,

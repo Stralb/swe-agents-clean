@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import unittest
 
-from src.scanners.scanner_runner import _clear_scanner
-from src.workers.job_queue import _scanner_config_for_job
+from miner.scanners.scanner_runner import _clear_scanner
+from miner.workers.job_queue import _scanner_config_for_job
 
 
 class RecordingDatabase:
@@ -71,7 +71,7 @@ class CodeQLForceRescanTests(
     def test_non_codeql_job_does_not_force_rescan(
         self,
     ) -> None:
-        from src.workers.job_queue import (
+        from miner.workers.job_queue import (
             JOB_SCANNERS,
         )
 

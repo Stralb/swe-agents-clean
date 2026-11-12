@@ -17,7 +17,7 @@ install:
 	$(PYTHON) -m pip install -r requirements.txt
 
 check:
-	$(PYTHON) -m compileall -q src scripts analysis tests
+	$(PYTHON) -m compileall -q miner rq3 analysis tests
 	$(PYTHON) -m analysis.matched_results --check
 	$(PYTHON) -m analysis.cohort_lineage audit-recorded
 	$(PYTHON) -m analysis.pathway_tables replay-indexed
@@ -29,9 +29,9 @@ test:
 	$(PYTHON) -m pytest -q --timeout=60 tests
 
 collect:
-	$(PYTHON) -m scripts.ensure_db
-	$(PYTHON) -m scripts.collect
+	$(PYTHON) -m miner init-db
+	$(PYTHON) -m miner collect
 
 scan:
-	$(PYTHON) -m scripts.ensure_db
-	$(PYTHON) -m scripts.scan
+	$(PYTHON) -m miner init-db
+	$(PYTHON) -m miner scan

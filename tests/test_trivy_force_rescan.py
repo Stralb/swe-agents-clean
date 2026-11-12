@@ -3,8 +3,8 @@ from __future__ import annotations
 import copy
 import unittest
 
-from src.settings import load_settings
-from src.workers.job_queue import (
+from miner.settings import load_settings
+from miner.workers.job_queue import (
     _scanner_config_for_job,
 )
 

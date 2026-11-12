@@ -1,5 +1,5 @@
-from src.artifacts.regions import classify_file, classify_files, profile_summary
-from src.filters.tool_applicability import route_reasons
+from miner.artifacts.regions import classify_file, classify_files, profile_summary
+from miner.filters.tool_applicability import route_reasons
 
 
 def test_dependency_config_routes_dependency_scanners_not_issue_keywords():

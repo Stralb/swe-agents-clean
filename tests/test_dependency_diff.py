@@ -1,4 +1,4 @@
-from src.scanners.dependency_diff import detect_dependency_changes, detect_dependency_regressions
+from miner.scanners.dependency_diff import detect_dependency_changes, detect_dependency_regressions
 
 
 def test_dependency_downgrade_detected():
@@ -30,7 +30,7 @@ def test_constraint_widening_detected():
 
 
 def test_osv_delta_concept_skip_same_before_after(monkeypatch, tmp_path):
-    from src.scanners import osv_scanner
+    from miner.scanners import osv_scanner
 
     files = [{
         "filename": "requirements.txt",

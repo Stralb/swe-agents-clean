@@ -1,4 +1,4 @@
-from src.pipeline.scan_pipeline import _enabled_cheap, _codeql_trigger_condition
+from miner.pipeline.scan_pipeline import _enabled_cheap, _codeql_trigger_condition
 
 
 def test_cheap_scanners_are_approved_downstream_workers_by_default():

@@ -2,8 +2,8 @@ from pathlib import Path
 
 import yaml
 
-from src.pipeline.collect_pipeline import _targeted_query_jobs, TARGETED_ISSUE_LINK_TERMS
-from src.settings import RuntimeLimits, Settings
+from miner.pipeline.collect_pipeline import _targeted_query_jobs, TARGETED_ISSUE_LINK_TERMS
+from miner.settings import RuntimeLimits, Settings
 
 
 def _settings(config):
@@ -18,12 +18,12 @@ def _settings(config):
 
 def test_wide_first_defaults_are_not_early_drop_caps():
     cfg = yaml.safe_load(Path('config.yml').read_text())
-    assert cfg['github']['min_stars'] == 200
+    assert cfg['github']['min_stars'] == 100
     assert cfg['github']['strict_primary_language'] is False
     assert cfg['collection']['max_raw_hits_per_repo_per_pass'] == 0
-    assert cfg['collection']['max_processed_prs_per_repo'] >= 50
-    assert cfg['collection']['max_prs_per_repo_per_query'] == 1
-    assert cfg['collection']['max_new_prs_per_repo_per_run'] == 2
+    assert cfg['collection']['max_processed_prs_per_repo'] == 0
+    assert cfg['collection']['max_prs_per_repo_per_query'] == 0
+    assert cfg['collection']['max_new_prs_per_repo_per_run'] == 0
     assert cfg['collection']['repo_walk_enabled'] is False
 
 
@@ -40,9 +40,9 @@ def test_query_phases_prioritize_issue_linked_work_before_single_stream():
     assert '"fix #"' not in ' '.join(q for _, _, q in jobs)
 
 
-def test_targeted_base_uses_2025_and_200_stars():
+def test_targeted_base_uses_configured_window_and_stars():
     cfg = yaml.safe_load(Path('config.yml').read_text())
     q = _targeted_query_jobs(_settings(cfg))[0][2]
-    assert 'stars:>=200' in q
-    assert 'merged:>=2025-01-01' in q
+    assert 'stars:>=100' in q
+    assert 'merged:>=2025-11-01' in q
     assert 'in:title,body' in q

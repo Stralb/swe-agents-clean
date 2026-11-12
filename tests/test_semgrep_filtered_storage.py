@@ -4,10 +4,10 @@ import json
 import unittest
 from typing import Any
 
-from src.scanners.scanner_runner import (
+from miner.scanners.scanner_runner import (
     _insert_finding,
 )
-from src.scanners.semgrep_scanner import (
+from miner.scanners.semgrep_scanner import (
     classify_semgrep_to_pr_delta,
     filter_semgrep_to_pr_delta,
 )

@@ -5,10 +5,10 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from src.scanners.gitleaks_scanner import (
+from miner.scanners.gitleaks_scanner import (
     scan_files_with_gitleaks,
 )
-from src.workers.job_queue import (
+from miner.workers.job_queue import (
     _scanner_config_for_job,
 )
 
@@ -84,11 +84,11 @@ class GitleaksRedactedReportTests(
             }
 
         with patch(
-            "src.scanners.gitleaks_scanner."
+            "miner.scanners.gitleaks_scanner."
             "shutil.which",
             return_value="/tmp/gitleaks",
         ), patch(
-            "src.scanners.gitleaks_scanner."
+            "miner.scanners.gitleaks_scanner."
             "run_cmd",
             side_effect=fake_run_cmd,
         ):

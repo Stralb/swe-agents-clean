@@ -1,6 +1,6 @@
 import pytest
 
-from src.filters.tool_applicability import (
+from miner.filters.tool_applicability import (
     has_any_applicable_downstream_worker,
     has_primary_applicable_downstream_worker,
     is_dependency_file,
@@ -48,7 +48,7 @@ def test_ci_workflow_is_classified_and_routed_to_secret_scan():
 
 
 def test_dependency_downgrade_finding_reports_line_number():
-    from src.scanners.dependency_diff import detect_dependency_regressions
+    from miner.scanners.dependency_diff import detect_dependency_regressions
 
     files = [{
         "filename": "requirements.txt",

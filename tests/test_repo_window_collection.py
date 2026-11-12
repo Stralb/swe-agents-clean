@@ -1,5 +1,5 @@
-from src.pipeline.repo_universe import lookback_window, repo_window_pr_query
-from src.github.client import GitHubClient
+from miner.pipeline.repo_universe import lookback_window, repo_window_pr_query
+from miner.github.client import GitHubClient
 
 
 def test_repo_window_query_covers_full_lookback_and_excludes_maintenance_bots():
@@ -19,7 +19,7 @@ def test_github_client_pace_defaults_can_be_set_without_requesting():
     assert gh.search_min_interval_seconds == 2.35
     assert gh.core_min_interval_seconds == 0
     assert gh.jitter_seconds == 0.65
-from src.pipeline.repo_universe import global_active_pr_query
+from miner.pipeline.repo_universe import global_active_pr_query
 
 
 def test_global_active_pr_query_is_structural_and_not_keyword_bucket():

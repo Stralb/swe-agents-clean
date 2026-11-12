@@ -3,7 +3,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from src.scanners import codeql_scanner
+from miner.scanners import codeql_scanner
 
 
 def test_codeql_tempdir_uses_configured_linux_local_parent(tmp_path, monkeypatch):

@@ -1,4 +1,4 @@
-from src.filters.tool_applicability import (
+from miner.filters.tool_applicability import (
     has_high_yield_downstream_surface,
     high_yield_surface_reasons,
 )

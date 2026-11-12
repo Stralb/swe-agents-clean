@@ -1,4 +1,4 @@
-from src.scanners.osv_scanner import _finding_key
+from miner.scanners.osv_scanner import _finding_key
 
 
 def test_osv_aliases_share_finding_key():

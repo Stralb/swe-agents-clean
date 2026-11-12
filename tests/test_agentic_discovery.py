@@ -1,5 +1,5 @@
-from src.filters.pr_filters import has_javascript_typescript_surface
-from src.pipeline.agentic_discovery import (
+from miner.filters.pr_filters import has_javascript_typescript_surface
+from miner.pipeline.agentic_discovery import (
     build_agentic_query_jobs,
     validate_pr_for_job,
 )

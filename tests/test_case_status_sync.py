@@ -1,12 +1,12 @@
 from pathlib import Path
 
-from src.db.database import Database
-from src.pipeline.case_status import sync_case_statuses
+from miner.db.database import Database
+from miner.pipeline.case_status import sync_case_statuses
 
 
 def _db(tmp_path: Path) -> Database:
     db = Database(tmp_path / "miner.db")
-    db.init_schema(Path("src/db/schema.sql"))
+    db.init_schema(Path("miner/db/schema.sql"))
     return db
 
 
