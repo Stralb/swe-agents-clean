@@ -1,4 +1,4 @@
-# RQ3 replay scripts
+# Replay: O/W/P CodeQL comparison (RQ3)
 
 Scripts for the O/W/P CodeQL replay comparison: 14 cases, each replayed with the original issue (O), the issue plus its historical warning (W), and the issue plus a warning-derived safety property (P). Twelve cases have all three conditions, giving 12 + 14 + 14 = 40 scanned patches.
 

@@ -25,7 +25,7 @@ make check
 | --- | --- |
 | `miner/` | The pipeline: collection, issue linking, filters, scanners, database, workers. Run with `python -m miner {init-db,collect,scan,export}` |
 | `analysis/` | Paired tests and cohort checks |
-| `rq3/` | The O/W/P CodeQL replay pipeline ([README](rq3/README.md)) |
+| `replay/` | The O/W/P patch replay and CodeQL comparison (RQ3) ([README](replay/README.md)) |
 | `data/` | Aggregate results, database schema and dataset guide ([README](data/README.md)) |
 | `tests/` | Unit tests |
 | `paper/` | Manuscript |
@@ -56,7 +56,7 @@ The comparisons are observational. A scanner finding is not proof of an exploita
 ## Reproducing the results
 
 - `make check` recomputes the eight paired tests from `data/matched_aggregates.json` and checks the cohort totals in `data/cohort_lineage.json`. The delay result is carried from the original analysis.
-- The RQ3 pipeline is in `rq3/`.
+- The RQ3 replay pipeline is in `replay/`.
 - Every case, annotation, matched pair and replay record is in the dataset.
 
 ## Running the miner
