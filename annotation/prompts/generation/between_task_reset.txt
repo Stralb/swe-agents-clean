@@ -1,0 +1,7 @@
+This is the next independent software task in this same conversation.
+
+Ignore all implementation details, decisions, code, assumptions, and outputs from every earlier task in this chat. Do not compare the new packet with earlier packets.
+
+Use only the newly uploaded INPUT ZIP for this run, read every file in it, and follow the exact same master implementation/output instructions from the first run.
+
+Return only the correctly named <RUN_ID>_OUTPUT.zip.

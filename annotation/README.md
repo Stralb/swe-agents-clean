@@ -13,6 +13,12 @@ Frozen prompt text given to the model.
 | [root_grouping_adjudicator.md](prompts/root_grouping_adjudicator.md) | Resolving grouping disagreements |
 | [later_cases_nine_phase_request.txt](prompts/later_cases_nine_phase_request.txt) | Full request for the 70 later cases: issue coding, PR coding and alignment, blind implementation coding, context, finding verification, finding-to-change mapping, task-role attribution, synthesis and risk assessment |
 | [mechanism_origin_pass_b_request.txt](prompts/mechanism_origin_pass_b_request.txt) | Full blind Pass-B request classifying the production route of all 342 implementation choices |
+| [generation/master_prompt.txt](prompts/generation/master_prompt.txt) | Shared implementation prompt for the five-chat, 30-packet experiment |
+| [generation/between_task_reset.txt](prompts/generation/between_task_reset.txt) | Reset instruction between generation tasks in the same chat |
+| [generation/screening_wave14.txt](prompts/generation/screening_wave14.txt) | Wave-14 screening generation request |
+| [review_phase2_audit_request.txt](prompts/review_phase2_audit_request.txt) | Post-freeze Phase-2 reliability and root-scope audit request |
+
+The Phase-2 audit file preserves the verbatim request from the handoff's “WHAT TO ASK” section; upload instructions and historical classifications are excluded. Generation prompts are separate from the annotation passes. These instructions document the requested procedure and do not establish runtime compliance or independent human review.
 
 ## Protocols
 
