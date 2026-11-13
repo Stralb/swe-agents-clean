@@ -1,12 +1,3 @@
-% =====================================================================
-% Supplementary material
-% Numbering: sections S1-S6, figures S1.., tables S1.. (distinct from the main paper).
-% Evidence-status vocabulary used throughout:
-% evidence-checked = model-proposed finding-to-change mapping retained under the main-paper Section 4.3 gate; not independently human validated per link
-% model-assisted = model judgement retained without independent re-annotation
-% source-reported = aggregate or outcome taken from archived reports, not re-derived here
-% workbook = field read from ORIGINAL_122_CASE_MANUAL_WORKBOOK.xlsx (original 122-instance cohort)
-% =====================================================================
 \clearpage
 \appendix
 \raggedbottom
@@ -17,11 +8,8 @@
 \setcounter{figure}{0}\renewcommand{\thefigure}{S\arabic{figure}}\renewcommand{\theHfigure}{S\arabic{figure}}
 \setcounter{table}{0}\renewcommand{\thetable}{S\arabic{table}}\renewcommand{\theHtable}{S\arabic{table}}
 
-% ---- evidence card: #1 identifier, #2 title
 \newcommand{\cf}[1]{\textsf{\bfseries #1:}}
 
-% A compact, non-floating exhibit for procedural explanations.  Notes and
-% limitations belong with their evidence, not in a prefatory mini-essay.
 \newcommand{\suppbox}[2]{%
   \par\smallskip\noindent{\setlength{\fboxsep}{7pt}%
   \fcolorbox{black!25}{black!2}{%
@@ -33,7 +21,6 @@
 {\Large\bfseries Supplementary Material}
 \end{center}
 
-% =====================================================================
 \section{Study Population and Measurement}\label{sec:s1}
 
 \suppbox{Selection protocol (GitHub issue--PR corpus)}{%
@@ -86,26 +73,25 @@ PR creation to merge (hours) & 2.86 & 0.43--27.01 & 151.78\\
 \end{table}
 
 \begin{table}[H]
-\caption{Security checks, scanner versions and configuration, and PR-attribution criteria. The versions refer to identified runs, not necessarily every scan.}
+\caption{Security checks, tool versions and configuration, and PR-attribution criteria. The versions refer to identified runs, not necessarily every scan.}
 \label{tab:scanners}
 \footnotesize\renewcommand{\arraystretch}{1.15}
 \begin{tabularx}{\linewidth}{@{}L{1.65cm}L{3.05cm}Y@{}}
 \toprule
 \textbf{Check} & \textbf{Recorded configuration} & \textbf{Evidence used to attribute findings to the PR}\\
 \midrule
-CodeQL & CLI 2.25.6 in a V6 replay; JavaScript query pack 2.3.11 in historical scanner logs. The replay used the JavaScript security-extended suite with build mode \texttt{none}. & Rule, primary location and, where available, data-flow steps in before/after results. In the initial cohort, the retained mapping points to a PR-added primary or flow line; an added flow step does not establish that the flagged statement itself is new.\\
+CodeQL & CLI 2.25.6 in a V6 replay; JavaScript query pack 2.3.11 in historical static-analysis logs. The replay used the JavaScript security-extended suite with build mode \texttt{none}. & Rule, primary location and, where available, data-flow steps in before/after results. In the initial cohort, the retained mapping points to a PR-added primary or flow line; an added flow step does not establish that the flagged statement itself is new.\\
 Semgrep & \texttt{p/security-audit} rule configuration; executable version not recovered. & Rule and source location in the before/after comparison, linked to a PR-added line.\\
 OSV-Scanner & Dependency snapshot scans at base and head; executable version not recovered. & Advisory and package/version evidence for a newly introduced dependency state.\\
 Trivy & CLI 0.72.0 in historical run metadata. An observed vulnerability database used format 2 and was updated on 22 July 2026 (UTC). & Advisory and package/version evidence compared across base and head.\\
-Dependency-downgrade analysis & Internal package/version comparison, not a separately versioned scanner. & An older declared or resolved version recorded in a changed dependency hunk.\\
+Dependency-downgrade analysis & Internal package/version comparison, not a separately versioned tool. & An older declared or resolved version recorded in a changed dependency hunk.\\
 Gitleaks & Added-content secret detection; executable version not recovered. & Rule and secret-like match on PR-added content; placeholder or test strings were not automatically excluded.\\
 \bottomrule
 \end{tabularx}
 \par\smallskip\raggedright\scriptsize
-\textbf{Attribution and coverage.} Original-cohort merge-base verification supports 142 retained dependency links. Applicability, execution and findings were recorded separately. A failed, unavailable or inapplicable check is not a negative result. Recorded version observations do not establish the complete executable and advisory data used for every historical run. The scanner configuration accompanies the study code.
+\textbf{Attribution and coverage.} Original-cohort merge-base verification supports 142 retained dependency links. Applicability, execution and findings were recorded separately. A failed, unavailable or inapplicable check is not a negative result. Recorded version observations do not establish the complete executable and advisory data used for every historical run. The tool configuration accompanies the study code.
 \end{table}
 
-% =====================================================================
 \FloatBarrier
 \section{Classification and Attribution}\label{sec:s2}
 
@@ -141,8 +127,8 @@ Incomplete & Material evidence is missing or the chronology is uncertain; this p
 \suppbox{Protocol B --- Validation and a separate blind description pass}{%
 \renewcommand{\arraystretch}{1.13}%
 \begin{tabularx}{\linewidth}{@{}L{0.8cm}Y@{}}
-\textbf{05} & \textbf{Validation boundary.} Each retained link has recorded supporting evidence, but the workbook does not demonstrate complete independent human re-annotation.\\
-\textbf{06} & \textbf{Blind patch descriptions.} Model-assisted descriptions of 134 candidate diffs omitted issue wording, PR goal and scanner outcome. A second pass left 133 descriptions unchanged and corrected one. Subsequent dependency checks excluded 12 cases, leaving 122 active cases. These descriptions neither determined the mappings or task roles nor constitute a human agreement study.\\
+\textbf{05} & \textbf{Validation boundary.} Each retained link has recorded supporting evidence, but the original annotation records do not demonstrate complete independent human re-annotation.\\
+\textbf{06} & \textbf{Blind patch descriptions.} Model-assisted descriptions of 134 candidate diffs omitted issue wording, PR goal and check outcome. A second pass left 133 descriptions unchanged and corrected one. Subsequent dependency checks excluded 12 cases, leaving 122 active cases. These descriptions neither determined the mappings or task roles nor constitute a human agreement study.\\
 \end{tabularx}}
 
 \suppbox{Blinded evaluation inputs and preserved patch-summary prompt}{%
@@ -150,10 +136,10 @@ Incomplete & Material evidence is missing or the chronology is uncertain; this p
 \par\smallskip
 \renewcommand{\arraystretch}{1.10}%
 \begin{tabularx}{\linewidth}{@{}L{2.7cm}Y@{}}
-\textbf{Issue summary} & Issue title/body only; a factual sentence with a verbatim source excerpt, before PR or scanner evidence.\\
+\textbf{Issue summary} & Issue title/body only; a factual sentence with a verbatim source excerpt, before PR or tool evidence.\\
 \textbf{PR summary} & PR title/body only; the stated goal was summarised without the linked issue or code.\\
-\textbf{Patch summary} & Diff and changed-file metadata only; issue, PR-description and scanner results excluded.\\
-\textbf{Task-role label} & Frozen issue description and mapped responsible change; scanner rule, severity and PR goal excluded.\\
+\textbf{Patch summary} & Diff and changed-file metadata only; issue, PR-description and check results excluded.\\
+\textbf{Task-role label} & Frozen issue description and mapped responsible change; tool rule, severity and PR goal excluded.\\
 \textbf{Choice classification} & Public evidence available before the change was used to distinguish prescribed, mechanical, selected and unresolved mechanisms.\\
 \end{tabularx}
 \par\smallskip Annotation requests for most stages and all codebooks are provided with the study code; the original request text for four classification stages was not recovered.
@@ -177,7 +163,6 @@ Total & 605 & \\
 \end{tabularx}
 \end{table}
 
-% =====================================================================
 \FloatBarrier
 \section{RQ1 Case Evidence}\label{sec:s3}
 
@@ -185,8 +170,8 @@ Total & 605 & \\
 \begin{tabularx}{\linewidth}{@{}L{2.2cm}Y@{}}
 \textbf{Coverage} & Spotify, GSD repair, Grok CLI file mentions and cc-wf-studio appear in the main text; further examples follow below.\\
 \textbf{Issue labels} & Problem only; Suggests solution; Explicit instruction.\\
-\textbf{Supporting} & Corresponds to the original workbook label ``Side-effect''.\\
-\textbf{Traceability} & GitHub links point to recorded commits; case identifiers refer to the original 122-instance workbook unless otherwise stated.\\
+\textbf{Supporting} & Corresponds to the original annotation label ``Side-effect''.\\
+\textbf{Traceability} & GitHub links point to recorded commits; case identifiers refer to the original 122-instance cohort unless otherwise stated.\\
 \end{tabularx}}
 
 \begin{casefile}{\textbf{spec-workflow-mcp}\ \ {\scriptsize\texttt{Pimzino/\allowbreak spec-workflow-mcp}}\ \ {\scriptsize Case 13918}}{\href{https://github.com/Pimzino/spec-workflow-mcp/issues/172}{Issue \#172}\ \ \href{https://github.com/Pimzino/spec-workflow-mcp/pull/173}{PR \#173}\ \ \href{https://github.com/Pimzino/spec-workflow-mcp/blob/45d7cd565c5b540643ef7470bfd08209e99681f2/src/tools/approvals.ts}{approvals.ts}}
@@ -242,7 +227,7 @@ Total & 605 & \\
 \crow{Request}{A content-origin (originality) proof with trusted timestamp metadata.}
 \crow{What the PRs did}{PR \#4348 adds an in-memory proof and hash. PR \#4353 reads the on-disk manifest, compares contents and writes an updated manifest by pathname.}
 \crow{Warning}{CodeQL \texttt{js/file-system-race}, \texttt{originalityProofManifest.js}:98, archived for PR \#4353 only.}
-\crow{Reading}{Extended provenance records contain a mapping for the later PR, but its individual fields have not been independently revalidated for this case card. The case is outside the original 122-instance workbook.}
+\crow{Reading}{Extended provenance records contain a mapping for the later PR, but its individual fields have not been independently revalidated for this case card. The case is outside the original 122-instance cohort.}
 \crow{Limit}{Successive PRs on one request moved the mechanism from memory to persistence. The finding must not be attributed to PR \#4348, and the two PRs are not a task-equivalent comparison.}
 \end{casefile}
 
@@ -262,12 +247,11 @@ Total & 605 & \\
 \crow{Limit}{An instructional placeholder, not a usable credential. Credential exposure is not established.}
 \end{casefile}
 
-% =====================================================================
 \FloatBarrier
 \section{Extended RQ1 Results}\label{sec:s4}
 
 \begin{table}[H]
-\caption{Findings versus responsible changes with and without the seven highest-count instances (original 122-instance cohort; workbook).}
+\caption{Findings versus responsible changes with and without the seven highest-count instances (original 122-instance cohort).}
 \label{tab:concentration}
 \footnotesize\renewcommand{\arraystretch}{1.12}
 \begin{tabularx}{\linewidth}{@{}L{5.2cm}rrY@{}}
@@ -326,7 +310,6 @@ Earlier classification snapshot & 5 & 103 & 234 & 0\\
 \textbf{Tool-generated choices} & At least one choice classified as mechanical appeared in 13/20 dependency-maintenance or compatibility/migration instances, versus 2/38 feature instances in the initial subset.\\
 \end{tabularx}}
 
-% =====================================================================
 \FloatBarrier
 \section{RQ2 Matching and Sensitivity}\label{sec:s5}
 
@@ -394,7 +377,6 @@ Issue--PR goal alignment & 160 of 190 vs 183 of 190; $p=0.00102$, $p_{\mathrm{Ho
 \label{fig:rq2-results}
 \end{figure}
 
-% =====================================================================
 
 \FloatBarrier
 \section{RQ3 Replay Evidence}\label{sec:s6}
@@ -476,7 +458,7 @@ A separate P1--P5 guidance pilot is excluded from these comparisons. The availab
 \begin{casefile}{\textbf{Oracle downloadable artifacts}\ \ {\scriptsize\texttt{steipete/\allowbreak oracle}}}{\href{https://github.com/steipete/oracle/issues/244}{Issue \#244}\ \ \href{https://github.com/steipete/oracle/pull/245}{PR \#245}\ \ \href{https://github.com/steipete/oracle/blob/ac32c892437ad4b92f0e1ddb5d9e90ad195e38a9/src/browser/artifacts.ts}{artifacts.ts}}
 \crow{Request}{Save browser-generated downloadable artifacts rather than only linking them in a transcript.}
 \crow{Historical PR}{Writes downloaded bytes using \texttt{writeBinaryBrowserArtifact}, which sanitises the filename and checks for an unused target path before writing.}
-\crow{Warning}{CodeQL \texttt{js/http-to-file-access}. Extended provenance records contain a mapping, not independently revalidated for this case card; this task is outside the original 122-instance workbook.}
+\crow{Warning}{CodeQL \texttt{js/http-to-file-access}. Extended provenance records contain a mapping, not independently revalidated for this case card; this task is outside the original 122-instance cohort.}
 \crow{Replay}{The historical rule was recorded under all three O/W/P conditions.}
 \crow{Limit}{Functional equivalence and any repair are not established.}
 \end{casefile}
@@ -484,7 +466,7 @@ A separate P1--P5 guidance pilot is excluded from these comparisons. The availab
 \begin{casefile}{\textbf{Neo.mjs Fleet service}\ \ {\scriptsize\texttt{neomjs/\allowbreak neo}}}{\href{https://github.com/neomjs/neo/issues/16735}{Issue \#16735}\ \ \href{https://github.com/neomjs/neo/pull/16761}{PR \#16761}\ \ \href{https://github.com/neomjs/neo/blob/6bf4ebc2d4acaea88faf293cd7e670fe9e3fd4ec/ai/scripts/diagnostics/fleetHealthcheck.mjs}{fleetHealthcheck.mjs}}
 \crow{Request}{An optional authenticated Fleet server and healthcheck probe with file-sourced bearer credentials.}
 \crow{Historical PR}{The probe reads a bearer token from a configured file and sends it to a configurable URL (default loopback, with a timeout).}
-\crow{Warning}{CodeQL \texttt{js/file-access-to-http}, \texttt{fleetHealthcheck.mjs}:107. An extended-provenance mapping is archived but not independently revalidated here; this task is outside the original 122-instance workbook.}
+\crow{Warning}{CodeQL \texttt{js/file-access-to-http}, \texttt{fleetHealthcheck.mjs}:107. An extended-provenance mapping is archived but not independently revalidated here; this task is outside the original 122-instance cohort.}
 \crow{Replay}{The property condition matched the original-issue condition in recorded alert counts.}
 \crow{Limit}{The zero-alert W output may omit functionality. This is a different task from the Neo.mjs wake receiver.}
 \end{casefile}
@@ -492,6 +474,6 @@ A separate P1--P5 guidance pilot is excluded from these comparisons. The availab
 \begin{casefile}{\textbf{Delegate Skills Windows relay}\ \ {\scriptsize\texttt{amElnagdy/\allowbreak delegate-skills}}}{\href{https://github.com/amElnagdy/delegate-skills/issues/3}{Issue \#3}\ \ \href{https://github.com/amElnagdy/delegate-skills/pull/13}{PR \#13}\ \ \href{https://github.com/amElnagdy/delegate-skills/blob/2c8d988f0d9542f7c005d8cf7f709005a63d1ba3/skills/grok-delegate/scripts/relay.mjs}{relay.mjs}}
 \crow{Request}{Fix Windows quoting and path failures in an existing codex-delegate relay.}
 \crow{Historical PR}{A new Grok relay writes brief, event and result files beneath an \texttt{os.tmpdir()} path named from repository and timestamp, created recursively rather than with \texttt{mkdtemp}.}
-\crow{Warning}{Four CodeQL \texttt{js/insecure-temporary-file} locations in \texttt{relay.mjs}. An extended-provenance mapping is archived but not independently revalidated here; this task is outside the original 122-instance workbook.}
+\crow{Warning}{Four CodeQL \texttt{js/insecure-temporary-file} locations in \texttt{relay.mjs}. An extended-provenance mapping is archived but not independently revalidated here; this task is outside the original 122-instance cohort.}
 \crow{Limit}{The linked issue and PR differ in scope, limiting what a reimplementation of the issue can test.}
 \end{casefile}
