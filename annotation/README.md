@@ -20,6 +20,10 @@ Frozen prompt text given to the model.
 
 The Phase-2 audit file preserves the verbatim request from the handoff's “WHAT TO ASK” section; upload instructions and historical classifications are excluded. Generation prompts are separate from the annotation passes. These instructions document the requested procedure and do not establish runtime compliance or independent human review.
 
+## Not recovered
+
+The original request text was not recovered for four stages: the Pass-A classification of the 342 implementation choices, the adjudication of Pass-A and Pass-B disagreements, the coding of the 190 matched controls and the quality check of those control labels. Their codebooks, blinding protocols and outputs are included and define what each stage did. The prompts above are the requests that were recovered.
+
 ## Protocols
 
 What each coder could see, and in what order. These are the instructions followed at each stage, not literal model requests.
