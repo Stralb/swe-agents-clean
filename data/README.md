@@ -11,7 +11,7 @@ Aggregate results used by the `checks/` modules, plus documentation for the stud
 | `pathway_aggregates.json`, `bootstrap_reference.json` | Indexed paired counts and bootstrap references |
 | `study_schema.sql` | Table and view layout of the study database (111 tables, 18 views) |
 | `erd/` | Entity-relationship diagrams: full, overview, and the parts used by `miner/`, `replay/` and `checks/` |
-| `scanner_versions.md` | Scanner versions and configuration |
+| `scanner_versions.md` | Analysis-tool versions and configuration |
 | `queries.sql` | Descriptive counts per analysis unit, and a walkthrough of one case |
 
 ## Database ERD
@@ -25,15 +25,15 @@ The case-level data is on [Hugging Face](https://huggingface.co/datasets/Stralb/
 | Data | Size |
 | --- | ---: |
 | Cases | 3,809 |
-| Scanner-positive cases | 192 |
+| Instances with newly recorded findings | 192 |
 | Initial / later annotation cohorts | 122 / 70 |
 | Cases with mapped changes | 191 |
-| Producing changes | 455 |
-| Implementation roots | 342 |
+| Responsible changes | 455 |
+| Implementation choices | 342 |
 | Matched pairs | 190 |
 | Replay runs | 40 across 14 cases (12 complete O/W/P triples) |
 
-The ten Parquet configurations keep cases, positive cases, changes, roots, pairs, annotations, findings, replay runs and artifacts as separate analysis units.
+The ten Parquet configurations keep cases, positive cases, changes, implementation choices, pairs, annotations, findings, replay runs and artifacts as separate analysis units.
 
 ```python
 from datasets import load_dataset

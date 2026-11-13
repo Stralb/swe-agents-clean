@@ -9,7 +9,7 @@ Frozen prompt text given to the model.
 | File | Stage |
 | --- | --- |
 | [implementation_description.txt](prompts/implementation_description.txt) | Blind description of what a patch changes (Stage 4B) |
-| [root_grouping_coder.md](prompts/root_grouping_coder.md) | Grouping producing changes into implementation choices |
+| [root_grouping_coder.md](prompts/root_grouping_coder.md) | Grouping responsible changes into implementation choices |
 | [root_grouping_adjudicator.md](prompts/root_grouping_adjudicator.md) | Resolving grouping disagreements |
 | [later_cases_nine_phase_request.txt](prompts/later_cases_nine_phase_request.txt) | Full request for the 70 later cases: issue coding, PR coding and alignment, blind implementation coding, context, finding verification, finding-to-change mapping, task-role attribution, synthesis and risk assessment |
 | [mechanism_origin_pass_b_request.txt](prompts/mechanism_origin_pass_b_request.txt) | Full blind Pass-B request classifying the production route of all 342 implementation choices |
@@ -41,7 +41,7 @@ What each coder could see, and in what order. These are the instructions followe
 
 | File | Contents |
 | --- | --- |
-| [root_grouping.md](codebooks/root_grouping.md) | Rules for grouping the 455 producing changes into 342 implementation choices |
+| [root_grouping.md](codebooks/root_grouping.md) | Rules for grouping the 455 responsible changes into 342 implementation choices |
 | [mechanism_origin.md](codebooks/mechanism_origin.md) | H/T/M/U production routes and T1 to T5 explanation strength |
 | [control_coding.csv](codebooks/control_coding.csv) | Purpose, specificity, alignment and implementation codes for matched controls |
 

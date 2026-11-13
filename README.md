@@ -1,6 +1,6 @@
 # Security findings in agent-associated pull requests
 
-Code and analysis for an observational study of GitHub issues and pull requests associated with coding agents. The study traces scanner-reported findings in the resulting changes back to the changed operations responsible for them, and compares the affected workflows with matched controls.
+Code and analysis for an observational study of GitHub issues and pull requests associated with coding agents. The study traces findings reported by analysis tools in the resulting changes back to the changed operations responsible for them, and compares the affected instances with matched controls.
 
 **Paper:** [paper/paper.pdf](paper/paper.pdf) · [source](paper/main.tex)
 **Dataset:** [Hugging Face](https://huggingface.co/datasets/Stralb/adversarial-swe-agents) *(private access required)* · [data guide](data/README.md)
@@ -9,7 +9,7 @@ Code and analysis for an observational study of GitHub issues and pull requests 
 
 ## Quick start
 
-Python 3.11 or later. No GitHub token and no scanners are needed.
+Python 3.11 or later. No GitHub token and no analysis tools are needed.
 
 ```bash
 python3 -m venv .venv
@@ -18,7 +18,7 @@ make setup
 make check
 ```
 
-`make check` checks Python syntax, recalculates the paired tests from the bundled aggregates, checks the recorded cohort totals, and runs the tests. It does not access GitHub, launch scanners, or modify data. A passing run prints the paired-test table and ends with `131 passed, 2 xfailed`:
+`make check` checks Python syntax, recalculates the paired tests from the bundled aggregates, checks the recorded cohort totals, and runs the tests. It does not access GitHub, launch analysis tools, or modify data. A passing run prints the paired-test table and ends with `131 passed, 2 xfailed`:
 
 ```
 Comparison                                 N     Effect           p        Holm
@@ -34,18 +34,18 @@ With Docker instead: `docker build -t checks . && docker run --rm checks`.
 
 | Path | Contents |
 | --- | --- |
-| `miner/` | ([README](miner/README.md)) The pipeline: collection, issue linking, filters, scanners, database, workers. Run with `python -m miner {init-db,collect,scan,export}` |
+| `miner/` | ([README](miner/README.md)) The pipeline: collection, issue linking, filters, analysis tools, database, workers. Run with `python -m miner {init-db,collect,scan,export}` |
 | `checks/` | ([README](checks/README.md)) Recomputes the paper's paired tests and bootstrap checks and verifies the cohort totals, from `data/` |
 | `replay/` | The O/W/P patch replay and CodeQL comparison (RQ3) ([README](replay/README.md)) |
 | `annotation/` | Prompts, blinding protocols and codebooks for the annotation stages ([README](annotation/README.md)) |
 | `data/` | Aggregate results, database schema and dataset guide ([README](data/README.md)) |
 | `tests/` | Unit tests |
 | `paper/` | LaTeX source and PDF of the paper ([build notes](paper/assets/README.md)) |
-| `config.yml` | Collection and scanner configuration used for the study |
+| `config.yml` | Collection and analysis-tool configuration used for the study |
 
 ## Study
 
-The population is 3,809 linked issue-to-pull-request workflows, of which 192 are scanner-positive. The matched analysis uses 190 pairs, 115 of them within the same repository. The code-change analysis records 455 producing changes in 191 workflows, grouped into 342 implementation roots. Pairs and changes are different units and are not interchangeable denominators.
+The population is 3,809 linked issue-to-pull-request instances, of which 192 have newly recorded findings. The matched analysis uses 190 pairs, 115 of them within the same repository. The code-change analysis records 455 responsible changes in 191 instances, grouped into 342 implementation choices. Pairs and changes are different units and are not interchangeable denominators.
 
 Five categorical comparisons use Stuart-Maxwell marginal-homogeneity tests, three binary comparisons use exact McNemar tests, and issue-to-PR delay uses the Wilcoxon signed-rank test. Holm adjustment covers the nine primary comparisons.
 
@@ -63,7 +63,7 @@ Five categorical comparisons use Stuart-Maxwell marginal-homogeneity tests, thre
 
 Explicit instructions occur in 121 of 190 positive issues (63.7%) and 148 of 190 controls (77.9%); positives suggest a solution without fully specifying it in 33 cases (17.4%) against 9 controls (4.7%). The PR is aligned with the issue goal in 160 of 190 positives (84.2%) and 183 of 190 controls (96.3%).
 
-The comparisons are observational. A scanner finding is not proof of an exploitable vulnerability or of a malicious issue, and matching does not establish causality.
+The comparisons are observational. A reported finding is not proof of an exploitable vulnerability or of a malicious issue, and matching does not establish causality.
 
 ## Database
 
@@ -79,7 +79,7 @@ The study database (111 tables, 18 views) is documented in [`data/study_schema.s
 
 ## Running the miner
 
-Collection needs GitHub credentials, a writable database and installed scanners (CodeQL, Semgrep, OSV-Scanner, Trivy, Gitleaks). It writes data, so use a disposable database.
+Collection needs GitHub credentials, a writable database and installed analysis tools (CodeQL, Semgrep, OSV-Scanner, Trivy, Gitleaks). It writes data, so use a disposable database.
 
 ```bash
 cp .env.example .env
