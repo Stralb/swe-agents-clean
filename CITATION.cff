@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this code or data, please cite it as below."
-title: "Between the Issue and the Warning: Tracing Security-Relevant Decisions in Agent-Associated Pull Requests"
+title: "Between the Issue and the Warning: Issue Requirements and Security Warnings in Agent-Associated Pull Requests"
 type: software
 authors:
   - family-names: "Strauss"
